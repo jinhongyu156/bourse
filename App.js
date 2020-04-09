@@ -1,114 +1,65 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import { Provider } from "react-redux";
+import store from "./redux/store/index.js";
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+/** pages*/
+// used by StackNavigator
+import Login from "./pages/login.js";
+// used by BottomTabNavigator
+import Finance from "./pages/finance.js";
+import Contract from "./pages/contract.js";
+import Ctc from "./pages/ctc.js";
+import User from "./pages/user.js";
+/** Icon */
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
+/** create Navigators */
+// StackNavigator
+const Stack = createStackNavigator();
+// BottomTabNavigator
+const Tab = createBottomTabNavigator();
+
+const ICONSIZE = 18;
+
+function TabNavigator()
+{
+	return <Tab.Navigator
+		initialRouteName = { "Finance" }
+		tabBarOptions = { { activeTintColor: "#F00", inactiveTintColor: "#999" } }
+	>
+		<Tab.Screen name = "Finance" component = { Finance } options = { {
+			title: "金融",
+			tabBarIcon: ( { color, size } ) => <Icon name = "coins" color = { color } size = { ICONSIZE } />
+		} } />
+		<Tab.Screen name = "Contract" component = { Contract } options = { {
+			title: "合约",
+			tabBarIcon: ( { color, size } ) => <Icon name = "file-contract" color = { color } size = { ICONSIZE } />
+		} } />
+		<Tab.Screen name = "Ctc" component = { Ctc } options = { {
+			title: "币币",
+			tabBarIcon: ( { color, size } ) => <Icon name = "coins" color = { color } size = { ICONSIZE } />
+		} } />
+		<Tab.Screen name = "User" component = { User } options = { {
+			title: "用户",
+			tabBarIcon: ( { color, size } ) => {
+				return <Icon name = "user" color = { color } size = { ICONSIZE } />
+			}
+		} } />
+	</Tab.Navigator>;
 };
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
-
-export default App;
+export default function()
+{
+	return <Provider store = { store }>
+		<NavigationContainer>
+			<Stack.Navigator initialRouteName = "TabNavigator">
+				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
+				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
+			</Stack.Navigator>
+		</NavigationContainer>
+	</Provider>;
+};
