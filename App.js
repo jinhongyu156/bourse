@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -15,7 +16,7 @@ import Contract from "./pages/contract.js";
 import Ctc from "./pages/ctc.js";
 import User from "./pages/user.js";
 /** Icon */
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 /** create Navigators */
 // StackNavigator
@@ -29,7 +30,7 @@ function TabNavigator()
 {
 	return <Tab.Navigator
 		initialRouteName = { "Finance" }
-		tabBarOptions = { { activeTintColor: "#F00", inactiveTintColor: "#999" } }
+		tabBarOptions = { { activeTintColor: "#F27B82", inactiveTintColor: "#76AEC0" } }
 	>
 		<Tab.Screen name = "Finance" component = { Finance } options = { {
 			title: "金融",
@@ -56,7 +57,7 @@ export default function()
 {
 	return <Provider store = { store }>
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName = "TabNavigator">
+			<Stack.Navigator initialRouteName = "Login">
 				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 			</Stack.Navigator>
