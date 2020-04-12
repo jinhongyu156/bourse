@@ -32,9 +32,10 @@ store.subscribe( () => {
 	const { language } = store.getState();
 	if( language.userLanguage && prevUserLanguage !== language.userLanguage )
 	{
+		console.log( "===sssssssss" );
 		I18n.locale = language.userLanguage;
 		prevUserLanguage = language.userLanguage;
-		RNRestart.Restart();
+		// RNRestart.Restart();
 	};
 } );
 

@@ -241,8 +241,7 @@ export default connect(
 			loginType: loginData.loginType,
 			countdown: loginData.countdown,
 			sendCodeStatus: loginData.sendCodeStatus,
-			inputError: loginData.inputError,
-			userLanguage: languageData.userLanguage
+			inputError: loginData.inputError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )

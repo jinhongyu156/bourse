@@ -9,11 +9,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 /** redux store */
 import store from "./redux/store/index.js";
-/** AsyncStorage */
-import AsyncStorage from "@react-native-community/async-storage"; 
-
-/** setConfig  */
-import { setLanguage } from "./redux/actions/language.js";
+import { getAsyncStorage } from "./redux/actions/language.js";
 
 /** pages*/
 // used by StackNavigator
@@ -61,16 +57,13 @@ function TabNavigator()
 	</Tab.Navigator>;
 };
 
+
 export default function()
 {
-	React.useEffect( function() {
-		( async () => {
-			const language = await AsyncStorage.getItem( "language" );
-			store.dispatch( setLanguage( language ) );
-		} )();
-		
-	}, [] );
-	return <Provider store = { store }>
+	const [ status, setStatus ] = React.useState( false )
+	status || store.dispatch( getAsyncStorage( () => setStatus( true ) ) );
+
+	return status && <Provider store = { store }>
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName = "Login">
 				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
