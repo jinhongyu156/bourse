@@ -6,10 +6,10 @@ export const ACTION_SET_COUNTDOWN_ACTIVE = "ACTION_SET_COUNTDOWN_ACTIVE";
 export const ACTION_SET_LOGINTYPE = "ACTION_SET_LOGINTYPE";
 export const ACTION_SET_INPUTTEXT = "ACTION_SET_INPUTTEXT";
 export const ACTION_SET_SENDCODESTATUS = "ACTION_SET_SENDCODESTATUS";
-
+export const ACTION_SET_INPUTERROR = "ACTION_SET_INPUTERROR";
 /* action create */
 let timer = null;
-const phoneNumberReg = /^1(3|4|5|7|8)\d{9}$/;					// 以 1 开头, 第二位可能是 3/4/5/7/8 的任意一个, \d 表示数字 [0 - 9] 的 9 位, 总共加起来 11 位结束
+const phoneNumberReg = /^1(3|4|5|7|8)\d{9}$/;
 const emailTextReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.{1}([a-zA-Z]{2,4})$/;
 
 // 发送验证码
@@ -29,7 +29,7 @@ export function sendCode()
 		{
 			const nowTimeStamp = Date.now();
 			const nextLoginType = getState().login.loginType;
-			console.log( "prevLoginType, nextLoginType", prevLoginType, nextLoginType );
+
 			if ( nowTimeStamp >= overTimeStamp )
 			{
 				dispatch( { type: ACTION_SET_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: prevLoginType === nextLoginType ? 3 : 0 } } );
@@ -71,9 +71,17 @@ export function setInputText( key, value )
 	{
 		if( key === "phoneNumber" )
 		{
+			dispatch( { type: ACTION_SET_INPUTERROR, payload: phoneNumberReg.test( value ) ? "" : "phoneNumber" } );
 			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( value ) ? 1 : 0 } );
+			
+		};
+		if( key === "emailText" )
+		{
+			dispatch( { type: ACTION_SET_INPUTERROR, payload: emailTextReg.test( value ) ? "" : "emailText" } );
+			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( value ) ? 1 : 0 } );
 		};
 		dispatch( { type: ACTION_SET_INPUTTEXT, payload: { [ key ]: value } } );
+
 	};
 };
 

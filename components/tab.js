@@ -92,7 +92,6 @@ export default React.memo( function(
 	
 	const goToPage = React.useCallback( function( pageNumber )							// 跳转页面函数
 	{
-		console.log( "pageNumber", pageNumber );
 		Platform.OS === "ios"
 			? tabViewRef.current.scrollTo( { x: pageNumber * CONTAINERWIDTH, y: 0, animated: animation } )
 		: Platform.OS === "android"

@@ -6,9 +6,12 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
+import I18n from "./../i18n/index.js";
+
 import Tab from "./../components/tab.js";
 
 import { sendCode, setLoginType, setInputText } from "./../redux/actions/login.js";
+import { setLanguage } from "./../redux/actions/language.js";
 
 // 图标宽高
 const ICONSIZE = 80;
@@ -49,16 +52,21 @@ const styles = StyleSheet.create( {
 	activeBgColor: { backgroundColor: "#4AA7C3" },
 
 	inactiveColor: { fontSize: 16, color: "#888888" },
-	activeColor: { fontSize: 20, color: "#4AA7C3" }
+	activeColor: { fontSize: 20, color: "#4AA7C3" },
+
+	errorBgColor: { backgroundColor: "#F00" }
 
 } );
 
 // logo
 const Logo = React.memo( function()
 {
+	console.log( "Logo re-render" )
 
-	return <Image style = { styles.icon } source = { require( "./../images/logo.png" ) } />
-
+	return <View>
+		<Text>{ I18n.t( "login.sendCode" ) }</Text>
+		<Image style = { styles.icon } source = { require( "./../images/logo.png" ) } />
+	</View>
 } );
 
 // 输入框
@@ -80,8 +88,7 @@ const Input = React.memo( function( { setInputText, index, value, placeholder } 
 const SendCodeBtn = React.memo( function( { sendCode, countdown, sendCodeStatus } )
 {
 	const disabled = sendCodeStatus == 2 || sendCodeStatus == 0;
-	const text = ( sendCodeStatus == 0 || sendCodeStatus == 1 ) ? "发送验证码" : disabled ? `${ countdown } S` : sendCodeStatus == 3 ? "重发验证码" : "";
-
+	const text = ( sendCodeStatus == 0 || sendCodeStatus == 1 ) ? I18n.t( "login.sendCode" ) : disabled ? `${ countdown } S` : sendCodeStatus == 3 ? I18n.t( "login.reSendCode" ) : "";		
 	return <View style = { styles.sendCodeBtnBox }>
 		<TouchableOpacity style = { [ styles.sendCodeBtn, disabled ? styles.inactiveBgColor : styles.activeBgColor ] } disabled = { disabled } onPress = { sendCode }>
 			<Text style = { styles.sendCodeBtnText }>{ text }</Text>
@@ -90,30 +97,37 @@ const SendCodeBtn = React.memo( function( { sendCode, countdown, sendCodeStatus 
 } );
 
 // 登录按钮
-const SubmitBtn = React.memo( function( { onSubmit } ) {
-	return <TouchableOpacity style = { [ styles.loginBtn, styles.inactiveBgColor ] }>
-		<Text style = { styles.loginBtnText }>登录</Text>
+const SubmitBtn = React.memo( function( { onSubmit, setLanguage } ) {
+
+	return <TouchableOpacity style = { [ styles.loginBtn, styles.inactiveBgColor ] } onPress = { () => {
+		setLanguage( parseInt(Math.random() * 100) % 2 ? "zh" : "en" );
+	} }>
+		<Text style = { styles.loginBtnText }>{ I18n.t( "login.loginSubmitBtn" ) }</Text>
 	</TouchableOpacity>;
 } );
+import store from "./../redux/store/index.js";
 
-// 电话登录方式
-const InputBox = React.memo( function( { loginType, sendCode, countdown, sendCodeStatus, setInputText, phoneNumber, emailText, password, code } ) {
+// 登录方式
+const InputBox = React.memo( function( { loginType, sendCode, countdown, sendCodeStatus, setInputText, phoneNumber, emailText, password, code, inputError } ) {
+
+	const hasError = ( loginType === 0 && inputError === "phoneNumber" ) || ( loginType === 1 && inputError === "emailText" );
+
 	return <View>
 		<View style = { styles.textInputBox }>
-		{
-			loginType === 0
-				? <Input index = { "phoneNumber" } value = { phoneNumber } setInputText = { setInputText } placeholder = { "请输入电话号码" } />
-				: <Input index = { "emailText" } value = { emailText } setInputText = { setInputText } placeholder = { "请输入电子邮件" } />
-		}
-		<View style = { styles.line } />
+			{
+				loginType === 0
+					? <Input index = { "phoneNumber" } value = { phoneNumber } setInputText = { setInputText } placeholder = { I18n.t( "login.placeholder.phoneNumber" ) } />
+					: <Input index = { "emailText" } value = { emailText } setInputText = { setInputText } placeholder = { I18n.t( "login.placeholder.email" ) } />
+			}
+			<View style = { [ styles.line, hasError ? styles.errorBgColor : {} ] } />
 		</View>
 		<View style = { styles.textInputBox }>
-			<Input index = { "password" } value = { password } setInputText = { setInputText } placeholder = { "请输入密码" } />
+			<Input index = { "password" } value = { password } setInputText = { setInputText } placeholder = { I18n.t( "login.placeholder.password" ) } />
 			<View style = { styles.line } />
 		</View>
 		<View style = { styles.textInputBox }>
 			<View style = { styles.codeTextInputBox }>
-				<Input index = { "code" } value = { code } setInputText = { setInputText } placeholder = { "请输入验证码" } />
+				<Input index = { "code" } value = { code } setInputText = { setInputText } placeholder = { I18n.t( "login.placeholder.code" ) } />
 				<View style = { styles.sendCodeBtnContainer }>
 					<SendCodeBtn sendCode = { sendCode } countdown = { countdown } sendCodeStatus = { sendCodeStatus } />
 				</View>
@@ -132,13 +146,7 @@ const TabBar = React.memo( function( { tabs, activeTab, goToPage } )
 	{
 		tabs.map( function( item, index )
 		{
-			return <TabBarItem
-				key = { index }
-				index = { index }
-				title = { item }
-				isActive = { activeTab == index }
-				onPress = { onPress }
-			/>;
+			return <TabBarItem key = { index } index = { index } title = { item } isActive = { activeTab == index } onPress = { onPress } />;
 		} )
 	}
 	</View>;
@@ -165,7 +173,7 @@ const TabBarItem = React.memo( function( { index, title, isActive, onPress } )
 
 const Login = function( props )
 {
-
+	console.log( "re-render11111111" )
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />
@@ -182,7 +190,7 @@ const Login = function( props )
 				onChangeTab = { o => props.setLoginType( o.i ) }
 			>
 				<InputBox
-					tabLabel = "电话号码登录"
+					tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
 					loginType = { props.loginType }
 					sendCode = { props.sendCode }
 					countdown = { props.countdown }
@@ -193,9 +201,10 @@ const Login = function( props )
 					emailText = { props.emailText }
 					password = { props.password }
 					code = { props.code }
+					inputError = { props.inputError }
 				/>
 				<InputBox
-					tabLabel = "邮箱登录"
+					tabLabel = { I18n.t( "login.loginType.email" ) }
 					loginType = { props.loginType }
 					sendCode = { props.sendCode }
 					countdown = { props.countdown }
@@ -206,13 +215,14 @@ const Login = function( props )
 					emailText = { props.emailText }
 					password = { props.password }
 					code = { props.code }
+					inputError = { props.inputError }
 				/>
 			</Tab>
 		</View>
-		<SubmitBtn />
+		<SubmitBtn setLanguage = { props.setLanguage } />
 		<View style = { styles.options }>
-			<TouchableOpacity><Text style = { styles.optionsText }>新用户</Text></TouchableOpacity>
-			<TouchableOpacity><Text style = { styles.optionsText }>忘记密码</Text></TouchableOpacity>
+			<TouchableOpacity><Text style = { styles.optionsText }>{ I18n.t( "login.options.register" ) }</Text></TouchableOpacity>
+			<TouchableOpacity><Text style = { styles.optionsText }>{ I18n.t( "login.options.forgetPassword" ) }</Text></TouchableOpacity>
 		</View>
 	</View>;
 
@@ -222,6 +232,7 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const loginData = state.login;
+		const languageData = state.language;
 		return {
 			phoneNumber: loginData.phoneNumber,
 			emailText: loginData.emailText,
@@ -229,11 +240,13 @@ export default connect(
 			code: loginData.code,
 			loginType: loginData.loginType,
 			countdown: loginData.countdown,
-			sendCodeStatus: loginData.sendCodeStatus
+			sendCodeStatus: loginData.sendCodeStatus,
+			inputError: loginData.inputError,
+			userLanguage: languageData.userLanguage
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { sendCode, setLoginType, setInputText }, dispatch );
+		return bindActionCreators( { sendCode, setLoginType, setInputText, setLanguage }, dispatch );
 	}
 )( Login );

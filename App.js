@@ -1,11 +1,19 @@
 import "react-native-gesture-handler";
 import React from "react";
+/** react-navigation */
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+/** redux provider */
 import { Provider } from "react-redux";
+/** redux store */
 import store from "./redux/store/index.js";
+/** AsyncStorage */
+import AsyncStorage from "@react-native-community/async-storage"; 
+
+/** setConfig  */
+import { setLanguage } from "./redux/actions/language.js";
 
 /** pages*/
 // used by StackNavigator
@@ -55,6 +63,13 @@ function TabNavigator()
 
 export default function()
 {
+	React.useEffect( function() {
+		( async () => {
+			const language = await AsyncStorage.getItem( "language" );
+			store.dispatch( setLanguage( language ) );
+		} )();
+		
+	}, [] );
 	return <Provider store = { store }>
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName = "Login">

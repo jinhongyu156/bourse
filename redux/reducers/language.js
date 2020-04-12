@@ -1,16 +1,16 @@
-import { ACTION_SET_LANGUAGE } from "./../actions/language.js";
+import { ACTION_SET_USERLANGUAGE } from "./../actions/language.js";
 
 const defaultState = {
-	language: 1,							// 中文: 1, 英文: 2
+	userLanguage: null,							// 由用户选择的语言包
 };
 
 export default function( state = defaultState, action )
 {
 	switch( action.type )
 	{
-		case ACTION_SET_LANGUAGE:
-			return Object.assign( {}, state, { language: action.payload } );
-
+		case ACTION_SET_USERLANGUAGE:
+			console.log( "haha" )
+			return Object.assign( {}, state, { userLanguage: action.payload } );
 		default:
 			return state;
 
