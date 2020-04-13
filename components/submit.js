@@ -3,10 +3,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create( {
-	submitBtn: { alignItems: "center", justifyContent: "center" },
-	submitBtnText: { fontSize: 18, fontWeight: "bold", color: "#FFFFFF" },
-	inactiveBgColor: { backgroundColor: "#888888" },
-	activeBgColor: { backgroundColor: "#4AA7C3" }
+	submitBtn: { borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: "#696DAC" },
+	submitBtnText: { fontSize: 18, fontWeight: "bold", color: "#FFFFFF" }
 } );
 
 /**
@@ -20,9 +18,8 @@ const styles = StyleSheet.create( {
  **/
 export default React.memo( function( { title, loading, submitBtnStyle, submitBtnTextStyle, onSubmit } )
 {
-	console.log( "submit re-render" );
 
-	return <TouchableOpacity style = { [ styles.submitBtn, submitBtnStyle, styles.inactiveBgColor ] } onPress = { onSubmit }>
+	return <TouchableOpacity style = { [ styles.submitBtn, submitBtnStyle ] } onPress = { onSubmit }>
 		<Text style = { [ styles.submitBtnText, submitBtnTextStyle ] }>{ title }</Text>
 	</TouchableOpacity>;
 

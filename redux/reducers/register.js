@@ -1,7 +1,8 @@
-import { ACTION_SET_ISLOADING, ACTION_SET_REGISTERTYPE, ACTION_SET_INPUTTEXT, ACTION_SET_INPUTERROR, ACTION_SET_CLEAR } from "./../actions/login.js";
+import { ACTION_SET_REGISTER_ISLOADING, ACTION_SET_REGISTER_REGISTERTYPE, ACTION_SET_REGISTER_INPUTTEXT, ACTION_SET_REGISTER_INPUTERROR, ACTION_SET_REGISTER_CLEAR } from "./../actions/register.js";
 
 const defaultState = {
 	name: "",									// 用户名称
+	referee: "",								// 推荐人 id
 	phoneNumber: "",							// 电话号码输入文本
 	emailText: "",								// 电子邮件输入文本
 	password: "",								// 密码输入文本
@@ -16,23 +17,17 @@ export default function( state = defaultState, action )
 {
 	switch( action.type )
 	{
-		case ACTION_SET_REGISTERTYPE:
-			return Object.assign( {}, state, { loginType: action.payload.loginType } );
+		case ACTION_SET_REGISTER_REGISTERTYPE:
+			return Object.assign( {}, state, { registerType: action.payload.registerType } );
 
-		case ACTION_SET_INPUTTEXT:
+		case ACTION_SET_REGISTER_INPUTTEXT:
 			return Object.assign( {}, state, action.payload );
 
-		case ACTION_SET_INPUTERROR:
+		case ACTION_SET_REGISTER_INPUTERROR:
 			return Object.assign( {}, state, { inputError: action.payload } );
 
-		case ACTION_SET_CLEAR:
-			return Object.assign( {}, state, {
-				phoneNumber: "",
-				emailText: "",
-				password: "",
-				code: "",
-				inputError: ""
-			} );
+		case ACTION_SET_REGISTER_CLEAR:
+			return Object.assign( {}, state, defaultState );
 		default:
 			return state;
 	};

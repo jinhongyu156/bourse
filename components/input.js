@@ -9,7 +9,11 @@ const styles = StyleSheet.create( {
 	textInput: { flex: 1, fontSize: 16, color: "#000000", paddingLeft: 14 },
 	inputRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
 	line: { height: 1, backgroundColor: "#DDDDDD" },
-	errorBgColor: { backgroundColor: "#F00" }
+	errorBgColor: { backgroundColor: "#F00" },
+
+	inactiveColor: { color: "#999999" },
+	activeColor: { color: "#000000" }
+
 
 } );
 
@@ -19,33 +23,35 @@ const styles = StyleSheet.create( {
  * @value				{string}		[description] input.value
  * @placeholder			{string}		[description] input.placeholder
  * @hasError			{bool}			[description] input.value hasError
+ * @disabled			{bool}			[description] input.disabled
  * @inputBoxStyle		{Object}		[description] inputbox.style
  * @inputStyle			{[Object]}		[description] input.style
  * @setInputText		{function}		[description] set input.value
- * @renderCodeImage		{function}		[description] index == code && props render
- * @renderlineImageLeft	{function}		[description] props render lineImageLeft
+ * @renderInputRight	{function}		[description] index == code && props render
+ * @renderInputLeft		{function}		[description] props render lineImageLeft
  * @return				{ele}			[description]
  **/
 
-export default React.memo( function( { index, value, placeholder, hasError, inputBoxStyle, inputStyle, renderCodeImage, renderlineImageLeft, setInputText } )
+export default React.memo( function( { index, value, placeholder, hasError, disabled, inputBoxStyle, inputStyle, renderInputRight, renderInputLeft, setInputText } )
 {
 	const keyboardType = index === "phoneNumber" ? "numeric" : index === "emailText" ? "email-address" : index === "password" ? "default" : "default"
 	const isPassword = index === "password";
-	const isCode = index === "code";
+	const isCode = index === "code" || index === "imageCode";
 
 	return <View style = { inputBoxStyle }>
 		
 		<View style = { styles.inputRow }>
-			{ renderlineImageLeft && renderlineImageLeft() }
+			{ renderInputLeft && renderInputLeft() }
 			<TextInput
-				style = { [ styles.textInput, inputStyle, index === "code" ? styles.codeTextInput : {} ] }
+				style = { [ styles.textInput, inputStyle, disabled ? styles.inactiveColor : styles.activeColor ] }
 				value = { value }
+				editable = { !disabled }
 				secureTextEntry = { isPassword }
 				keyboardType = { keyboardType }
 				placeholder = { placeholder }
 				placeholderTextColor = { PLACEHOLDERTEXTCOLOR }
 				onChangeText = { text => setInputText( index, text ) } />
-			{ isCode && renderCodeImage && renderCodeImage() }
+			{ isCode && renderInputRight && renderInputRight() }
 		</View>
 		<View style = { [ styles.line, hasError ? styles.errorBgColor : {} ] } />
 	</View>

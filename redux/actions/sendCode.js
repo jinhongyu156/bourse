@@ -1,3 +1,5 @@
+import { phoneNumberReg, emailTextReg } from "./../../components/regExp.js";
+
 /* action type */
 export const ACTION_SET_COUNTDOWN_ACTIVE = "ACTION_SET_COUNTDOWN_ACTIVE";
 export const ACTION_SET_SENDCODESTATUS = "ACTION_SET_SENDCODESTATUS";
@@ -10,21 +12,39 @@ export function sendCode()
 	const seconds = 10;
 	return function( dispatch, getState )
 	{
-		const { login } = getState();
+		const { register } = getState();
+		const { sendCode } = getState();
 
-		if ( login.sendCodeStatus === 2 ) return;
+		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 ) return;
+		console.log( "成功发送", register.sendCodeStatus );
+		const prevRegisterType = register.registerType;
 
-		const prevLoginType = login.loginType;
-
-		const overTimeStamp = Date.now() + seconds * 1000;		// 切换到后台时, 倒计时将不受影响
+		const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响
 		const run = function()
 		{
 			const nowTimeStamp = Date.now();
-			const nextLoginType = getState().login.loginType;
+			const nextRegisterType = getState().register.registerType;
+			const nextRegisterPhoneNumber = getState().register.phoneNumber;
+			const nextRegisterEmailText = getState().register.emailText;
 
 			if ( nowTimeStamp >= overTimeStamp )
 			{
-				dispatch( { type: ACTION_SET_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: prevLoginType === nextLoginType ? 3 : 0 } } );
+				let sendCodeStatus = 0
+				if ( prevRegisterType === nextRegisterType )
+				{
+					sendCodeStatus = 3;
+				} else
+				{
+					if ( nextRegisterType === 0 )
+					{
+						sendCodeStatus = phoneNumberReg.test( nextRegisterPhoneNumber ) ? 1 : 0;
+					};
+					if ( nextRegisterType === 1 )
+					{
+						sendCodeStatus = emailTextReg.test( nextRegisterEmailText ) ? 1 : 0;
+					};
+				}
+				dispatch( { type: ACTION_SET_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: sendCodeStatus } } );
 				clearInterval( timer );
 			} else
 			{

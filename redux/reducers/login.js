@@ -1,4 +1,4 @@
-import { ACTION_SET_ISLOADING, ACTION_SET_LOGINTYPE, ACTION_SET_INPUTTEXT, ACTION_SET_INPUTERROR, ACTION_SET_CLEAR } from "./../actions/login.js";
+import { ACTION_SET_LOGIN_ISLOADING, ACTION_SET_LOGIN_LOGINTYPE, ACTION_SET_LOGIN_INPUTTEXT, ACTION_SET_LOGIN_INPUTERROR, ACTION_SET_LOGIN_CLEAR } from "./../actions/login.js";
 
 const defaultState = {
 	phoneNumber: "",							// 电话号码输入文本
@@ -14,23 +14,18 @@ export default function( state = defaultState, action )
 {
 	switch( action.type )
 	{
-		case ACTION_SET_LOGINTYPE:
+		case ACTION_SET_LOGIN_LOGINTYPE:
 			return Object.assign( {}, state, { loginType: action.payload.loginType } );
 
-		case ACTION_SET_INPUTTEXT:
+		case ACTION_SET_LOGIN_INPUTTEXT:
 			return Object.assign( {}, state, action.payload );
 
-		case ACTION_SET_INPUTERROR:
+		case ACTION_SET_LOGIN_INPUTERROR:
 			return Object.assign( {}, state, { inputError: action.payload } );
 
-		case ACTION_SET_CLEAR:
-			return Object.assign( {}, state, {
-				phoneNumber: "",
-				emailText: "",
-				password: "",
-				code: "",
-				inputError: ""
-			} );
+		case ACTION_SET_LOGIN_CLEAR:
+			return Object.assign( {}, state, defaultState );
+
 		default:
 			return state;
 	};

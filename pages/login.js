@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, Image, Keyboard, Dimensions } from "react-native";
+
+import { useFocusEffect } from "@react-navigation/native";
 
 import { bindActionCreators } from "redux";
 
@@ -13,13 +15,14 @@ import I18n from "./../i18n/index.js";
 import Tab from "./../components/tab.js";
 import Input from "./../components/input.js";
 import SubmitBtn from "./../components/submit.js";
+import TabBar from "./../components/sizeChangeTabBar.js";
 
-import { setLoginType, setInputText } from "./../redux/actions/login.js";
+import { setLoginType, setInputText, clear } from "./../redux/actions/login.js";
 
 // 图标宽高
 const ICONSIZE = 80;
 
-// tabBar 宽高
+// tab bar 高
 const TABBARHEIGHT = 60;
 
 // input box 高
@@ -37,19 +40,19 @@ const styles = StyleSheet.create( {
 	icon: { width: ICONSIZE, height: ICONSIZE, borderColor: "#FFFFFF", borderRadius: 80, borderWidth: 2, marginVertical: 20 },
 
 	tabBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT * 3 + TABBARHEIGHT },
-	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },
 
 	textInputBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, justifyContent: "center" },
 	codeTextInput: { flex: 2 },
 	codeImageBtnContainer: { flex: 1, backgroundColor: "blue" },
 
-	submitBtn: { width: LISTITEMWIDTH, height: 50, marginTop: 30, marginBottom: 20, borderRadius: 4 },
+	submitBtn: { width: LISTITEMWIDTH, height: 50, marginVertical: 16 },
 
-	options: { width: LISTITEMWIDTH, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-	optionsText: { fontSize: 14 },
+	forgotBox: { width: LISTITEMWIDTH, marginTop: 30, alignItems: "flex-end" },
+	forgotText: { fontSize: 14, color: "#666666" },
 
-	inactiveColor: { fontSize: 16, color: "#888888" },
-	activeColor: { fontSize: 20, color: "#4AA7C3" }
+	registerBox: { width: LISTITEMWIDTH, alignItems: "center", marginTop: 10 },
+	registerText: { fontSize: 14, color: "#696DAC" }
 
 } );
 
@@ -81,12 +84,17 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 		return <CodeImage />
 	}, [] );
 
-	const renderPasswordImageLeft = React.useCallback( function()
+	const userIcon = React.useCallback( function()
+	{
+		return <Icon name = "user" color = { "#888888" } size = { 18 } />
+	}, [] );
+
+	const passwordIcon = React.useCallback( function()
 	{
 		return <Icon name = "lock" color = { "#888888" } size = { 18 } />
 	}, [] );
 
-	return <View>
+	return <React.Fragment>
 		<Input
 			index = { isPhoneNumber ? "phoneNumber" : "emailText" }
 			value = { isPhoneNumber ? phoneNumber : emailText }
@@ -94,7 +102,7 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			hasError = { hasError }
 			inputBoxStyle = { styles.textInputBox }
 			setInputText = { setInputText }
-			renderlineImageLeft = { renderPasswordImageLeft }
+			renderInputLeft = { userIcon }
 		/>
 		<Input
 			index = { "password" }
@@ -103,7 +111,7 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			hasError = { false }
 			inputBoxStyle = { styles.textInputBox }
 			setInputText = { setInputText }
-			renderlineImageLeft = { renderPasswordImageLeft }
+			renderInputLeft = { passwordIcon }
 		/>
 		<Input
 			index = { "code" }
@@ -113,51 +121,28 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			inputBoxStyle = { styles.textInputBox }
 			inputStyle = { styles.codeTextInput }
 			setInputText = { setInputText }
-			renderCodeImage = { renderCodeImage }
+			renderInputRight = { renderCodeImage }
 		>
 		</Input>
-	</View>;
-} );
-
-// 选项卡导航栏
-const TabBar = React.memo( function( { tabs, activeTab, goToPage } )
-{
-
-	const onPress = React.useCallback( i => goToPage( i ), [] );
-
-	return <View style = { styles.tabBar }>
-	{
-		tabs.map( function( item, index )
-		{
-			return <TabBarItem key = { index } index = { index } title = { item } isActive = { activeTab == index } onPress = { onPress } />;
-		} )
-	}
-	</View>;
-
-}, function( prevProps, nextProps )
-{
-	const activeTabChanged = prevProps.activeTab == nextProps.activeTab;
-	const goToPageChanged = prevProps.goToPage == nextProps.goToPage;
-	const tabsChanged = JSON.stringify( prevProps.tabs ) == JSON.stringify( nextProps.tabs );
-	return activeTabChanged && goToPageChanged && tabsChanged;
-
-} );
-
-// 选项卡项
-const TabBarItem = React.memo( function( { index, title, isActive, onPress } )
-{
-	return <TouchableOpacity onPress = { () => onPress( index ) }>
-		<Text style = { [ isActive ? styles.activeColor : styles.inactiveColor ] }>{ title }</Text>
-	</TouchableOpacity>;
-
+	</React.Fragment>;
 } );
 
 const Login = function( props )
 {
+	// componentWillUnmount
+	useFocusEffect(
+		React.useCallback( function()
+		{
+			return function()
+			{
+				props.clear();
+			};
+		}, [] )
+	);
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
-		return <TabBar tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />
+		return <TabBar tabs = { tabs } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
 	}, [] );
 
 	const onChangeTab = React.useCallback( function( o )
@@ -170,45 +155,59 @@ const Login = function( props )
 		props.navigation.push( "Register" );
 	} );
 
-	return <View style = { styles.container }>
-		<Logo />
-		<View style = { styles.tabBox }>
-			<Tab
-				contentProps = { { pageMargin: PAGEMARGIN } }
-				renderTabBar = { renderTabBar }
-				initialPage = { props.loginType }
-				onChangeTab = { onChangeTab }
-			>
-				<InputBox
-					tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
-					loginType = { props.loginType }
-					setInputText = { props.setInputText }
+	return <ScrollView
+		showsVerticalScrollIndicator = { false }
+		contentContainerStyle = { styles.container }
+		keyboardDismissMode = { "on-drag" }							// 无效
+		onScrollBeginDrag = { Keyboard.dismiss }					// 暂且用该方法使其滑动时关闭键盘
+	>
+		<React.Fragment>
+			<Logo />
+			<View style = { styles.tabBox }>
+				<Tab
+					contentProps = { { pageMargin: PAGEMARGIN } }
+					renderTabBar = { renderTabBar }
+					initialPage = { props.loginType }
+					onChangeTab = { onChangeTab }
+				>
+					<InputBox
+						tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
+						loginType = { props.loginType }
+						setInputText = { props.setInputText }
 
-					phoneNumber = { props.phoneNumber }
-					emailText = { props.emailText }
-					password = { props.password }
-					code = { props.code }
-					inputError = { props.inputError }
-				/>
-				<InputBox
-					tabLabel = { I18n.t( "login.loginType.email" ) }
-					loginType = { props.loginType }
-					setInputText = { props.setInputText }
+						phoneNumber = { props.phoneNumber }
+						emailText = { props.emailText }
+						password = { props.password }
+						code = { props.code }
+						inputError = { props.inputError }
+					/>
+					<InputBox
+						tabLabel = { I18n.t( "login.loginType.email" ) }
+						loginType = { props.loginType }
+						setInputText = { props.setInputText }
 
-					phoneNumber = { props.phoneNumber }
-					emailText = { props.emailText }
-					password = { props.password }
-					code = { props.code }
-					inputError = { props.inputError }
-				/>
-			</Tab>
-		</View>
-		<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { () => {} } />
-		<View style = { styles.options }>
-			<TouchableOpacity onPress = { gotoRegister }><Text style = { styles.optionsText }>{ I18n.t( "login.options.register" ) }</Text></TouchableOpacity>
-			<TouchableOpacity><Text style = { styles.optionsText }>{ I18n.t( "login.options.forgetPassword" ) }</Text></TouchableOpacity>
-		</View>
-	</View>;
+						phoneNumber = { props.phoneNumber }
+						emailText = { props.emailText }
+						password = { props.password }
+						code = { props.code }
+						inputError = { props.inputError }
+					/>
+				</Tab>
+			</View>
+
+			<View style = { styles.forgotBox }>
+				<TouchableOpacity onPress = { () => {} }>
+					<Text style = { styles.forgotText }>{ I18n.t( "login.forgetPassword" ) }</Text>
+				</TouchableOpacity>
+			</View>
+			<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { () => {} } />
+			<View style = { styles.registerBox }>
+				<TouchableOpacity onPress = { gotoRegister }>
+					<Text style = { styles.registerText }>{ I18n.t( "login.register" ) }</Text>
+				</TouchableOpacity>
+			</View>
+		</React.Fragment>
+	</ScrollView>;
 
 };
 
@@ -227,6 +226,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText }, dispatch );
+		return bindActionCreators( { setLoginType, setInputText, clear }, dispatch );
 	}
 )( Login );

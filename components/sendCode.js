@@ -11,18 +11,23 @@ const styles = StyleSheet.create( {
 	sendCodeBtnText: { color: "#FFFFFF" },
 
 	inactiveBgColor: { backgroundColor: "#888888" },
-	activeBgColor: { backgroundColor: "#4AA7C3" }
+	activeBgColor: { backgroundColor: "#696DAC" }
 
 } );
 
 
 // 发送验证码按钮
-const SendCodeBtn = React.memo( function( { sendCode, countdown, sendCodeStatus } )
+export default React.memo( function( { sendCode, countdown, sendCodeStatus } )
 {
 	const disabled = sendCodeStatus == 2 || sendCodeStatus == 0;
-	const text = ( sendCodeStatus == 0 || sendCodeStatus == 1 ) ? I18n.t( "login.sendCode" ) : disabled ? `${ countdown } S` : sendCodeStatus == 3 ? I18n.t( "login.reSendCode" ) : "";		
+	const text = ( sendCodeStatus == 0 || sendCodeStatus == 1 ) ? I18n.t( "sendCode.sendCode" ) : disabled ? `${ countdown } S` : sendCodeStatus == 3 ? I18n.t( "sendCode.reSendCode" ) : "";
+
 	return <View style = { styles.sendCodeBtnBox }>
-		<TouchableOpacity style = { [ styles.sendCodeBtn, disabled ? styles.inactiveBgColor : styles.activeBgColor ] } disabled = { disabled } onPress = { sendCode }>
+		<TouchableOpacity
+			style = { [ styles.sendCodeBtn, disabled ? styles.inactiveBgColor : styles.activeBgColor ] }
+			// disabled = { disabled }
+			onPress = { sendCode }
+		>
 			<Text style = { styles.sendCodeBtnText }>{ text }</Text>
 		</TouchableOpacity>
 	</View>;

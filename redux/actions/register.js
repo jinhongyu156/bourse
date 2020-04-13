@@ -1,22 +1,36 @@
+import { phoneNumberReg, emailTextReg } from "./../../components/regExp.js";
+
 /* action type */
-export const ACTION_SET_ISLOADING = "ACTION_SET_ISLOADING";
-export const ACTION_SET_REGISTERTYPE = "ACTION_SET_REGISTERTYPE";
-export const ACTION_SET_INPUTTEXT = "ACTION_SET_INPUTTEXT";
-export const ACTION_SET_INPUTERROR = "ACTION_SET_INPUTERROR";
-export const ACTION_SET_CLEAR = "ACTION_SET_CLEAR";
+import { ACTION_SET_SENDCODESTATUS } from "./sendCode.js";
+export const ACTION_SET_REGISTER_ISLOADING = "ACTION_SET_REGISTER_ISLOADING";
+export const ACTION_SET_REGISTER_REGISTERTYPE = "ACTION_SET_REGISTER_REGISTERTYPE";
+export const ACTION_SET_REGISTER_INPUTTEXT = "ACTION_SET_REGISTER_INPUTTEXT";
+export const ACTION_SET_REGISTER_INPUTERROR = "ACTION_SET_REGISTER_INPUTERROR";
+export const ACTION_SET_REGISTER_CLEAR = "ACTION_SET_REGISTER_CLEAR";
 
 /* action create */
-const phoneNumberReg = /^1(3|4|5|7|8)\d{9}$/;
-const emailTextReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.{1}([a-zA-Z]{2,4})$/;
-
 // 切换注册方式
 export function setRegisterType( registerType )
 {
 	return async function( dispatch, getState )
 	{
 		const { register } = getState();
-		dispatch( { type: ACTION_SET_INPUTTEXT, payload: { code: "" } } );
-		dispatch( { type: ACTION_SET_REGISTERTYPE, payload: { registerType } } );
+		const { sendCode } = getState();
+
+		dispatch( { type: ACTION_SET_REGISTER_INPUTTEXT, payload: { code: "" } } );
+		dispatch( { type: ACTION_SET_REGISTER_REGISTERTYPE, payload: { registerType } } );
+		if ( sendCode.sendCodeStatus !== 2 )
+		{
+			if ( registerType === 0 )
+			{
+				dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( register.phoneNumber ) ? 1 : 0 } );
+			};
+
+			if ( registerType === 1 )
+			{
+				dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( register.emailText ) ? 1 : 0 } );
+			};
+		};
 	};
 };
 
@@ -27,23 +41,23 @@ export function setInputText( key, value )
 	{
 		if( key === "phoneNumber" )
 		{
-			dispatch( { type: ACTION_SET_INPUTERROR, payload: phoneNumberReg.test( value ) ? "" : "phoneNumber" } );
-			// dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( value ) ? 1 : 0 } );
-			
+			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: phoneNumberReg.test( value ) ? "" : "phoneNumber" } );
+			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( value ) ? 1 : 0 } );
 		};
 		if( key === "emailText" )
 		{
-			dispatch( { type: ACTION_SET_INPUTERROR, payload: emailTextReg.test( value ) ? "" : "emailText" } );
-			// dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( value ) ? 1 : 0 } );
+			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: emailTextReg.test( value ) ? "" : "emailText" } );
+			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( value ) ? 1 : 0 } );
 		};
-		dispatch( { type: ACTION_SET_INPUTTEXT, payload: { [ key ]: value } } );
+		dispatch( { type: ACTION_SET_REGISTER_INPUTTEXT, payload: { [ key ]: value } } );
 
 	};
 };
 
 // 注册页面 componentWillUnmount
-export function clear() {
-	return { type: ACTION_SET_CLEAR };
+export function clear()
+{
+	return { type: ACTION_SET_REGISTER_CLEAR };
 };
 
 // 注册
@@ -51,9 +65,9 @@ export function fetchCityData()
 {
 	return async function( dispatch, getState )
 	{
-		const { home } = getState();
-
-		if ( home.isLoading ) return;
+		const { register } = getState();
+		console.log( "register", register );
+		if ( register.isLoading ) return;
 	};
 };
 
