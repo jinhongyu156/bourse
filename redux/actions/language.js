@@ -1,7 +1,10 @@
 import AsyncStorage from "@react-native-community/async-storage"; 
 
+import systemLocale from "./../../i18n/systemLocale.js";
+
 /* action type */
 export const ACTION_SET_USERLANGUAGE = "ACTION_SET_USERLANGUAGE";
+export const ACTION_SET_ISSYNC = "ACTION_SET_ISSYNC";
 
 /* action create */
 // 设置当前语言
@@ -24,8 +27,17 @@ export function getAsyncStorage( callback )
 	return async function( dispatch )
 	{
 		try {
-			const userLanguage = await AsyncStorage.getItem( "userLanguage" )
-			userLanguage && dispatch( { type: ACTION_SET_USERLANGUAGE, payload: userLanguage } );
+			const userLanguage = await AsyncStorage.getItem( "userLanguage" );
+
+			if( userLanguage )
+			{
+				dispatch( { type: ACTION_SET_USERLANGUAGE, payload: userLanguage } );
+			} else 
+			{
+				AsyncStorage.setItem( "userLanguage", systemLocale );
+				dispatch( { type: ACTION_SET_USERLANGUAGE, payload: systemLocale } );
+			};
+			dispatch( { type: ACTION_SET_ISSYNC } );
 			callback && callback();
 		} catch( e ) {
 			dispatch( { type: ACTION_SET_USERLANGUAGE, payload: null } );

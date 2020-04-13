@@ -14,6 +14,8 @@ import { getAsyncStorage } from "./redux/actions/language.js";
 /** pages*/
 // used by StackNavigator
 import Login from "./pages/login.js";
+import Register from "./pages/register.js";
+
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
 import Contract from "./pages/contract.js";
@@ -60,13 +62,15 @@ function TabNavigator()
 
 export default function()
 {
-	const [ status, setStatus ] = React.useState( false )
-	status || store.dispatch( getAsyncStorage( () => setStatus( true ) ) );
+	const [ status, setStatus ] = React.useState( false );
 
+	status || store.dispatch( getAsyncStorage( () => setStatus( true ) ) );
+	
 	return status && <Provider store = { store }>
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName = "Login">
 				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
+				<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 			</Stack.Navigator>
 		</NavigationContainer>

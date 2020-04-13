@@ -6,15 +6,13 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import Icon from "react-native-vector-icons/FontAwesome5";
-
 import I18n from "./../i18n/index.js";
 
 import Tab from "./../components/tab.js";
 import Input from "./../components/input.js";
 import SubmitBtn from "./../components/submit.js";
 
-import { setLoginType, setInputText } from "./../redux/actions/login.js";
+import { setRegisterType, setInputText } from "./../redux/actions/register.js";
 
 // 图标宽高
 const ICONSIZE = 80;
@@ -26,10 +24,10 @@ const TABBARHEIGHT = 60;
 const LISTITEMHEIGIT = 60;
 
 // input box 宽
-const LISTITEMWIDTH = Dimensions.get( "window" ).width * 0.8;
+const LISTITEMWIDTH = Dimensions.get( "window" ).width * 0.9;
 
 // 页面 padding
-const PAGEMARGIN =  Dimensions.get( "window" ).width * 0.2;
+const PAGEMARGIN =  Dimensions.get( "window" ).width * 0.1;
 
 const styles = StyleSheet.create( {
 
@@ -53,67 +51,51 @@ const styles = StyleSheet.create( {
 
 } );
 
-// logo
-const Logo = React.memo( function()
-{
-
-	return <Image style = { styles.icon } source = { require( "./../images/logo.png" ) } />
-
-} );
-
 // codeImage
 const CodeImage = React.memo( function()
 {
 
-	return <View style = { styles.codeImageBtnContainer }>
-		<Text>123</Text>
-	</View>
+	return <View style = { styles.codeImageBtnContainer }></View>
+
 } );
 
 // 登录方式
-const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, emailText, password, code, inputError } ) {
+const InputBox = React.memo( function( { registerType, setInputText, phoneNumber, emailText, password, code, inputError } ) {
 
-	const hasError = ( loginType === 0 && inputError === "phoneNumber" ) || ( loginType === 1 && inputError === "emailText" );
-	const isPhoneNumber = loginType == 0;
+	const hasError = ( registerType === 0 && inputError === "phoneNumber" ) || ( registerType === 1 && inputError === "emailText" );
+	const isPhoneNumber = registerType == 0;
 
 	const renderCodeImage = React.useCallback( function()
 	{
 		return <CodeImage />
 	}, [] );
 
-	const renderPasswordImageLeft = React.useCallback( function()
-	{
-		return <Icon name = "lock" color = { "#888888" } size = { 18 } />
-	}, [] );
-
 	return <View>
 		<Input
 			index = { isPhoneNumber ? "phoneNumber" : "emailText" }
 			value = { isPhoneNumber ? phoneNumber : emailText }
-			placeholder = { isPhoneNumber ? I18n.t( "login.placeholder.phoneNumber" ) : I18n.t( "login.placeholder.email" ) }
+			placeholder = { isPhoneNumber ? "phoneNumber" : "email" }
 			hasError = { hasError }
 			inputBoxStyle = { styles.textInputBox }
 			setInputText = { setInputText }
-			renderlineImageLeft = { renderPasswordImageLeft }
 		/>
 		<Input
 			index = { "password" }
 			value = { password }
-			placeholder = { I18n.t( "login.placeholder.password" ) }
+			placeholder = { "password" }
 			hasError = { false }
 			inputBoxStyle = { styles.textInputBox }
 			setInputText = { setInputText }
-			renderlineImageLeft = { renderPasswordImageLeft }
 		/>
 		<Input
 			index = { "code" }
 			value = { code }
-			placeholder = { I18n.t( "login.placeholder.code" ) }
+			placeholder = { "code" }
 			hasError = { false }
 			inputBoxStyle = { styles.textInputBox }
 			inputStyle = { styles.codeTextInput }
 			setInputText = { setInputText }
-			renderCodeImage = { renderCodeImage }
+			// renderCodeImage = { renderCodeImage }
 		>
 		</Input>
 	</View>;
@@ -152,7 +134,7 @@ const TabBarItem = React.memo( function( { index, title, isActive, onPress } )
 
 } );
 
-const Login = function( props )
+const Register = function( props )
 {
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
@@ -160,28 +142,21 @@ const Login = function( props )
 		return <TabBar tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />
 	}, [] );
 
-	const onChangeTab = React.useCallback( function( o )
-	{
-		props.setLoginType( o.i );
+	const onChangeTab = React.useCallback( function( o ) {
+		props.setRegisterType( o.i )
 	}, [] );
 
-	const gotoRegister = React.useCallback( function()
-	{
-		props.navigation.push( "Register" );
-	} );
-
 	return <View style = { styles.container }>
-		<Logo />
 		<View style = { styles.tabBox }>
 			<Tab
 				contentProps = { { pageMargin: PAGEMARGIN } }
 				renderTabBar = { renderTabBar }
-				initialPage = { props.loginType }
+				initialPage = { props.registerType }
 				onChangeTab = { onChangeTab }
 			>
 				<InputBox
-					tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
-					loginType = { props.loginType }
+					tabLabel = { "phoneNumber" }
+					registerType = { props.registerType }
 					setInputText = { props.setInputText }
 
 					phoneNumber = { props.phoneNumber }
@@ -191,8 +166,8 @@ const Login = function( props )
 					inputError = { props.inputError }
 				/>
 				<InputBox
-					tabLabel = { I18n.t( "login.loginType.email" ) }
-					loginType = { props.loginType }
+					tabLabel = { "email" }
+					registerType = { props.registerType }
 					setInputText = { props.setInputText }
 
 					phoneNumber = { props.phoneNumber }
@@ -203,10 +178,10 @@ const Login = function( props )
 				/>
 			</Tab>
 		</View>
-		<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { () => {} } />
+		<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { "registerSubmitBtn" } />
 		<View style = { styles.options }>
-			<TouchableOpacity onPress = { gotoRegister }><Text style = { styles.optionsText }>{ I18n.t( "login.options.register" ) }</Text></TouchableOpacity>
-			<TouchableOpacity><Text style = { styles.optionsText }>{ I18n.t( "login.options.forgetPassword" ) }</Text></TouchableOpacity>
+			<TouchableOpacity><Text style = { styles.optionsText }>{ "register" }</Text></TouchableOpacity>
+			<TouchableOpacity><Text style = { styles.optionsText }>{ "forgetPassword" }</Text></TouchableOpacity>
 		</View>
 	</View>;
 
@@ -215,18 +190,20 @@ const Login = function( props )
 export default connect(
 	function mapStateToProps( state, ownProps )
 	{
-		const loginData = state.login;
+		const registerData = state.register;
 		return {
-			phoneNumber: loginData.phoneNumber,
-			emailText: loginData.emailText,
-			password: loginData.password,
-			code: loginData.code,
-			loginType: loginData.loginType,
-			inputError: loginData.inputError
+			name: registerData.name,
+			phoneNumber: registerData.phoneNumber,
+			emailText: registerData.emailText,
+			password: registerData.password,
+			imageCode: registerData.imageCode,
+			code: registerData.code,
+			inputError: registerData.inputError,
+			registerType: registerData.registerType
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText }, dispatch );
+		return bindActionCreators( { setRegisterType, setInputText }, dispatch );
 	}
-)( Login );
+)( Register );
