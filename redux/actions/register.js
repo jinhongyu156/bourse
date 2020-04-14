@@ -1,4 +1,4 @@
-import { phoneNumberReg, emailTextReg } from "./../../components/regExp.js";
+import { phoneNumberReg, emailTextReg, passwordReg } from "./../../javascripts/regExp.js";
 
 /* action type */
 import { ACTION_SET_SENDCODESTATUS } from "./sendCode.js";

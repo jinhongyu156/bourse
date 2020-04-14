@@ -18,9 +18,7 @@ const styles = StyleSheet.create( {
  **/
 export default React.memo( function( { title, loading, submitBtnStyle, submitBtnTextStyle, onSubmit } )
 {
-
 	return <TouchableOpacity style = { [ styles.submitBtn, submitBtnStyle ] } onPress = { onSubmit }>
 		<Text style = { [ styles.submitBtnText, submitBtnTextStyle ] }>{ title }</Text>
 	</TouchableOpacity>;
-
 } );

@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import I18n from "./../i18n/index.js";
+import I18n from "i18n-js";
 
 import Tab from "./../components/tab.js";
 import Input from "./../components/input.js";
@@ -18,6 +18,7 @@ import SubmitBtn from "./../components/submit.js";
 import TabBar from "./../components/sizeChangeTabBar.js";
 
 import { setLoginType, setInputText, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
+import { setLanguage } from "./../redux/actions/language.js";
 
 // 图标宽高
 const ICONSIZE = 80;
@@ -43,9 +44,10 @@ const styles = StyleSheet.create( {
 	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },
 
 	textInputBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, justifyContent: "center" },
-	codeTextInput: { flex: 2 },
-	codeImageBtnBox: { flex: 1 },
-	codeImageBtn: { height: LISTITEMHEIGIT },
+	textInput: { height: LISTITEMHEIGIT * 0.8 },
+	codeTextInput: { flex: 2, height: LISTITEMHEIGIT * 0.8 },
+	codeImageBtnBox: { flex: 1, alignItems: "center" },
+	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
 	submitBtn: { width: LISTITEMWIDTH, height: 50, marginVertical: 16 },
 
@@ -71,28 +73,30 @@ const Logo = React.memo( function()
 // codeImage
 const CodeImage = React.memo( function( { imageBlob, fetchImageError, fetchImageCode } )
 {
-	console.log( "=====", imageBlob, fetchImageError, ( imageBlob && !fetchImageError ) )
-
-	return ( imageBlob && !fetchImageError )
-		? <TouchableOpacity style = { styles.codeImageBtnBox } onPress = { fetchImageCode }>
+	if( imageBlob && !fetchImageError )
+	{
+		return <TouchableOpacity style = { styles.codeImageBtnBox } onPress = { fetchImageCode }>
 			<Image resizeMode = { "cover" } style = { styles.codeImageBtn } source = { { uri: `data:image/png;base64,${ imageBlob }` } } />
-		</TouchableOpacity>
-		: <View style = { styles.codeImageBtnBox }>
+		</TouchableOpacity>;
+	} else
+	{
+		return <View style = { styles.codeImageBtnBox }>
 			<Text style = { styles.errorColor }>{ fetchImageError }</Text>
-		</View>
+		</View>;
+	};
 } );
 
 // 登录方式
 const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, emailText, password, code, inputError, imageBlob, fetchImageCode, fetchImageError } )
 {
-
-	const hasError = ( loginType === 0 && inputError === "phoneNumber" ) || ( loginType === 1 && inputError === "emailText" );
+	const phoneNumberOrEmailTextHasError = ( loginType === 0 && inputError[ "phoneNumber" ] ) || ( loginType === 1 && inputError[ "emailText" ] );
+	const passwordHasError = inputError[ "password" ];
 	const isPhoneNumber = loginType == 0;
 
 	const renderCodeImage = React.useCallback( function()
 	{
 		return <CodeImage imageBlob = { imageBlob } fetchImageError = { fetchImageError } fetchImageCode = { fetchImageCode } />
-	}, [ imageBlob ] );
+	}, [ imageBlob, fetchImageError ] );
 
 	const userIcon = React.useCallback( function()
 	{
@@ -109,8 +113,9 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			index = { isPhoneNumber ? "phoneNumber" : "emailText" }
 			value = { isPhoneNumber ? phoneNumber : emailText }
 			placeholder = { isPhoneNumber ? I18n.t( "login.placeholder.phoneNumber" ) : I18n.t( "login.placeholder.email" ) }
-			hasError = { hasError }
+			hasError = { phoneNumberOrEmailTextHasError }
 			inputBoxStyle = { styles.textInputBox }
+			inputStyle = { styles.textInput }
 			setInputText = { setInputText }
 			renderInputLeft = { userIcon }
 		/>
@@ -118,8 +123,9 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			index = { "password" }
 			value = { password }
 			placeholder = { I18n.t( "login.placeholder.password" ) }
-			hasError = { false }
+			hasError = { passwordHasError }
 			inputBoxStyle = { styles.textInputBox }
+			inputStyle = { styles.textInput }
 			setInputText = { setInputText }
 			renderInputLeft = { passwordIcon }
 		/>
@@ -232,6 +238,8 @@ const Login = function( props )
 					<Text style = { styles.registerText }>{ I18n.t( "login.register" ) }</Text>
 				</TouchableOpacity>
 			</View>
+			<Text onPress = { () => props.setLanguage( "zh" ) }>zh</Text>
+			<Text onPress = { () => props.setLanguage( "en" ) }>en</Text>
 		</React.Fragment>
 	</ScrollView>;
 
@@ -256,6 +264,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText, fetchImageCode, fetchLogin, clear }, dispatch );
+		return bindActionCreators( { setLoginType, setInputText, fetchImageCode, fetchLogin, clear, setLanguage }, dispatch );
 	}
 )( Login );

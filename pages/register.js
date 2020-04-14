@@ -161,6 +161,7 @@ const InputBox = React.memo( function( {
 
 const Register = function( props )
 {
+
 	// componentWillUnmount
 	useFocusEffect(
 		React.useCallback( function()

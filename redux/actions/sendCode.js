@@ -1,4 +1,4 @@
-import { phoneNumberReg, emailTextReg } from "./../../components/regExp.js";
+import { phoneNumberReg, emailTextReg } from "./../../javascripts/regExp.js";
 
 /* action type */
 export const ACTION_SET_COUNTDOWN_ACTIVE = "ACTION_SET_COUNTDOWN_ACTIVE";

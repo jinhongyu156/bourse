@@ -5,7 +5,11 @@ export default {
 		loginType: { phoneNumber: "电话号码登录", email: "邮箱登录" },
 		forgetPassword: "忘记密码 ?",
 		register: "立即注册",
-		loginSubmitBtn: "登录"
+		loginSubmitBtn: "登录",
+
+		fetchImageCodeError: "获取失败",
+		fetchLoginError: "登录失败",
+		inputError: "请将信息填写完整"
 	},
 	register: {
 		placeholder: {

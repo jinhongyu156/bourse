@@ -34,7 +34,7 @@ store.subscribe( () => {
 	{
 		I18n.locale = language.userLanguage;
 		prevUserLanguage = language.userLanguage;
-		// language.isSync && RNRestart.Restart();
+		language.isSync && RNRestart.Restart();
 	};
 } );
 

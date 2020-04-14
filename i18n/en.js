@@ -8,7 +8,11 @@ export default {
 		loginType: { phoneNumber: "Telephone number login", email: "Email login" },
 		forgetPassword: "Forgot password",
 		register: "I'm a new user",
-		loginSubmitBtn: "Login"
+		loginSubmitBtn: "Login",
+
+		fetchImageCodeError: "failed get code",
+		fetchLoginError: "login failed",
+		inputError: "please complete the information"
 	},
 	register: {
 		placeholder: {

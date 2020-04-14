@@ -5,7 +5,7 @@ const defaultState = {
 	emailText: "",								// 电子邮件输入文本
 	password: "",								// 密码输入文本
 	code: "",									// 验证码输入文本
-	inputError: "",								// 输入是否存在错误
+	inputError: {},								// 输入是否存在错误
 	imageBlob: null,							// 验证码图片二进制数据
 	loginType: 0,								// 0: 电话号码登录方式, 1: 电子邮件登录方式
 	isLoading: false,							// 是否正在登录
@@ -13,7 +13,6 @@ const defaultState = {
 	fetchLoginError: null,						// 登录错误信息
 	fetchImageError: null						// 获取验证码错误信息
 };
-
 
 
 export default function( state = defaultState, action )
