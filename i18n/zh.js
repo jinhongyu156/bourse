@@ -8,11 +8,17 @@ export default {
 		loginSubmitBtn: "登录"
 	},
 	register: {
-		placeholder: { email: "请输入电子邮箱", phoneNumber: "请输入电话号码", name: "请输入姓名", referee: "请输入推荐人", imageCode: "请输入图片验证码", password: "请输入密码", code: "请输入设备验证码" },
+		placeholder: {
+			email: "请输入电子邮箱", phoneNumber: "请输入电话号码", name: "请输入姓名", referee: "请输入推荐人",
+			password: "请输入密码", newPassword: "请输入新密码",
+			imageCode: "请输入图片验证码", code: "请输入设备验证码"
+		},
 		registerType: { phoneNumber: "电话号码注册", email: "邮箱注册" },
-		login: "已有账号? 去登录",
+		findType: { phoneNumber: "电话号码", email: "邮箱" },
+		login: "去登录",
 		adviceNote: "用户协议(免责声明)",
-		registerSubmitBtn: "注册"
+		registerSubmitBtn: "注册",
+		forgetSubmitBtn: "提交"
 	},
 	sendCode: {
 		sendCode: "发送验证码",

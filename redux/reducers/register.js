@@ -6,10 +6,11 @@ const defaultState = {
 	phoneNumber: "",							// 电话号码输入文本
 	emailText: "",								// 电子邮件输入文本
 	password: "",								// 密码输入文本
+	newPassword: "",							// 新密码输入文本
 	imageCode: "",								// 图片验证码输入文本
 	code: "",									// 验证码输入文本
 	inputError: "",								// 输入是否存在错误
-	registerType: 0,							// 0: 电话号码注册方式, 1: 电子邮件注册方式
+	registerType: 0,							// 0: 电话号码注册方式/找回密码方式, 1: 电子邮件注册方式/找回密码方式
 	isLoading: false							// 是否正在注册
 };
 

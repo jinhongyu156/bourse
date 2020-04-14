@@ -16,7 +16,7 @@ export function sendCode()
 		const { sendCode } = getState();
 
 		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 ) return;
-		console.log( "成功发送", register.sendCodeStatus );
+		console.log( "成功发送" );
 		const prevRegisterType = register.registerType;
 
 		const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响

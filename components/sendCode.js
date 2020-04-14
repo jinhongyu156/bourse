@@ -25,7 +25,7 @@ export default React.memo( function( { sendCode, countdown, sendCodeStatus } )
 	return <View style = { styles.sendCodeBtnBox }>
 		<TouchableOpacity
 			style = { [ styles.sendCodeBtn, disabled ? styles.inactiveBgColor : styles.activeBgColor ] }
-			// disabled = { disabled }
+			disabled = { disabled }
 			onPress = { sendCode }
 		>
 			<Text style = { styles.sendCodeBtnText }>{ text }</Text>

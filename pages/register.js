@@ -67,7 +67,7 @@ const CodeImage = React.memo( function()
 
 // 注册方式
 const InputBox = React.memo( function( {
-	registerType, setInputText, phoneNumber, emailText, name, referee, password, code, imageCode, inputError,
+	pageType, registerType, setInputText, phoneNumber, emailText, name, referee, password, newPassword, code, imageCode, inputError,
 	sendCode, countdown, sendCodeStatus
 } ) {
 
@@ -108,6 +108,15 @@ const InputBox = React.memo( function( {
 		<Input
 			index = { "referee" }
 			value = { referee }
+			placeholder = { I18n.t( "register.placeholder.referee" ) }
+			hasError = { false }
+			disabled = { disabled }
+			inputBoxStyle = { styles.textInputBox }
+			setInputText = { setInputText }
+		/>
+		<Input
+			index = { "newPassword" }
+			value = { newPassword }
 			placeholder = { I18n.t( "register.placeholder.referee" ) }
 			hasError = { false }
 			disabled = { disabled }
@@ -176,6 +185,7 @@ const Register = function( props )
 	{
 		props.navigation.navigate( "Login" );
 	} );
+	console.log( props );
 
 	return <ScrollView
 		showsVerticalScrollIndicator = { false }
@@ -192,7 +202,7 @@ const Register = function( props )
 					onChangeTab = { onChangeTab }
 				>
 					<InputBox
-						tabLabel = { I18n.t( "register.registerType.phoneNumber" ) }
+						tabLabel = { props.route.params.type === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }
 						registerType = { props.registerType }
 						setInputText = { props.setInputText }
 
@@ -201,6 +211,7 @@ const Register = function( props )
 						name = { props.name }
 						referee = { props.referee }
 						password = { props.password }
+						newPassword = { props.newPassword }
 						code = { props.code }
 						imageCode = { props.imageCode }
 						inputError = { props.inputError }
@@ -210,7 +221,7 @@ const Register = function( props )
 						sendCodeStatus = { props.sendCodeStatus }
 					/>
 					<InputBox
-						tabLabel = { I18n.t( "register.registerType.email" ) }
+						tabLabel = { props.route.params.type === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
 						registerType = { props.registerType }
 						setInputText = { props.setInputText }
 
@@ -219,6 +230,7 @@ const Register = function( props )
 						name = { props.name }
 						referee = { props.referee }
 						password = { props.password }
+						newPassword = { props.newPassword }
 						code = { props.code }
 						imageCode = { props.imageCode }
 						inputError = { props.inputError }
@@ -229,11 +241,15 @@ const Register = function( props )
 					/>
 				</Tab>
 			</View>
-			<View style = { styles.adviceNoteBox }>
-				<TouchableOpacity onPress = { gotoLogin }>
-					<Text style = { styles.adviceNoteText }>{ I18n.t( "register.adviceNote" ) }</Text>
-				</TouchableOpacity>
-			</View>
+			{
+				props.route.params.type === "register"
+					? <View style = { styles.adviceNoteBox }>
+						<TouchableOpacity onPress = { gotoLogin }>
+							<Text style = { styles.adviceNoteText }>{ I18n.t( "register.adviceNote" ) }</Text>
+						</TouchableOpacity>
+					</View>
+					: null
+			}
 			<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "register.registerSubmitBtn" ) } />
 			<View style = { styles.loginBox }>
 				<TouchableOpacity onPress = { gotoLogin }>

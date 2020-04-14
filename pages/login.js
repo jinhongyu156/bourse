@@ -17,7 +17,7 @@ import Input from "./../components/input.js";
 import SubmitBtn from "./../components/submit.js";
 import TabBar from "./../components/sizeChangeTabBar.js";
 
-import { setLoginType, setInputText, clear } from "./../redux/actions/login.js";
+import { setLoginType, setInputText, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
 
 // 图标宽高
 const ICONSIZE = 80;
@@ -44,7 +44,8 @@ const styles = StyleSheet.create( {
 
 	textInputBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, justifyContent: "center" },
 	codeTextInput: { flex: 2 },
-	codeImageBtnContainer: { flex: 1, backgroundColor: "blue" },
+	codeImageBtnBox: { flex: 1 },
+	codeImageBtn: { height: LISTITEMHEIGIT },
 
 	submitBtn: { width: LISTITEMWIDTH, height: 50, marginVertical: 16 },
 
@@ -52,7 +53,10 @@ const styles = StyleSheet.create( {
 	forgotText: { fontSize: 14, color: "#666666" },
 
 	registerBox: { width: LISTITEMWIDTH, alignItems: "center", marginTop: 10 },
-	registerText: { fontSize: 14, color: "#696DAC" }
+	registerText: { fontSize: 14, color: "#696DAC" },
+
+	errorBox: { width: LISTITEMWIDTH },
+	errorColor: { color: "#F00" },
 
 } );
 
@@ -65,24 +69,30 @@ const Logo = React.memo( function()
 } );
 
 // codeImage
-const CodeImage = React.memo( function()
+const CodeImage = React.memo( function( { imageBlob, fetchImageError, fetchImageCode } )
 {
+	console.log( "=====", imageBlob, fetchImageError, ( imageBlob && !fetchImageError ) )
 
-	return <View style = { styles.codeImageBtnContainer }>
-		<Text>123</Text>
-	</View>
+	return ( imageBlob && !fetchImageError )
+		? <TouchableOpacity style = { styles.codeImageBtnBox } onPress = { fetchImageCode }>
+			<Image resizeMode = { "cover" } style = { styles.codeImageBtn } source = { { uri: `data:image/png;base64,${ imageBlob }` } } />
+		</TouchableOpacity>
+		: <View style = { styles.codeImageBtnBox }>
+			<Text style = { styles.errorColor }>{ fetchImageError }</Text>
+		</View>
 } );
 
 // 登录方式
-const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, emailText, password, code, inputError } ) {
+const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, emailText, password, code, inputError, imageBlob, fetchImageCode, fetchImageError } )
+{
 
 	const hasError = ( loginType === 0 && inputError === "phoneNumber" ) || ( loginType === 1 && inputError === "emailText" );
 	const isPhoneNumber = loginType == 0;
 
 	const renderCodeImage = React.useCallback( function()
 	{
-		return <CodeImage />
-	}, [] );
+		return <CodeImage imageBlob = { imageBlob } fetchImageError = { fetchImageError } fetchImageCode = { fetchImageCode } />
+	}, [ imageBlob ] );
 
 	const userIcon = React.useCallback( function()
 	{
@@ -152,7 +162,12 @@ const Login = function( props )
 
 	const gotoRegister = React.useCallback( function()
 	{
-		props.navigation.push( "Register" );
+		props.navigation.push( "Register", { type: "register" } );
+	} );
+
+	const gotoForget = React.useCallback( function()
+	{
+		props.navigation.push( "Register", { type: "forget" } );
 	} );
 
 	return <ScrollView
@@ -163,6 +178,9 @@ const Login = function( props )
 	>
 		<React.Fragment>
 			<Logo />
+			<View style = { styles.errorBox }>
+				<Text style = { styles.errorColor }>{ props.fetchLoginError }</Text>
+			</View>
 			<View style = { styles.tabBox }>
 				<Tab
 					contentProps = { { pageMargin: PAGEMARGIN } }
@@ -180,6 +198,10 @@ const Login = function( props )
 						password = { props.password }
 						code = { props.code }
 						inputError = { props.inputError }
+
+						imageBlob = { props.imageBlob }
+						fetchImageCode = { props.fetchImageCode }
+						fetchImageError = { props.fetchImageError }
 					/>
 					<InputBox
 						tabLabel = { I18n.t( "login.loginType.email" ) }
@@ -191,16 +213,20 @@ const Login = function( props )
 						password = { props.password }
 						code = { props.code }
 						inputError = { props.inputError }
+
+						imageBlob = { props.imageBlob }
+						fetchImageCode = { props.fetchImageCode }
+						fetchImageError = { props.fetchImageError }
 					/>
 				</Tab>
 			</View>
 
 			<View style = { styles.forgotBox }>
-				<TouchableOpacity onPress = { () => {} }>
+				<TouchableOpacity onPress = { gotoForget }>
 					<Text style = { styles.forgotText }>{ I18n.t( "login.forgetPassword" ) }</Text>
 				</TouchableOpacity>
 			</View>
-			<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { () => {} } />
+			<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { props.fetchLogin } />
 			<View style = { styles.registerBox }>
 				<TouchableOpacity onPress = { gotoRegister }>
 					<Text style = { styles.registerText }>{ I18n.t( "login.register" ) }</Text>
@@ -221,11 +247,15 @@ export default connect(
 			password: loginData.password,
 			code: loginData.code,
 			loginType: loginData.loginType,
-			inputError: loginData.inputError
+			inputError: loginData.inputError,
+			imageBlob: loginData.imageBlob,
+			isLogin: loginData.isLogin,
+			fetchLoginError: loginData.fetchLoginError,
+			fetchImageError: loginData.fetchImageError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText, clear }, dispatch );
+		return bindActionCreators( { setLoginType, setInputText, fetchImageCode, fetchLogin, clear }, dispatch );
 	}
 )( Login );
