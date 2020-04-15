@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create( {
 	submitBtn: { borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: "#696DAC" },
@@ -18,7 +18,11 @@ const styles = StyleSheet.create( {
  **/
 export default React.memo( function( { title, loading, submitBtnStyle, submitBtnTextStyle, onSubmit } )
 {
-	return <TouchableOpacity style = { [ styles.submitBtn, submitBtnStyle ] } onPress = { onSubmit }>
-		<Text style = { [ styles.submitBtnText, submitBtnTextStyle ] }>{ title }</Text>
+	return <TouchableOpacity style = { [ styles.submitBtn, submitBtnStyle ] } disabled = { loading } onPress = { onSubmit }>
+	{
+		loading
+			? <ActivityIndicator size = "small" color = "#FFFFFF" />
+			: <Text style = { [ styles.submitBtnText, submitBtnTextStyle ] }>{ title }</Text>
+	}
 	</TouchableOpacity>;
 } );

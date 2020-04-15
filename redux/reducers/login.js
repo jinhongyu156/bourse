@@ -1,4 +1,8 @@
-import { ACTION_SET_LOGIN_ISLOADING, ACTION_SET_LOGIN_LOGINTYPE, ACTION_SET_LOGIN_INPUTTEXT, ACTION_SET_IMAGEBLOB, ACTION_SET_LOGIN_INPUTERROR, ACTION_SET_ISLOGIN, ACTION_SET_FETCHLOGINERROR, ACTION_SET_FETCHIMAGEERROR, ACTION_SET_LOGIN_CLEAR } from "./../actions/login.js";
+import {
+	ACTION_SET_LOGIN_ISLOADING, ACTION_SET_LOGIN_LOGINTYPE, ACTION_SET_LOGIN_INPUTTEXT, ACTION_SET_LOGIN_IMAGEBLOB,
+	ACTION_SET_LOGIN_INPUTERROR, ACTION_SET_LOGIN_ISLOGIN, ACTION_SET_LOGIN_FETCHLOGINERROR, ACTION_SET_LOGIN_FETCHIMAGEERROR,
+	ACTION_SET_LOGIN_ISSHOWACTIONSHEET, ACTION_SET_LOGIN_CLEAR
+} from "./../actions/login.js";
 
 const defaultState = {
 	phoneNumber: "",							// 电话号码输入文本
@@ -11,7 +15,9 @@ const defaultState = {
 	isLoading: false,							// 是否正在登录
 	isLogin: false,								// 是否登录
 	fetchLoginError: null,						// 登录错误信息
-	fetchImageError: null						// 获取验证码错误信息
+	fetchImageError: null,						// 获取验证码错误信息
+	isShowActionSheet: false,					// 显示 ActionSheet
+	actionSheetData: {}							// 显示 ActionSheet 所需要的数据
 };
 
 
@@ -28,20 +34,26 @@ export default function( state = defaultState, action )
 		case ACTION_SET_LOGIN_INPUTTEXT:
 			return Object.assign( {}, state, action.payload );
 
-		case ACTION_SET_IMAGEBLOB:
+		case ACTION_SET_LOGIN_IMAGEBLOB:
 			return Object.assign( {}, state, { imageBlob: action.payload } );
 
 		case ACTION_SET_LOGIN_INPUTERROR:
 			return Object.assign( {}, state, { inputError: action.payload } );
 
-		case ACTION_SET_ISLOGIN:
+		case ACTION_SET_LOGIN_ISLOGIN:
 			return Object.assign( {}, state, { isLogin: action.payload } );
 
-		case ACTION_SET_FETCHLOGINERROR:
+		case ACTION_SET_LOGIN_FETCHLOGINERROR:
 			return Object.assign( {}, state, { fetchLoginError: action.payload } );
 
-		case ACTION_SET_FETCHIMAGEERROR:
+		case ACTION_SET_LOGIN_FETCHIMAGEERROR:
 			return Object.assign( {}, state, { fetchImageError: action.payload } );
+
+		case ACTION_SET_LOGIN_ISSHOWACTIONSHEET:
+			return Object.assign( {}, state, {
+				isShowActionSheet: action.payload.isShowActionSheet,
+				actionSheetData: action.payload.actionSheetData
+			} );
 
 		case ACTION_SET_LOGIN_CLEAR:
 			return Object.assign( {}, state, defaultState );

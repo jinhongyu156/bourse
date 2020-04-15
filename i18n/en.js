@@ -12,7 +12,12 @@ export default {
 
 		fetchImageCodeError: "failed get code",
 		fetchLoginError: "login failed",
-		inputError: "please complete the information"
+		inputError: "please complete the information",
+
+		actionSheetBtn: "Language Settings",
+		actionSheetTitle: "Please select language",
+		actionSheetMessage: "The application is restarted after the language is reset",
+		actionSheetOptions: [ "Chinese", "English", "Cancel" ]
 	},
 	register: {
 		placeholder: {
@@ -26,16 +31,10 @@ export default {
 		login: "login",
 		adviceNote: "advice note",
 		registerSubmitBtn: "register",
-		forgetSubmitBtn: "submit"
-	},
-	forget: {
-		placeholder: {
-			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
-			password: "Please enter your password", newPassword: "Please enter your new password",
-			imageCode: "Please enter your image code", code: "Please enter the code"
-		},
-		findType: { phoneNumber: "Find by telephone number", email: "Find by email" },
-		forgetSubmitBtn: "submit"
+		forgetSubmitBtn: "submit",
+
+		fetchImageCodeError: "failed get code",
+
 	},
 	sendCode: {
 		sendCode: "Send code",

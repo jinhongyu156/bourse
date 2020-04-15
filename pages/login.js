@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, ScrollView, Text, TouchableOpacity, StyleSheet, Image, Keyboard, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, KeyboardAvoidingView } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -12,16 +12,24 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 import I18n from "i18n-js";
 
+import Input from "./../containers/input.js";
+import CodeImage from "./../containers/codeImage.js";
+
 import Tab from "./../components/tab.js";
-import Input from "./../components/input.js";
 import SubmitBtn from "./../components/submit.js";
 import TabBar from "./../components/sizeChangeTabBar.js";
+import ActionSheet from "./../components/actionSheet.js";
 
-import { setLoginType, setInputText, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
-import { setLanguage } from "./../redux/actions/language.js";
+import { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
 
-// 图标宽高
+// LOGO 容器高
+const ICONBOXHEIGHT = 140;
+
+// LOGO 宽高
 const ICONSIZE = 80;
+
+// 错误信息提示框 高
+const ERRORBOXHEIGHT = 20;
 
 // tab bar 高
 const TABBARHEIGHT = 60;
@@ -32,13 +40,24 @@ const LISTITEMHEIGIT = 60;
 // input box 宽
 const LISTITEMWIDTH = Dimensions.get( "window" ).width * 0.8;
 
+// 提交按钮高度
+const SUBMITBTNHEIGHT = 50;
+
+// 注册按钮高度
+const REGISTERBTNHEIGHT = 40;
+
 // 页面 padding
 const PAGEMARGIN =  Dimensions.get( "window" ).width * 0.2;
+
+// used by KeyboardAvoidingView
+const KEYBOARDVERTICALOFFSET = Dimensions.get( "window" ).height - ICONBOXHEIGHT - ERRORBOXHEIGHT - TABBARHEIGHT - LISTITEMHEIGIT * 3 - LISTITEMHEIGIT - SUBMITBTNHEIGHT - REGISTERBTNHEIGHT;
 
 const styles = StyleSheet.create( {
 
 	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE" },
-	icon: { width: ICONSIZE, height: ICONSIZE, borderColor: "#FFFFFF", borderRadius: 80, borderWidth: 2, marginVertical: 20 },
+
+	iconBox: { width: LISTITEMWIDTH, height: ICONBOXHEIGHT, justifyContent: "center", alignItems: "center" },
+	icon: { width: ICONSIZE, height: ICONSIZE, borderColor: "#FFFFFF", borderRadius: 80, borderWidth: 2 },
 
 	tabBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT * 3 + TABBARHEIGHT },
 	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },
@@ -49,15 +68,18 @@ const styles = StyleSheet.create( {
 	codeImageBtnBox: { flex: 1, alignItems: "center" },
 	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
-	submitBtn: { width: LISTITEMWIDTH, height: 50, marginVertical: 16 },
-
-	forgotBox: { width: LISTITEMWIDTH, marginTop: 30, alignItems: "flex-end" },
+	forgotBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, alignItems: "flex-end", justifyContent: "flex-end" },
 	forgotText: { fontSize: 14, color: "#666666" },
 
-	registerBox: { width: LISTITEMWIDTH, alignItems: "center", marginTop: 10 },
+	submitBtn: { width: LISTITEMWIDTH, height: SUBMITBTNHEIGHT },
+
+	registerBox: { width: LISTITEMWIDTH, height: REGISTERBTNHEIGHT, justifyContent: "center", alignItems: "center" },
 	registerText: { fontSize: 14, color: "#696DAC" },
 
-	errorBox: { width: LISTITEMWIDTH },
+	optionsBox: { width: LISTITEMWIDTH, paddingVertical: 14, flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
+	optionsText: { paddingVertical: 10 },
+
+	errorBox: { width: LISTITEMWIDTH, height: ERRORBOXHEIGHT, justifyContent: "center" },
 	errorColor: { color: "#F00" },
 
 } );
@@ -66,24 +88,9 @@ const styles = StyleSheet.create( {
 const Logo = React.memo( function()
 {
 
-	return <Image style = { styles.icon } source = { require( "./../images/logo.png" ) } />
-
-} );
-
-// codeImage
-const CodeImage = React.memo( function( { imageBlob, fetchImageError, fetchImageCode } )
-{
-	if( imageBlob && !fetchImageError )
-	{
-		return <TouchableOpacity style = { styles.codeImageBtnBox } onPress = { fetchImageCode }>
-			<Image resizeMode = { "cover" } style = { styles.codeImageBtn } source = { { uri: `data:image/png;base64,${ imageBlob }` } } />
-		</TouchableOpacity>;
-	} else
-	{
-		return <View style = { styles.codeImageBtnBox }>
-			<Text style = { styles.errorColor }>{ fetchImageError }</Text>
-		</View>;
-	};
+	return <View style = { styles.iconBox }>
+		<Image style = { styles.icon } source = { require( "./../images/logo.png" ) } />
+	</View>
 } );
 
 // 登录方式
@@ -95,7 +102,14 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 
 	const renderCodeImage = React.useCallback( function()
 	{
-		return <CodeImage imageBlob = { imageBlob } fetchImageError = { fetchImageError } fetchImageCode = { fetchImageCode } />
+		return <CodeImage
+			imageBlob = { imageBlob }
+			codeImageBtnBoxStyle = { styles.codeImageBtnBox }
+			codeImageBtnStyle = { styles.codeImageBtn }
+			errorColorStyle = { styles.errorColor }
+			fetchImageError = { fetchImageError }
+			fetchImageCode = { fetchImageCode }
+		/>
 	}, [ imageBlob, fetchImageError ] );
 
 	const userIcon = React.useCallback( function()
@@ -176,12 +190,7 @@ const Login = function( props )
 		props.navigation.push( "Register", { type: "forget" } );
 	} );
 
-	return <ScrollView
-		showsVerticalScrollIndicator = { false }
-		contentContainerStyle = { styles.container }
-		keyboardDismissMode = { "on-drag" }							// 无效
-		onScrollBeginDrag = { Keyboard.dismiss }					// 暂且用该方法使其滑动时关闭键盘
-	>
+	return <KeyboardAvoidingView style = { styles.container } behavior = "position" keyboardVerticalOffset = { -KEYBOARDVERTICALOFFSET }>
 		<React.Fragment>
 			<Logo />
 			<View style = { styles.errorBox }>
@@ -226,22 +235,37 @@ const Login = function( props )
 					/>
 				</Tab>
 			</View>
-
 			<View style = { styles.forgotBox }>
 				<TouchableOpacity onPress = { gotoForget }>
 					<Text style = { styles.forgotText }>{ I18n.t( "login.forgetPassword" ) }</Text>
 				</TouchableOpacity>
 			</View>
-			<SubmitBtn submitBtnStyle = { styles.submitBtn } title = { I18n.t( "login.loginSubmitBtn" ) } onSubmit = { props.fetchLogin } />
+			<SubmitBtn
+				title = { I18n.t( "login.loginSubmitBtn" ) }
+				submitBtnStyle = { styles.submitBtn }
+				loading = { props.isLoading }
+				onSubmit = { props.fetchLogin }
+			/>
 			<View style = { styles.registerBox }>
 				<TouchableOpacity onPress = { gotoRegister }>
 					<Text style = { styles.registerText }>{ I18n.t( "login.register" ) }</Text>
 				</TouchableOpacity>
 			</View>
-			<Text onPress = { () => props.setLanguage( "zh" ) }>zh</Text>
-			<Text onPress = { () => props.setLanguage( "en" ) }>en</Text>
+			<View style = { styles.optionsBox }>
+				<TouchableOpacity onPress = { props.showLanguageActionSheet }>
+					<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetBtn" ) }</Text>
+				</TouchableOpacity>
+				<TouchableOpacity>
+					<Text style = { styles.optionsText }>主题选择(功能尚未完成)</Text>
+				</TouchableOpacity>
+			</View>
+			<ActionSheet
+				{ ...props.actionSheetData }
+				hide = { props.hideActionSheet }
+				isShow = { props.isShowActionSheet }
+			/>
 		</React.Fragment>
-	</ScrollView>;
+	</KeyboardAvoidingView>;
 
 };
 
@@ -249,21 +273,26 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const loginData = state.login;
+
 		return {
 			phoneNumber: loginData.phoneNumber,
 			emailText: loginData.emailText,
 			password: loginData.password,
 			code: loginData.code,
 			loginType: loginData.loginType,
+			isLoading: loginData.isLoading,
 			inputError: loginData.inputError,
 			imageBlob: loginData.imageBlob,
 			isLogin: loginData.isLogin,
+			isShowActionSheet: loginData.isShowActionSheet,
+			actionSheetData: loginData.actionSheetData,
 			fetchLoginError: loginData.fetchLoginError,
 			fetchImageError: loginData.fetchImageError
+
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText, fetchImageCode, fetchLogin, clear, setLanguage }, dispatch );
+		return bindActionCreators( { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear }, dispatch );
 	}
 )( Login );

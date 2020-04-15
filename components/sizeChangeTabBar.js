@@ -2,9 +2,6 @@ import React from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-// tabBar 宽高
-const TABBARHEIGHT = 60;
-
 const styles = StyleSheet.create( {
 
 	tabBar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },

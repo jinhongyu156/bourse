@@ -9,7 +9,12 @@ export default {
 
 		fetchImageCodeError: "获取失败",
 		fetchLoginError: "登录失败",
-		inputError: "请将信息填写完整"
+		inputError: "请将信息填写完整",
+
+		actionSheetBtn: "语言设置",
+		actionSheetTitle: "请选择语言",
+		actionSheetMessage: "重置语言后将重启应用",
+		actionSheetOptions: [ "中文", "英文", "取消" ]
 	},
 	register: {
 		placeholder: {
@@ -18,11 +23,14 @@ export default {
 			imageCode: "请输入图片验证码", code: "请输入设备验证码"
 		},
 		registerType: { phoneNumber: "电话号码注册", email: "邮箱注册" },
-		findType: { phoneNumber: "电话号码", email: "邮箱" },
+		findType: { phoneNumber: "通过电话号码", email: "通过邮箱" },
 		login: "去登录",
 		adviceNote: "用户协议(免责声明)",
 		registerSubmitBtn: "注册",
-		forgetSubmitBtn: "提交"
+		forgetSubmitBtn: "提交",
+
+		fetchImageCodeError: "获取失败",
+
 	},
 	sendCode: {
 		sendCode: "发送验证码",

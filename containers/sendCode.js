@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-import I18n from "./../i18n/index.js";
+import I18n from "i18n-js";
 
 const styles = StyleSheet.create( {
 
