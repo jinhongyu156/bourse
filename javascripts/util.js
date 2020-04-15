@@ -13,6 +13,32 @@ export function isObject( obj )
 	return Object.prototype.toString.call( obj ) === "[object Object]";
 };
 
+// 判断字符串是否为 json
+export function isJSON( str )
+{
+	let bool = false;
+	try
+	{
+		const obj = JSON.parse( str );
+		if( obj && typeof obj == "object" )
+		{
+			bool = true;
+		} else
+		{
+			bool = false;
+		}
+	} catch( e ) {
+		return false;
+	};
+	return bool;
+};
+
+// unicode 字符串转化为中文字符串
+function unicodeToChinese( str )
+{
+    return unescape( eval( "'" + str + "'" ).replace( /\u/g, "%u" ) );
+};
+
 // post fetch
 export function fetchPost( url, data, config = {} )
 {
@@ -35,7 +61,14 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			resolve( res );
+			console.log( "=======================>", res, typeof res );
+			if( isJSON( res ) )
+			{
+				resolve( JSON.parse( unicodeToChinese( res ) ) );
+			} else
+			{
+				resolve( res );
+			};
 		} ).catch( function( err )
 		{
 			reject( { type: "catch", err: err } );

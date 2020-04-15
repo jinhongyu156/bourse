@@ -1,57 +1,103 @@
+import I18n from "i18n-js";
+import { fetchPost, fetchImage, isObject } from "./../../javascripts/util.js";
 import { phoneNumberReg, emailTextReg } from "./../../javascripts/regExp.js";
 
 /* action type */
-export const ACTION_SET_COUNTDOWN_ACTIVE = "ACTION_SET_COUNTDOWN_ACTIVE";
-export const ACTION_SET_SENDCODESTATUS = "ACTION_SET_SENDCODESTATUS";
-
+export const ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE = "ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE";
+export const ACTION_SET_SENDCODE_SENDCODESTATUS = "ACTION_SET_SENDCODE_SENDCODESTATUS";
+export const ACTION_SET_SENDCODE_SENDCODEERROR = "ACTION_SET_SENDCODE_SENDCODEERROR";
 /* action create */
+
+// 设置当前验证码状态
+export function setSendCodeStatus( sendCodeStatus )
+{
+	return { type: ACTION_SET_SENDCODE_SENDCODESTATUS, payload: sendCodeStatus }
+};
+
 // 发送验证码
 let timer = null;
 export function sendCode()
 {
-	const seconds = 10;
-	return function( dispatch, getState )
+	return async function( dispatch, getState )
 	{
 		const { register } = getState();
 		const { sendCode } = getState();
 
-		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 ) return;
-		console.log( "成功发送" );
-		const prevRegisterType = register.registerType;
+		const seconds = sendCode.countdown;
 
-		const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响
-		const run = function()
+		// 开始倒计时
+		function startCountdown()
 		{
-			const nowTimeStamp = Date.now();
-			const nextRegisterType = getState().register.registerType;
-			const nextRegisterPhoneNumber = getState().register.phoneNumber;
-			const nextRegisterEmailText = getState().register.emailText;
-
-			if ( nowTimeStamp >= overTimeStamp )
+			const prevRegisterType = register.registerType;
+			const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响
+			const run = function()
 			{
-				let sendCodeStatus = 0
-				if ( prevRegisterType === nextRegisterType )
+				const nowTimeStamp = Date.now();
+				const nextRegisterType = getState().register.registerType;
+				const nextRegisterPhoneNumber = getState().register.phoneNumber;
+				const nextRegisterEmailText = getState().register.emailText;
+
+				if ( nowTimeStamp >= overTimeStamp )
 				{
-					sendCodeStatus = 3;
+					let sendCodeStatus = 0
+					if ( prevRegisterType === nextRegisterType )
+					{
+						sendCodeStatus = 3;
+					} else
+					{
+						if ( nextRegisterType === 0 )
+						{
+							sendCodeStatus = phoneNumberReg.test( nextRegisterPhoneNumber ) ? 1 : 0;
+						};
+						if ( nextRegisterType === 1 )
+						{
+							sendCodeStatus = emailTextReg.test( nextRegisterEmailText ) ? 1 : 0;
+						};
+					}
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: sendCodeStatus } } );
+					clearInterval( timer );
 				} else
 				{
-					if ( nextRegisterType === 0 )
-					{
-						sendCodeStatus = phoneNumberReg.test( nextRegisterPhoneNumber ) ? 1 : 0;
-					};
-					if ( nextRegisterType === 1 )
-					{
-						sendCodeStatus = emailTextReg.test( nextRegisterEmailText ) ? 1 : 0;
-					};
-				}
-				dispatch( { type: ACTION_SET_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: sendCodeStatus } } );
-				clearInterval( timer );
-			} else
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ), sendCodeStatus: 2 } } );
+				};
+			};
+			run();
+			timer = setInterval( run, 1000 );
+		};
+
+		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 )
+		{
+			dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: I18n.t( "sendCode.info" ) } );
+		} else
+		{
+			try
 			{
-				dispatch( { type: ACTION_SET_COUNTDOWN_ACTIVE, payload: { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ), sendCodeStatus: 2 } } );
+				const params = {
+					"提交": register.registerType === 0 ? "发送手机短信验证码" : register.registerType === 1 ? "发送邮箱验证码" : "",
+					"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
+					"验证码": register.imageCode
+				};
+
+				console.log( "params", params );
+
+				const res = await fetchPost( "/yanzheng.php", params );
+
+				console.log( "res", res );
+
+				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } );
+					startCountdown();
+				} else
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: res } );
+				};
+			} catch( err )
+			{
+				dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "sendCode.sendCodeError" ) }` : err.toString() } );
 			};
 		};
-		run();
-		timer = setInterval( run, 1000 );
 	};
 };
+
+

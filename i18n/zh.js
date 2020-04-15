@@ -29,11 +29,15 @@ export default {
 		registerSubmitBtn: "注册",
 		forgetSubmitBtn: "提交",
 
+		inputError: "请将信息填写完整",
 		fetchImageCodeError: "获取失败",
+		fetchRegisterError: "注册失败"
 
 	},
 	sendCode: {
 		sendCode: "发送验证码",
-		reSendCode: "重发验证码"
+		reSendCode: "重发验证码",
+		sendCodeError: "发送验证码失败",
+		info: "条件不满足无法发送"
 	}
 };

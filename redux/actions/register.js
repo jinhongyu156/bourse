@@ -1,9 +1,7 @@
-
 import { fetchPost, fetchImage } from "./../../javascripts/util.js";
 import { phoneNumberReg, emailTextReg, passwordReg, refereeReg, nameReg } from "./../../javascripts/regExp.js";
 
 /* action type */
-import { ACTION_SET_SENDCODESTATUS } from "./sendCode.js";
 export const ACTION_SET_REGISTER_ISLOADING = "ACTION_SET_REGISTER_ISLOADING";
 export const ACTION_SET_REGISTER_REGISTERTYPE = "ACTION_SET_REGISTER_REGISTERTYPE";
 export const ACTION_SET_REGISTER_INPUTTEXT = "ACTION_SET_REGISTER_INPUTTEXT";
@@ -11,32 +9,33 @@ export const ACTION_SET_REGISTER_INPUTERROR = "ACTION_SET_REGISTER_INPUTERROR";
 export const ACTION_SET_REGISTER_IMAGEBLOB = "ACTION_SET_REGISTER_IMAGEBLOB";
 
 export const ACTION_SET_REGISTER_FETCHIMAGEERROR = "ACTION_SET_REGISTER_FETCHIMAGEERROR";
+export const ACTION_SET_REGISTER_FETCHREGISTERERROR = "ACTION_SET_REGISTER_FETCHREGISTERERROR";
 
 export const ACTION_SET_REGISTER_CLEAR = "ACTION_SET_REGISTER_CLEAR";
 
-
 /* action create */
+import { setSendCodeStatus } from "./sendCode.js"
 // 切换注册方式
 export function setRegisterType( registerType )
 {
-	return async function( dispatch, getState )
+	return function( dispatch, getState )
 	{
 		const { register } = getState();
 		const { sendCode } = getState();
 
-		dispatch( { type: ACTION_SET_REGISTER_INPUTTEXT, payload: { code: "" } } );
+		dispatch( { type: ACTION_SET_REGISTER_INPUTTEXT, payload: { imageCode: "" } } );
 		dispatch( { type: ACTION_SET_REGISTER_REGISTERTYPE, payload: { registerType } } );
 
 		if ( sendCode.sendCodeStatus !== 2 )
 		{
 			if ( registerType === 0 )
 			{
-				dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( register.phoneNumber ) ? 1 : 0 } );
+				dispatch( setSendCodeStatus( ( register.imageCode && phoneNumberReg.test( register.phoneNumber ) ) ? 1 : 0 ) );
 			};
 
 			if ( registerType === 1 )
 			{
-				dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( register.emailText ) ? 1 : 0 } );
+				dispatch( setSendCodeStatus( ( register.imageCode && emailTextReg.test( register.emailText ) ) ? 1 : 0 ) );
 			};
 		};
 
@@ -61,7 +60,7 @@ export function setRegisterType( registerType )
 // 设置输入文本
 export function setInputText( key, value )
 {
-	return async function( dispatch, getState )
+	return function( dispatch, getState )
 	{
 		const { register } = getState();
 
@@ -70,7 +69,7 @@ export function setInputText( key, value )
 		if( key === "phoneNumber" )
 		{
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { phoneNumber: !phoneNumberReg.test( value ) } ) } );
-			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: phoneNumberReg.test( value ) ? 1 : 0 } );
+			dispatch( setSendCodeStatus( ( register.imageCode && phoneNumberReg.test( value ) ) ? 1 : 0 ) );
 			if( phoneNumberReg.test( value ) )
 			{
 				register.imageBlob || dispatch( fetchImageCode() );
@@ -83,7 +82,7 @@ export function setInputText( key, value )
 		if( key === "emailText" )
 		{
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { emailText: !emailTextReg.test( value ) } ) } );
-			dispatch( { type: ACTION_SET_SENDCODESTATUS, payload: emailTextReg.test( value ) ? 1 : 0 } );
+			dispatch( setSendCodeStatus( ( register.imageCode && emailTextReg.test( value ) ) ? 1 : 0 ) );
 			if( emailTextReg.test( value ) )
 			{
 				register.imageBlob || dispatch( fetchImageCode() );
@@ -92,6 +91,12 @@ export function setInputText( key, value )
 				dispatch( { type: ACTION_SET_REGISTER_IMAGEBLOB, payload: null } );
 			}
 		};
+
+		if( key === "imageCode" )
+		{
+			dispatch( setSendCodeStatus( ( ( ( phoneNumberReg.test( register.phoneNumber ) && register.registerType === 0 ) || ( emailTextReg.test( register.emailText ) && register.registerType === 1 ) ) && value ) ? 1 : 0 ) );
+		};
+
 		if( key === "referee" )
 		{
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { referee: !refereeReg.test( value ) } ) } );
@@ -100,11 +105,6 @@ export function setInputText( key, value )
 		if( key === "password" )
 		{
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { password: !passwordReg.test( value ) } ) } );
-		};
-
-		if( key === "newPassword" )
-		{
-			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { newPassword: !( passwordReg.test( value ) && ( value === register.password ) ) } ) } );
 		};
 
 		if( key === "name" )
@@ -152,14 +152,51 @@ export function fetchImageCode()
 	};
 };
 
-// 注册
-export function fetchCityData()
+// 注册请求
+export function fetchRegister( callback )
 {
 	return async function( dispatch, getState )
 	{
 		const { register } = getState();
 		console.log( "register", register );
-		if ( register.isLoading ) return;
+		if ( ( ( register.registerType === 0 && register.phoneNumber ) || ( register.registerType === 1 && register.emailText ) ) && register.name && register.referee && register.password && register.imageCode && register.code && !register.isLoading && Object.values( register.inputError ).every( item => item === false ) )
+		{
+			dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: true } );
+			try
+			{
+				const params = {
+					"提交": "注册",
+					"注册方式": register.registerType === 0 ? "手机注册" : register.registerType === 1 ? "邮箱注册" : "",
+					"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
+					"姓名": register.name,
+					"密码": register.password,
+					"推荐人ID": register.referee,
+					"图形验证码": register.imageCode,
+					"短信验证码": register.code
+				};
+				console.log( "params", params );
+				const res = await fetchPost( "/user.php", params );
+				console.log( "res", res );
+				if( res === "ok" )
+				{
+					dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: null } );
+					dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
+					callback();
+				} else
+				{
+					dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: res } );
+					dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
+				};
+			} catch( err )
+			{
+				console.log( "err", err );
+				dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchRegisterError" ) }` : err.toString() } );
+				dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
+			};
+		} else
+		{
+			dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: I18n.t( "register.inputError" ) } );
+			dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
+		};
 	};
 };
-

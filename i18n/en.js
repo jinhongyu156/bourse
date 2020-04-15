@@ -33,11 +33,15 @@ export default {
 		registerSubmitBtn: "register",
 		forgetSubmitBtn: "submit",
 
+		inputError: "please complete the information",
 		fetchImageCodeError: "failed get code",
+		fetchRegisterError: "failed get register"
 
 	},
 	sendCode: {
 		sendCode: "Send code",
-		reSendCode: "Resend code"
+		reSendCode: "Resend code",
+		sendCodeError: "failed to send verification code",
+		info: "cannot send if condition is not satisfied"
 	}
 };
