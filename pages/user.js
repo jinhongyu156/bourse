@@ -19,7 +19,7 @@ const User =  React.memo( function( props )
 	props.isLogin || props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
 
 	return <View style = { styles.container }>
-		<Text onPress = { props.logout }>退出登录</Text>
+		<Text onPress = { props.logout }>退出</Text>
 	</View>;
 } );
 
