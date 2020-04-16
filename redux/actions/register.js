@@ -7,6 +7,7 @@ export const ACTION_SET_REGISTER_ISLOADING = "ACTION_SET_REGISTER_ISLOADING";
 export const ACTION_SET_REGISTER_REGISTERTYPE = "ACTION_SET_REGISTER_REGISTERTYPE";
 export const ACTION_SET_REGISTER_INPUTTEXT = "ACTION_SET_REGISTER_INPUTTEXT";
 export const ACTION_SET_REGISTER_AGREE = "ACTION_SET_REGISTER_AGREE";
+export const ACTION_SET_REGISTER_ISSHOWMODAL = "ACTION_SET_REGISTER_ISSHOWMODAL";
 export const ACTION_SET_REGISTER_INPUTERROR = "ACTION_SET_REGISTER_INPUTERROR";
 export const ACTION_SET_REGISTER_IMAGEBLOB = "ACTION_SET_REGISTER_IMAGEBLOB";
 
@@ -130,6 +131,18 @@ export function toggleAgree( agree )
 		const { register } = getState();
 		dispatch( { type: ACTION_SET_REGISTER_AGREE, payload: !register.agree } );
 	};
+};
+
+// 打开 modal 框
+export function showModal()
+{
+ 	return { type: ACTION_SET_REGISTER_ISSHOWMODAL, payload: true };
+};
+
+// 关闭 modal 框
+export function hideModal()
+{
+ 	return { type: ACTION_SET_REGISTER_ISSHOWMODAL, payload: false };
 };
 
 // 注册页面 componentWillUnmount

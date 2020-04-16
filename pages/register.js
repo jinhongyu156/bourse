@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Alert, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, Text, Alert, Modal, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -15,11 +15,12 @@ import CodeImage from "./../containers/codeImage.js";
 import SendCodeBtn from "./../containers/sendCode.js";
 import SubmitBtn from "./../containers/submit.js";
 import TabBar from "./../containers/sizeChangeTabBar.js";
+import Disclaimer from "./../containers/disclaimer.js";
 
 import Tab from "./../components/tab.js";
 import CheckBox from "./../components/checkBox.js";
 
-import { setRegisterType, setInputText, toggleAgree, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
+import { setRegisterType, setInputText, toggleAgree, showModal, hideModal, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
 import { sendCode } from "./../redux/actions/sendCode.js";
 
 // 错误信息提示框 高
@@ -59,8 +60,8 @@ const styles = StyleSheet.create( {
 	codeImageBtnBox: { flex: 1, alignItems: "center" },
 	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
-	adviceNoteBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, alignItems: "flex-end", justifyContent: "flex-end" },
-	adviceNoteText: { fontSize: 14, color: "#666666", paddingLeft: 20, paddingTop: 10 },
+	adviceNoteBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" },
+	adviceNoteText: { fontSize: 14, color: "#666666", paddingLeft: 10, paddingTop: 10 },
 
 	submitBtn: { width: LISTITEMWIDTH, height: SUBMITBTNHEIGHT },
 
@@ -285,14 +286,11 @@ const Register = function( props )
 					? <View style = { styles.adviceNoteBox }>
 						<CheckBox
 							isChecked = { props.agree }
-							rightText = { I18n.t( "register.adviceNote" ) }
-							checkedCheckBoxColor = { "red" }
-							uncheckedCheckBoxColor = { "#000" }
-							onClick = { () => console.log( "点击了" ) }
+							checkedCheckBoxColor = { "#696DAC" }
+							uncheckedCheckBoxColor = { "#888888" }
+							onClick = { props.toggleAgree }
 						/>
-						{/*<TouchableOpacity onPress = { gotoLogin }>
-													<Text style = { styles.adviceNoteText }>{ I18n.t( "register.adviceNote" ) }</Text>
-												</TouchableOpacity>*/}
+						<Text style = { styles.adviceNoteText } onPress = { props.showModal }>{ I18n.t( "register.adviceNote" ) }</Text>
 					</View>
 					: <View style = { styles.adviceNoteBox } />
 			}
@@ -308,6 +306,17 @@ const Register = function( props )
 				</TouchableOpacity>
 			</View>
 		</ScrollView>
+		<Modal
+			animationType ="none"
+			transparent = { true }
+			visible = { props.isShowModal }
+			onRequestClose = { props.hideModal }
+		>
+			<Disclaimer
+				hide = { props.hideModal }
+			/>
+		</Modal>
+
 	</View>;
 };
 
@@ -327,6 +336,7 @@ export default connect(
 			imageCode: registerData.imageCode,
 			code: registerData.code,
 			agree: registerData.agree,
+			isShowModal: registerData.isShowModal,
 			inputError: registerData.inputError,
 			registerType: registerData.registerType,
 			isLoading: registerData.isLoading,
@@ -342,6 +352,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setRegisterType, setInputText, toggleAgree, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
+		return bindActionCreators( { setRegisterType, setInputText, toggleAgree, showModal, hideModal, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
 	}
 )( Register );

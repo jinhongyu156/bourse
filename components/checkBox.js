@@ -1,5 +1,7 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableHighlight } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+
+import Icon from "react-native-vector-icons/Fontisto";
 
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center" },
@@ -23,7 +25,6 @@ export default function ( {
 	onClick														// 点击时触发
 } )
 {
-	console.log("leftText, rightText", leftText, rightText);
 	function _renderLeft()
 	{
 		console.log( leftTextView ? leftTextView : leftText ? leftText : null )
@@ -38,14 +39,16 @@ export default function ( {
 
 	function _renderCheckbox()
 	{
-		return isChecked ? <Text style = { { color: checkedCheckBoxColor } }>选中</Text> : <Text style = { { color: uncheckedCheckBoxColor } }>未选中</Text>
+		return isChecked
+			? <Icon name = "checkbox-active" color = { checkedCheckBoxColor } size = { 18 } />
+			: <Icon name = "checkbox-passive" color = { uncheckedCheckBoxColor } size = { 18 } />
 	};
 
-	return <TouchableHighlight style = { style } onPress = { onClick } underlayColor = "transparent" disabled = { disabled }>
-		<View style = { styles.container }>
+	return <TouchableOpacity style = { [ styles.container, style ] } onPress = { onClick } underlayColor = "transparent" disabled = { disabled }>
+		<React.Fragment>
 			{ _renderLeft() }
 			{ _renderCheckbox() }
 			{ _renderRight() }
-		</View>
-	</TouchableHighlight>
+		</React.Fragment>
+	</TouchableOpacity>
 };
