@@ -4,10 +4,12 @@ import registerReducer from "./register.js";
 import sendCodeReducer from "./sendCode.js";
 
 import languageReducer from "./language.js";
+import storageToReduxReducer from "./storageToRedux.js";
 
 export default combineReducers( {
 	login: loginReducer,
 	register: registerReducer,
 	sendCode: sendCodeReducer,
-	language: languageReducer
+	language: languageReducer,
+	storageToRedux: storageToReduxReducer
 } );

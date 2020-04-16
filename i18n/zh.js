@@ -1,5 +1,10 @@
 export default {
-	bottomTabNavigator: [ "金融", "合约", "币币", "用户" ],
+	bottomTabNavigator: {
+		finance: "金融",
+		contract: "合约",
+		ctc: "币币",
+		user: "用户"
+	},
 	login: {
 		placeholder: { email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
 		loginType: { phoneNumber: "电话号码登录", email: "邮箱登录" },
@@ -31,7 +36,13 @@ export default {
 
 		inputError: "请将信息填写完整",
 		fetchImageCodeError: "获取失败",
-		fetchRegisterError: "注册失败"
+		fetchRegisterError: "注册失败",
+	
+		registerSuccess: "注册成功",
+		findSuccess: "找回密码成功",
+		loginNow: "现在就去登录 ?",
+		cancel: "取消",
+		confirm: "确定"
 
 	},
 	sendCode: {

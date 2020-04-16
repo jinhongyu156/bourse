@@ -42,7 +42,14 @@ export function sendCode()
 					let sendCodeStatus = 0
 					if ( prevRegisterType === nextRegisterType )
 					{
-						sendCodeStatus = 3;
+						if ( nextRegisterType === 0 )
+						{
+							sendCodeStatus = phoneNumberReg.test( nextRegisterPhoneNumber ) ? 3 : 0;
+						};
+						if ( nextRegisterType === 1 )
+						{
+							sendCodeStatus = emailTextReg.test( nextRegisterEmailText ) ? 3 : 0;
+						};
 					} else
 					{
 						if ( nextRegisterType === 0 )
@@ -53,7 +60,7 @@ export function sendCode()
 						{
 							sendCodeStatus = emailTextReg.test( nextRegisterEmailText ) ? 1 : 0;
 						};
-					}
+					};
 					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: sendCodeStatus } } );
 					clearInterval( timer );
 				} else
@@ -78,11 +85,7 @@ export function sendCode()
 					"验证码": register.imageCode
 				};
 
-				console.log( "params", params );
-
 				const res = await fetchPost( "/yanzheng.php", params );
-
-				console.log( "res", res );
 
 				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
 				{
@@ -100,4 +103,10 @@ export function sendCode()
 	};
 };
 
+// 清空发送验证码的错误信息
+export function clearSendCodeError()
+{
+	return { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null };
+};
 
+// 164619

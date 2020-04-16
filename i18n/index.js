@@ -1,7 +1,4 @@
 import I18n from "i18n-js";
-import store from "./../redux/store/index.js";
-import RNRestart from "react-native-restart";
-
 import en from "./en.js";														// 英文语言包
 import zh from "./zh.js";														// 中文语言包
 import systemLocale from "./systemLocale.js";
@@ -23,19 +20,5 @@ I18n.locale = systemLocale;														// 为 i18n 设置语言环境 locale
 I18n.fallbacks = true;
 
 I18n.translations = { en, zh };
-
-const { language } = store.getState();											// 从 reudex 获取当前语言环境
-let prevUserLanguage = language.userLanguage;
-
-store.subscribe( () => {
-	const { language } = store.getState();
-
-	if( prevUserLanguage !== language.userLanguage )
-	{
-		I18n.locale = language.userLanguage;
-		prevUserLanguage = language.userLanguage;
-		language.isSync && RNRestart.Restart();
-	};
-} );
 
 export default I18n;

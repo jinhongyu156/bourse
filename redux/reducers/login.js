@@ -56,7 +56,9 @@ export default function( state = defaultState, action )
 			} );
 
 		case ACTION_SET_LOGIN_CLEAR:
-			return Object.assign( {}, state, defaultState );
+			const _defaultState = Object.assign( {}, defaultState );
+			delete _defaultState.isLogin;
+			return Object.assign( {}, state, _defaultState );
 
 		default:
 			return state;

@@ -61,7 +61,8 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			console.log( "=======================>", res, typeof res );
+			console.log( "请求参数", data );
+			console.log( "请求结果", res );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );
@@ -123,7 +124,15 @@ export function fetchGet( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			resolve( res );
+			console.log( "请求参数", data );
+			console.log( "请求结果", res );
+			if( isJSON( res ) )
+			{
+				resolve( JSON.parse( unicodeToChinese( res ) ) );
+			} else
+			{
+				resolve( res );
+			};
 		} ).catch( function( err )
 		{
 			reject( { type: "catch", err: err } );

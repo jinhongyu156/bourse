@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, KeyboardAvoidingView } from "react-native";
 
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 
 import { bindActionCreators } from "redux";
 
@@ -14,10 +14,10 @@ import I18n from "i18n-js";
 
 import Input from "./../containers/input.js";
 import CodeImage from "./../containers/codeImage.js";
+import SubmitBtn from "./../containers/submit.js";
+import TabBar from "./../containers/sizeChangeTabBar.js";
 
 import Tab from "./../components/tab.js";
-import SubmitBtn from "./../components/submit.js";
-import TabBar from "./../components/sizeChangeTabBar.js";
 import ActionSheet from "./../components/actionSheet.js";
 
 import { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
@@ -69,12 +69,12 @@ const styles = StyleSheet.create( {
 	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
 	forgotBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, alignItems: "flex-end", justifyContent: "flex-end" },
-	forgotText: { fontSize: 14, color: "#666666" },
+	forgotText: { fontSize: 14, color: "#666666", paddingLeft: 20, paddingTop: 10 },
 
 	submitBtn: { width: LISTITEMWIDTH, height: SUBMITBTNHEIGHT },
 
 	registerBox: { width: LISTITEMWIDTH, height: REGISTERBTNHEIGHT, justifyContent: "center", alignItems: "center" },
-	registerText: { fontSize: 14, color: "#696DAC" },
+	registerText: { fontSize: 14, color: "#696DAC", paddingVertical: 10, paddingHorizontal: 40 },
 
 	optionsBox: { width: LISTITEMWIDTH, paddingVertical: 14, flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
 	optionsText: { paddingVertical: 10 },
@@ -163,12 +163,11 @@ const Login = function( props )
 	useFocusEffect(
 		React.useCallback( function()
 		{
-			return function()
-			{
-				props.clear();
-			};
+			return props.clear;
 		}, [] )
 	);
+
+	props.isLogin && props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "TabNavigator" } ] } ) );
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
@@ -183,12 +182,12 @@ const Login = function( props )
 	const gotoRegister = React.useCallback( function()
 	{
 		props.navigation.push( "Register", { type: "register" } );
-	} );
+	}, [] );
 
 	const gotoForget = React.useCallback( function()
 	{
 		props.navigation.push( "Register", { type: "forget" } );
-	} );
+	}, [] );
 
 	return <KeyboardAvoidingView style = { styles.container } behavior = "position" keyboardVerticalOffset = { -KEYBOARDVERTICALOFFSET }>
 		<React.Fragment>

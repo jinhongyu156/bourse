@@ -120,6 +120,26 @@ export function showLanguageActionSheet()
 	};
 };
 
+// 设置登录状态
+export function setIsLogin( isLogin )
+{
+	return { type: ACTION_SET_LOGIN_ISLOGIN, payload: isLogin };
+};
+
+// 退出登录
+export function logout()
+{
+	return async function( dispatch, getState )
+	{
+		const { login } = getState();
+		if ( login.isLogin )
+		{
+			await AsyncStorage.setItem( "isLogin", "false" );
+			dispatch( setIsLogin( false ) );
+		};
+	};
+};
+
 // 登录页面 componentWillUnmount
 export function clear()
 {
@@ -160,20 +180,21 @@ export function fetchLogin()
 		if ( ( ( login.loginType === 0 && login.phoneNumber ) || ( login.loginType === 1 && login.emailText ) ) && login.password && login.code && !login.isLoading && Object.values( login.inputError ).every( item => item === false ) )
 		{
 			dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: true } );
-			const params = { "提交": "登录", "电话": login.phoneNumber, "密码": login.password, "验证码": login.code };
+			console.log( "login", login );
+			const params = { "提交": "登录", "电话": login.loginType === 0 ? login.phoneNumber : login.loginType === 1 ? login.emailText : "", "密码": login.password, "验证码": login.code };
 			try
 			{
 				const res = await fetchPost( "/user.php", params );
 				if( res === "ok" )
 				{
 					await AsyncStorage.setItem( "isLogin", "true" );
-					dispatch( { type: ACTION_SET_LOGIN_ISLOGIN, payload: true } );
+					dispatch( setIsLogin( true ) );
 					dispatch( { type: ACTION_SET_LOGIN_FETCHLOGINERROR, payload: null } );
 					dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: false } );
 				} else
 				{
 					await AsyncStorage.setItem( "isLogin", "false" );
-					dispatch( { type: ACTION_SET_LOGIN_ISLOGIN, payload: false } );
+					dispatch( setIsLogin( false ) );
 					dispatch( { type: ACTION_SET_LOGIN_FETCHLOGINERROR, payload: res } );
 					dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: false } );
 				}
@@ -181,7 +202,7 @@ export function fetchLogin()
 			} catch( err )
 			{
 				await AsyncStorage.setItem( "isLogin", "false" );
-				dispatch( { type: ACTION_SET_LOGIN_ISLOGIN, payload: false } );
+				dispatch( setIsLogin( false ) );
 				dispatch( { type: ACTION_SET_LOGIN_FETCHLOGINERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "login.fetchLoginError" ) }` : err.toString() } );
 				dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: false } );
 			};

@@ -1,46 +1,23 @@
 import AsyncStorage from "@react-native-community/async-storage"; 
-
-import systemLocale from "./../../i18n/systemLocale.js";
+import I18n from "./../../i18n/index.js";
+import RNRestart from "react-native-restart";
 
 /* action type */
 export const ACTION_SET_USERLANGUAGE = "ACTION_SET_USERLANGUAGE";
-export const ACTION_SET_ISSYNC = "ACTION_SET_ISSYNC";
 
 /* action create */
 // 设置当前语言
-export function setLanguage( language )
+export function setLanguage( language, isInit = false )
 {
 	return async function( dispatch )
 	{
 		try {
+			I18n.locale = language;
 			await AsyncStorage.setItem( "userLanguage", language );
 			dispatch( { type: ACTION_SET_USERLANGUAGE, payload: language } );
+			isInit || RNRestart.Restart();
 		} catch ( e ) {
 			dispatch( { type: ACTION_SET_USERLANGUAGE, payload: null } );
 		};
 	}
-};
-
-// 将 AsyncStorage 中的语言数据载入 Redux
-export function getAsyncStorage( callback )
-{
-	return async function( dispatch )
-	{
-		try {
-			const userLanguage = await AsyncStorage.getItem( "userLanguage" );
-
-			if( userLanguage )
-			{
-				dispatch( { type: ACTION_SET_USERLANGUAGE, payload: userLanguage } );
-			} else 
-			{
-				AsyncStorage.setItem( "userLanguage", systemLocale );
-				dispatch( { type: ACTION_SET_USERLANGUAGE, payload: systemLocale } );
-			};
-			dispatch( { type: ACTION_SET_ISSYNC } );
-			callback && callback();
-		} catch( e ) {
-			dispatch( { type: ACTION_SET_USERLANGUAGE, payload: null } );
-		};
-	};
 };

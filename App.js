@@ -1,7 +1,9 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { StyleSheet, Image } from "react-native";
+
 /** react-navigation */
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -9,7 +11,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 /** redux store */
 import store from "./redux/store/index.js";
-import { getAsyncStorage } from "./redux/actions/language.js";
+import { asyncStorageToRedux } from "./redux/actions/storageToRedux.js";
+
+/** I18n */
+import I18n from "./i18n/index.js";
 
 /** pages*/
 // used by StackNavigator
@@ -21,8 +26,6 @@ import Finance from "./pages/finance.js";
 import Contract from "./pages/contract.js";
 import Ctc from "./pages/ctc.js";
 import User from "./pages/user.js";
-/** Icon */
-import Icon from "react-native-vector-icons/FontAwesome5";
 
 /** create Navigators */
 // StackNavigator
@@ -30,45 +33,53 @@ const Stack = createStackNavigator();
 // BottomTabNavigator
 const Tab = createBottomTabNavigator();
 
-const ICONSIZE = 18;
+// 底部导航 icon size
+const ICONSIZE = 24;
 
-function TabNavigator()
+const styles = StyleSheet.create( { image: { width: ICONSIZE, height: ICONSIZE } } );
+
+function TabNavigator( props )
 {
 	return <Tab.Navigator
 		initialRouteName = { "Finance" }
-		tabBarOptions = { { activeTintColor: "#F27B82", inactiveTintColor: "#76AEC0" } }
+		tabBarOptions = { { activeTintColor: "#696DAC", inactiveTintColor: "#dEE1E4" } }
 	>
 		<Tab.Screen name = "Finance" component = { Finance } options = { {
-			title: "金融",
-			tabBarIcon: ( { color, size } ) => <Icon name = "coins" color = { color } size = { ICONSIZE } />
+			title: I18n.t( "bottomTabNavigator.finance" ),
+			tabBarIcon: ( { focused, size } ) => focused
+				? <Image style = { styles.image } source = { require( "./images/finance_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/finance_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "Contract" component = { Contract } options = { {
-			title: "合约",
-			tabBarIcon: ( { color, size } ) => <Icon name = "file-contract" color = { color } size = { ICONSIZE } />
+			title: I18n.t( "bottomTabNavigator.contract" ),
+			tabBarIcon: ( { focused, size } ) => focused
+				? <Image style = { styles.image } source = { require( "./images/contract_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/contract_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "Ctc" component = { Ctc } options = { {
-			title: "币币",
-			tabBarIcon: ( { color, size } ) => <Icon name = "coins" color = { color } size = { ICONSIZE } />
+			title: I18n.t( "bottomTabNavigator.ctc" ),
+			tabBarIcon: ( { focused, size } ) => focused
+				? <Image style = { styles.image } source = { require( "./images/ctc_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/ctc_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "User" component = { User } options = { {
-			title: "用户",
-			tabBarIcon: ( { color, size } ) => {
-				return <Icon name = "user" color = { color } size = { ICONSIZE } />
-			}
+			title: I18n.t( "bottomTabNavigator.user" ),
+			tabBarIcon: ( { focused, size } ) => focused
+				? <Image style = { styles.image } source = { require( "./images/user_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/user_inactive.png" ) } />
 		} } />
 	</Tab.Navigator>;
 };
-
 
 export default function()
 {
 	const [ status, setStatus ] = React.useState( false );
 
-	status || store.dispatch( getAsyncStorage( () => setStatus( true ) ) );
-	
+	status || store.dispatch( asyncStorageToRedux( () => setStatus( true ) ) );
+
 	return status && <Provider store = { store }>
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName = "Login">
+			<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
 				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />

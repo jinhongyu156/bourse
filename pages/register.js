@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, Text, Alert, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -8,17 +8,18 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import I18n from "./../i18n/index.js";
+import I18n from "i18n-js";
 
 import Input from "./../containers/input.js";
 import CodeImage from "./../containers/codeImage.js";
 import SendCodeBtn from "./../containers/sendCode.js";
+import SubmitBtn from "./../containers/submit.js";
+import TabBar from "./../containers/sizeChangeTabBar.js";
 
 import Tab from "./../components/tab.js";
-import SubmitBtn from "./../components/submit.js";
-import TabBar from "./../components/sizeChangeTabBar.js";
+import CheckBox from "./../components/checkBox.js";
 
-import { setRegisterType, setInputText, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
+import { setRegisterType, setInputText, toggleAgree, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
 import { sendCode } from "./../redux/actions/sendCode.js";
 
 // 错误信息提示框 高
@@ -49,7 +50,7 @@ const styles = StyleSheet.create( {
 
 	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE" },
 
-	tabBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT * 6 + TABBARHEIGHT },
+	tabBox: { width: LISTITEMWIDTH },
 	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },
 
 	textInputBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, justifyContent: "center" },
@@ -59,20 +60,20 @@ const styles = StyleSheet.create( {
 	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
 	adviceNoteBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, alignItems: "flex-end", justifyContent: "flex-end" },
-	adviceNoteText: { fontSize: 14, color: "#666666" },
+	adviceNoteText: { fontSize: 14, color: "#666666", paddingLeft: 20, paddingTop: 10 },
 
 	submitBtn: { width: LISTITEMWIDTH, height: SUBMITBTNHEIGHT },
 
 	loginBox: { width: LISTITEMWIDTH, height: LOGINBTNHEIGHT, justifyContent: "center", alignItems: "center" },
-	loginText: { fontSize: 14, color: "#696DAC" },
+	loginText: { fontSize: 14, color: "#696DAC", paddingVertical: 10, paddingHorizontal: 40 },
 
-	errorBox: { width: LISTITEMWIDTH, maxHeight: ERRORBOXHEIGHT * 4, justifyContent: "center" },
+	errorBox: { width: LISTITEMWIDTH, minHeight: ERRORBOXHEIGHT, maxHeight: ERRORBOXHEIGHT * 4, justifyContent: "center" },
 	errorColor: { fontSize: 12, color: "#F00" },
 } );
 
 // 注册方式
 const InputBox = React.memo( function( {
-	pageType, registerType, setInputText, phoneNumber, emailText, name, referee, password, code, imageCode, inputError,
+	pageType, registerType, setInputText, phoneNumber, emailText, name, referee, password, newPassword, code, imageCode, inputError,
 	sendCode, countdown, sendCodeStatus,
 	imageBlob, fetchImageError, fetchImageCode
 } ) {
@@ -110,31 +111,35 @@ const InputBox = React.memo( function( {
 			inputStyle = { styles.textInput }
 			setInputText = { setInputText }
 		/>
-		<Input
-			index = { "name" }
-			value = { name }
-			placeholder = { I18n.t( "register.placeholder.name" ) }
-			hasError = { inputError[ "name" ] }
-			disabled = { false }
-			inputBoxStyle = { styles.textInputBox }
-			inputStyle = { styles.textInput }
-			setInputText = { setInputText }
-		/>
-		<Input
-			index = { "referee" }
-			value = { referee }
-			placeholder = { I18n.t( "register.placeholder.referee" ) }
-			hasError = { inputError[ "referee" ] }
-			disabled = { false }
-			inputBoxStyle = { styles.textInputBox }
-			inputStyle = { styles.textInput }
-			setInputText = { setInputText }
-		/>
+		{
+			pageType === "register"
+				? <Input
+					index = { "name" }
+					value = { name }
+					placeholder = { I18n.t( "register.placeholder.name" ) }
+					hasError = { inputError[ "name" ] }
+					disabled = { false }
+					inputBoxStyle = { styles.textInputBox }
+					inputStyle = { styles.textInput }
+					setInputText = { setInputText }
+				/>
+				: null
+		}
 		<Input
 			index = { "password" }
 			value = { password }
 			placeholder = { I18n.t( "register.placeholder.password" ) }
 			hasError = { inputError[ "password" ] }
+			disabled = { false }
+			inputBoxStyle = { styles.textInputBox }
+			inputStyle = { styles.textInput }
+			setInputText = { setInputText }
+		/>
+		<Input
+			index = { pageType === "register" ? "referee" : "newPassword" }
+			value = { pageType === "register" ? referee : newPassword }
+			placeholder = { pageType === "register" ? I18n.t( "register.placeholder.referee" ) : I18n.t( "register.placeholder.newPassword" ) }
+			hasError = { pageType === "register" ? inputError[ "referee" ] : inputError[ "newPassword" ] }
 			disabled = { false }
 			inputBoxStyle = { styles.textInputBox }
 			inputStyle = { styles.textInput }
@@ -172,12 +177,11 @@ const Register = function( props )
 	useFocusEffect(
 		React.useCallback( function()
 		{
-			return function()
-			{
-				props.clear();
-			};
+			return props.clear;
 		}, [] )
 	);
+
+	const pageType = props.route.params.type;
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
@@ -195,20 +199,19 @@ const Register = function( props )
 	
 	const fetchRegister = React.useCallback( function()
 	{
-		props.fetchRegister( function()
+		props.fetchRegister( pageType, function()
 		{
-			Alert.alert( "注册成功", "现在就去登录", [ {
-				text: "取消",
-				style: "cancel",
-				onPress: () => console.log( "Cancel Pressed" )
-			}, {
-				text: "确定",
-				onPress: () => console.log( "OK Pressed" )
-			} ], {
-				cancelable: false
-			} );
+			Alert.alert(
+				pageType === "register" ? I18n.t( "register.registerSuccess" ) : I18n.t( "register.findSuccess" ),
+				I18n.t( "register.loginNow" ),
+				[
+					{ text: I18n.t( "register.cancel" ), style: "cancel", onPress: props.clear },
+					{ text: I18n.t( "register.confirm" ), onPress: gotoLogin }
+				],
+				{ cancelable: false }
+			);
 		} );
-	}, [] );
+	}, [ pageType ] );
 
 	return <View style = { styles.container }>
 		<ScrollView
@@ -220,7 +223,7 @@ const Register = function( props )
 				{ props.fetchRegisterError ? <Text style = { styles.errorColor }>{ props.fetchRegisterError }</Text> : null }
 				{ props.sendCodeError ? <Text style = { styles.errorColor }>{ props.sendCodeError }</Text> : null }
 			</View>
-			<View style = { styles.tabBox }>
+			<View style = { [ styles.tabBox, { height: LISTITEMHEIGIT * ( pageType === "register" ? 6 : 5 ) + TABBARHEIGHT } ] }>
 				<Tab
 					contentProps = { { pageMargin: PAGEMARGIN } }
 					renderTabBar = { renderTabBar }
@@ -228,15 +231,17 @@ const Register = function( props )
 					onChangeTab = { onChangeTab }
 				>
 					<InputBox
-						tabLabel = { props.route.params.type === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }
+						tabLabel = { pageType === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }
 						registerType = { props.registerType }
 						setInputText = { props.setInputText }
 
+						pageType = { pageType }
 						phoneNumber = { props.phoneNumber }
 						emailText = { props.emailText }
 						name = { props.name }
 						referee = { props.referee }
 						password = { props.password }
+						newPassword = { props.newPassword }
 						code = { props.code }
 						imageCode = { props.imageCode }
 						inputError = { props.inputError }
@@ -250,15 +255,17 @@ const Register = function( props )
 						sendCodeStatus = { props.sendCodeStatus }
 					/>
 					<InputBox
-						tabLabel = { props.route.params.type === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
+						tabLabel = { pageType === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
 						registerType = { props.registerType }
 						setInputText = { props.setInputText }
 
+						pageType = { pageType }
 						phoneNumber = { props.phoneNumber }
 						emailText = { props.emailText }
 						name = { props.name }
 						referee = { props.referee }
 						password = { props.password }
+						newPassword = { props.newPassword }
 						code = { props.code }
 						imageCode = { props.imageCode }
 						inputError = { props.inputError }
@@ -274,16 +281,23 @@ const Register = function( props )
 				</Tab>
 			</View>
 			{
-				props.route.params.type === "register"
+				pageType === "register"
 					? <View style = { styles.adviceNoteBox }>
-						<TouchableOpacity onPress = { gotoLogin }>
-							<Text style = { styles.adviceNoteText }>{ I18n.t( "register.adviceNote" ) }</Text>
-						</TouchableOpacity>
+						<CheckBox
+							isChecked = { props.agree }
+							rightText = { I18n.t( "register.adviceNote" ) }
+							checkedCheckBoxColor = { "red" }
+							uncheckedCheckBoxColor = { "#000" }
+							onClick = { () => console.log( "点击了" ) }
+						/>
+						{/*<TouchableOpacity onPress = { gotoLogin }>
+													<Text style = { styles.adviceNoteText }>{ I18n.t( "register.adviceNote" ) }</Text>
+												</TouchableOpacity>*/}
 					</View>
 					: <View style = { styles.adviceNoteBox } />
 			}
 			<SubmitBtn
-				title = { props.route.params.type === "register" ? I18n.t( "register.registerSubmitBtn" ) : I18n.t( "register.forgetSubmitBtn" ) }
+				title = { pageType === "register" ? I18n.t( "register.registerSubmitBtn" ) : I18n.t( "register.forgetSubmitBtn" ) }
 				submitBtnStyle = { styles.submitBtn }
 				loading = { props.isLoading }
 				onSubmit = { fetchRegister }
@@ -309,8 +323,10 @@ export default connect(
 			phoneNumber: registerData.phoneNumber,
 			emailText: registerData.emailText,
 			password: registerData.password,
+			newPassword: registerData.newPassword,
 			imageCode: registerData.imageCode,
 			code: registerData.code,
+			agree: registerData.agree,
 			inputError: registerData.inputError,
 			registerType: registerData.registerType,
 			isLoading: registerData.isLoading,
@@ -326,6 +342,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setRegisterType, setInputText, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
+		return bindActionCreators( { setRegisterType, setInputText, toggleAgree, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
 	}
 )( Register );

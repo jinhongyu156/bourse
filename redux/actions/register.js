@@ -1,3 +1,4 @@
+import I18n from "i18n-js";
 import { fetchPost, fetchImage } from "./../../javascripts/util.js";
 import { phoneNumberReg, emailTextReg, passwordReg, refereeReg, nameReg } from "./../../javascripts/regExp.js";
 
@@ -5,6 +6,7 @@ import { phoneNumberReg, emailTextReg, passwordReg, refereeReg, nameReg } from "
 export const ACTION_SET_REGISTER_ISLOADING = "ACTION_SET_REGISTER_ISLOADING";
 export const ACTION_SET_REGISTER_REGISTERTYPE = "ACTION_SET_REGISTER_REGISTERTYPE";
 export const ACTION_SET_REGISTER_INPUTTEXT = "ACTION_SET_REGISTER_INPUTTEXT";
+export const ACTION_SET_REGISTER_AGREE = "ACTION_SET_REGISTER_AGREE";
 export const ACTION_SET_REGISTER_INPUTERROR = "ACTION_SET_REGISTER_INPUTERROR";
 export const ACTION_SET_REGISTER_IMAGEBLOB = "ACTION_SET_REGISTER_IMAGEBLOB";
 
@@ -14,7 +16,7 @@ export const ACTION_SET_REGISTER_FETCHREGISTERERROR = "ACTION_SET_REGISTER_FETCH
 export const ACTION_SET_REGISTER_CLEAR = "ACTION_SET_REGISTER_CLEAR";
 
 /* action create */
-import { setSendCodeStatus } from "./sendCode.js"
+import { setSendCodeStatus, clearSendCodeError } from "./sendCode.js"
 // 切换注册方式
 export function setRegisterType( registerType )
 {
@@ -107,6 +109,11 @@ export function setInputText( key, value )
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { password: !passwordReg.test( value ) } ) } );
 		};
 
+		if( key === "newPassword" )
+		{
+			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { newPassword: !( passwordReg.test( value ) && register.password === value ) } ) } );
+		};
+
 		if( key === "name" )
 		{
 			dispatch( { type: ACTION_SET_REGISTER_INPUTERROR, payload: Object.assign( {}, register.inputError, { name: !nameReg.test( value ) } ) } );
@@ -115,10 +122,25 @@ export function setInputText( key, value )
 	};
 };
 
+// 设置是否同意用户协议
+export function toggleAgree( agree )
+{
+	return function( dispatch, getState )
+	{
+		const { register } = getState();
+		dispatch( { type: ACTION_SET_REGISTER_AGREE, payload: !register.agree } );
+	};
+};
+
 // 注册页面 componentWillUnmount
 export function clear()
 {
-	return { type: ACTION_SET_REGISTER_CLEAR };
+	return function( dispatch )
+	{
+		dispatch( clearSendCodeError() );
+		dispatch( setSendCodeStatus( 0 ) );
+		dispatch( { type: ACTION_SET_REGISTER_CLEAR } );
+	};
 };
 
 // 图片验证码请求
@@ -153,30 +175,46 @@ export function fetchImageCode()
 };
 
 // 注册请求
-export function fetchRegister( callback )
+export function fetchRegister( type, callback )
 {
 	return async function( dispatch, getState )
 	{
 		const { register } = getState();
-		console.log( "register", register );
-		if ( ( ( register.registerType === 0 && register.phoneNumber ) || ( register.registerType === 1 && register.emailText ) ) && register.name && register.referee && register.password && register.imageCode && register.code && !register.isLoading && Object.values( register.inputError ).every( item => item === false ) )
+
+		if (
+			( ( register.registerType === 0 && register.phoneNumber ) || ( register.registerType === 1 && register.emailText ) ) &&
+			( type === "register" ? ( register.name && register.referee ) : ( register.newPassword ) ) &&
+			register.password && register.imageCode && register.code &&
+			!register.isLoading && Object.values( register.inputError ).every( item => item === false )
+		)
 		{
 			dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: true } );
 			try
 			{
-				const params = {
-					"提交": "注册",
-					"注册方式": register.registerType === 0 ? "手机注册" : register.registerType === 1 ? "邮箱注册" : "",
-					"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
-					"姓名": register.name,
-					"密码": register.password,
-					"推荐人ID": register.referee,
-					"图形验证码": register.imageCode,
-					"短信验证码": register.code
-				};
-				console.log( "params", params );
+				const params = type === "register"
+					? {
+						"提交": "注册",
+						"注册方式": register.registerType === 0 ? "手机注册" : register.registerType === 1 ? "邮箱注册" : "",
+						"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
+						"姓名": register.name,
+						"密码": register.password,
+						"推荐人ID": register.referee,
+						"图形验证码": register.imageCode,
+						"短信验证码": register.code
+					}
+				: type === "forget"
+					? {
+						"提交": "重置密码",
+						"注册方式": register.registerType === 0 ? "手机账号" : register.registerType === 1 ? "邮箱账号" : "",
+						"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
+						"密码": register.password,
+						"确认密码": register.newPassword,
+						"图形验证码": register.imageCode,
+						"短信验证码": register.code
+					}
+				: {};
+
 				const res = await fetchPost( "/user.php", params );
-				console.log( "res", res );
 				if( res === "ok" )
 				{
 					dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: null } );
@@ -189,7 +227,6 @@ export function fetchRegister( callback )
 				};
 			} catch( err )
 			{
-				console.log( "err", err );
 				dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchRegisterError" ) }` : err.toString() } );
 				dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
 			};

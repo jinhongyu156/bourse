@@ -1,5 +1,10 @@
 export default {
-	bottomTabNavigator: [ "Finance", "Contract", "Ctc", "User" ],
+	bottomTabNavigator: {
+		finance: "Finance",
+		contract: "Contract",
+		ctc: "Ctc",
+		user: "User"
+	},
 	login: {
 		placeholder: {
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
@@ -35,8 +40,13 @@ export default {
 
 		inputError: "please complete the information",
 		fetchImageCodeError: "failed get code",
-		fetchRegisterError: "failed get register"
+		fetchRegisterError: "failed get register",
 
+		registerSuccess: "Register Success",
+		findSuccess: "Find Password Success",
+		loginNow: "Login Now ?",
+		cancel: "cancel",
+		confirm: "confirm"
 	},
 	sendCode: {
 		sendCode: "Send code",
