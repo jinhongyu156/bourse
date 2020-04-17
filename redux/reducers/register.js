@@ -1,5 +1,5 @@
 import {
-	ACTION_SET_REGISTER_ISLOADING, ACTION_SET_REGISTER_REGISTERTYPE, ACTION_SET_REGISTER_INPUTTEXT, ACTION_SET_REGISTER_AGREE, ACTION_SET_REGISTER_ISSHOWMODAL,
+	ACTION_SET_REGISTER_ISLOADING, ACTION_SET_REGISTER_REGISTERTYPE, ACTION_SET_REGISTER_INPUTTEXT, ACTION_SET_REGISTER_AGREE,
 	ACTION_SET_REGISTER_INPUTERROR, ACTION_SET_REGISTER_IMAGEBLOB, ACTION_SET_REGISTER_FETCHIMAGEERROR, ACTION_SET_REGISTER_FETCHREGISTERERROR,
 	ACTION_SET_REGISTER_CLEAR
 } from "./../actions/register.js";
@@ -14,8 +14,7 @@ const defaultState = {
 	imageCode: "",								// 图片验证码输入文本
 	code: "",									// 验证码输入文本
 	imageBlob: null,							// 验证码图片二进制数据
-	agree: false,								// 是否同意免责协议
-	isShowModal: false,							// 是否显示 modal 框
+	agree: true,								// 是否同意免责协议
 	inputError: {},								// 输入是否存在错误
 	registerType: 0,							// 0: 电话号码注册方式/找回密码方式, 1: 电子邮件注册方式/找回密码方式
 	isLoading: false,							// 是否正在注册
@@ -38,9 +37,6 @@ export default function( state = defaultState, action )
 
 		case ACTION_SET_REGISTER_AGREE:
 			return Object.assign( {}, state, { agree: action.payload } );
-
-		case ACTION_SET_REGISTER_ISSHOWMODAL:
-			return Object.assign( {}, state, { isShowModal: action.payload } );
 
 		case ACTION_SET_REGISTER_INPUTERROR:
 			return Object.assign( {}, state, { inputError: action.payload } );

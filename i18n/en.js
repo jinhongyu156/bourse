@@ -37,6 +37,7 @@ export default {
 		adviceNote: "advice note",
 		registerSubmitBtn: "register",
 		forgetSubmitBtn: "submit",
+		disclaimer: "User Agreement (Disclaimer)",
 
 		inputError: "please complete the information",
 		fetchImageCodeError: "failed get code",
@@ -53,5 +54,27 @@ export default {
 		reSendCode: "Resend code",
 		sendCodeError: "failed to send verification code",
 		info: "cannot send if condition is not satisfied"
+	},
+	header: {
+		trading: "Trading",
+		investment: "investment",
+		benefits: "Get the benefits"
+	},
+	finance: {
+		exchange: {
+			exchangeText: "potint",
+			potintExchange: "potint exchange"
+		},
+		userInfo: {
+			point: "Point",
+			trading: "Trading",
+			power: "Power",
+			communityPerformance: "Performance",
+			communityLevel: "Level",
+			numberOfTeam: "Number of Team",
+			todayEarnings: "Today earnings",
+			yesterdayEarnings: "Yesterday Earnings",
+			allEarnings: "All Earnings"
+		}
 	}
 };

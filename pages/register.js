@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Alert, Modal, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, Text, Alert, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -14,13 +14,12 @@ import Input from "./../containers/input.js";
 import CodeImage from "./../containers/codeImage.js";
 import SendCodeBtn from "./../containers/sendCode.js";
 import SubmitBtn from "./../containers/submit.js";
-import TabBar from "./../containers/sizeChangeTabBar.js";
-import Disclaimer from "./../containers/disclaimer.js";
+import TabBar from "./../containers/tabBar.js";
 
 import Tab from "./../components/tab.js";
 import CheckBox from "./../components/checkBox.js";
 
-import { setRegisterType, setInputText, toggleAgree, showModal, hideModal, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
+import { setRegisterType, setInputText, toggleAgree, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
 import { sendCode } from "./../redux/actions/sendCode.js";
 
 // 错误信息提示框 高
@@ -61,12 +60,15 @@ const styles = StyleSheet.create( {
 	codeImageBtn: { width: LISTITEMWIDTH * 0.3, height: LISTITEMHEIGIT * 0.8 },
 
 	adviceNoteBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, paddingVertical: 14, flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" },
-	adviceNoteText: { fontSize: 14, color: "#666666", paddingLeft: 10, paddingTop: 10 },
+	adviceNoteText: { fontSize: 14, paddingLeft: 10, paddingTop: 10 },
 
 	submitBtn: { width: LISTITEMWIDTH, height: SUBMITBTNHEIGHT },
 
 	loginBox: { width: LISTITEMWIDTH, height: LOGINBTNHEIGHT, justifyContent: "center", alignItems: "center" },
 	loginText: { fontSize: 14, color: "#696DAC", paddingVertical: 10, paddingHorizontal: 40 },
+
+	inactiveColor: { color: "#666666" },
+	activeColor: { color: "#696DAC" },
 
 	errorBox: { width: LISTITEMWIDTH, minHeight: ERRORBOXHEIGHT, maxHeight: ERRORBOXHEIGHT * 4, justifyContent: "center" },
 	errorColor: { fontSize: 12, color: "#F00" },
@@ -78,7 +80,6 @@ const InputBox = React.memo( function( {
 	sendCode, countdown, sendCodeStatus,
 	imageBlob, fetchImageError, fetchImageCode
 } ) {
-
 	const phoneNumberOrEmailTextHasError = ( registerType === 0 && inputError[ "phoneNumber" ] ) || ( registerType === 1 && inputError[ "emailText" ] );
 
 	const disabled = sendCodeStatus === 2;
@@ -86,14 +87,16 @@ const InputBox = React.memo( function( {
 
 	const renderCodeImage = React.useCallback( function()
 	{
-		return <CodeImage
-			imageBlob = { imageBlob }
-			codeImageBtnBoxStyle = { styles.codeImageBtnBox }
-			codeImageBtnStyle = { styles.codeImageBtn }
-			errorColorStyle = { styles.errorColor }
-			fetchImageError = { fetchImageError }
-			fetchImageCode = { fetchImageCode }
-		/>;
+		return imageBlob
+			? <CodeImage
+				imageBlob = { imageBlob }
+				codeImageBtnBoxStyle = { styles.codeImageBtnBox }
+				codeImageBtnStyle = { styles.codeImageBtn }
+				errorColorStyle = { styles.errorColor }
+				fetchImageError = { fetchImageError }
+				fetchImageCode = { fetchImageCode }
+			/>
+			: null;
 	}, [ imageBlob, fetchImageError ] );
 
 	const renderCode = React.useCallback( function()
@@ -186,7 +189,7 @@ const Register = function( props )
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
-		return <TabBar tabs = { tabs } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
+		return <TabBar tabs = { tabs } type = { "checkBox" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
 	}, [] );
 
 	const onChangeTab = React.useCallback( function( o ) {
@@ -197,7 +200,12 @@ const Register = function( props )
 	{
 		props.navigation.navigate( "Login" );
 	}, [] );
-	
+
+	const gotoDisclaimer = React.useCallback( function()
+	{
+		props.navigation.push( "Disclaimer" );
+	}, [] );
+
 	const fetchRegister = React.useCallback( function()
 	{
 		props.fetchRegister( pageType, function()
@@ -290,7 +298,12 @@ const Register = function( props )
 							uncheckedCheckBoxColor = { "#888888" }
 							onClick = { props.toggleAgree }
 						/>
-						<Text style = { styles.adviceNoteText } onPress = { props.showModal }>{ I18n.t( "register.adviceNote" ) }</Text>
+						<Text
+							style = { [ styles.adviceNoteText, props.agree ? styles.activeColor : styles.inactiveColor ] }
+							onPress = { gotoDisclaimer }
+						>
+							{ I18n.t( "register.adviceNote" ) }
+						</Text>
 					</View>
 					: <View style = { styles.adviceNoteBox } />
 			}
@@ -306,16 +319,6 @@ const Register = function( props )
 				</TouchableOpacity>
 			</View>
 		</ScrollView>
-		<Modal
-			animationType ="none"
-			transparent = { true }
-			visible = { props.isShowModal }
-			onRequestClose = { props.hideModal }
-		>
-			<Disclaimer
-				hide = { props.hideModal }
-			/>
-		</Modal>
 
 	</View>;
 };
@@ -336,7 +339,6 @@ export default connect(
 			imageCode: registerData.imageCode,
 			code: registerData.code,
 			agree: registerData.agree,
-			isShowModal: registerData.isShowModal,
 			inputError: registerData.inputError,
 			registerType: registerData.registerType,
 			isLoading: registerData.isLoading,
@@ -352,6 +354,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setRegisterType, setInputText, toggleAgree, showModal, hideModal, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
+		return bindActionCreators( { setRegisterType, setInputText, toggleAgree, sendCode, fetchImageCode, fetchRegister, clear }, dispatch );
 	}
 )( Register );

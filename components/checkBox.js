@@ -7,7 +7,7 @@ const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center" },
 } );
 
-export default function ( {
+export default React.memo( function ( {
 	style,														// checkbox 容器样式
 	disabled,													// 禁止使用
 	isChecked,													// 当前是否已选中
@@ -27,13 +27,11 @@ export default function ( {
 {
 	function _renderLeft()
 	{
-		console.log( leftTextView ? leftTextView : leftText ? leftText : null )
 		return leftTextView ? leftTextView : leftText ? <Text style = { leftTextStyle }>{ leftText }</Text> : null;
 	};
 
 	function _renderRight()
 	{
-		console.log( rightTextView ? rightTextView : rightText ? rightText : null )
 		return rightTextView ? rightTextView : rightText ? <Text style = { rightTextStyle }>{ rightText }</Text> : null;
 	};
 
@@ -45,10 +43,8 @@ export default function ( {
 	};
 
 	return <TouchableOpacity style = { [ styles.container, style ] } onPress = { onClick } underlayColor = "transparent" disabled = { disabled }>
-		<React.Fragment>
-			{ _renderLeft() }
-			{ _renderCheckbox() }
-			{ _renderRight() }
-		</React.Fragment>
+		{ _renderLeft() }
+		{ _renderCheckbox() }
+		{ _renderRight() }
 	</TouchableOpacity>
-};
+} );

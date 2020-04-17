@@ -33,6 +33,7 @@ export default {
 		adviceNote: "用户协议(免责声明)",
 		registerSubmitBtn: "注册",
 		forgetSubmitBtn: "提交",
+		disclaimer: "用户协议(免责声明)",
 
 		inputError: "请将信息填写完整",
 		fetchImageCodeError: "获取失败",
@@ -50,5 +51,28 @@ export default {
 		reSendCode: "重发验证码",
 		sendCodeError: "发送验证码失败",
 		info: "条件不满足无法发送"
+	},
+	header: {
+		trading: "交易金",
+		investment: "投资",
+		benefits: "领取收益"
+	},
+	finance: {
+		exchange: {
+			exchangeText: "兑换",
+			potintExchange: "积分兑换"
+		},
+		userInfo: {
+			point: "积分金额",
+			trading: "交易金",
+			power: "算力",
+			communityPerformance: "社区业绩",
+			communityLevel: "社区等级",
+			numberOfTeam: "团队人数",
+			todayEarnings: "今日收益",
+			yesterdayEarnings: "昨日等级",
+			allEarnings: "累计收益"
+		}
 	}
 };
+

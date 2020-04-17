@@ -180,7 +180,7 @@ export function fetchLogin()
 		if ( ( ( login.loginType === 0 && login.phoneNumber ) || ( login.loginType === 1 && login.emailText ) ) && login.password && login.code && !login.isLoading && Object.values( login.inputError ).every( item => item === false ) )
 		{
 			dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: true } );
-			console.log( "login", login );
+
 			const params = { "提交": "登录", "电话": login.loginType === 0 ? login.phoneNumber : login.loginType === 1 ? login.emailText : "", "密码": login.password, "验证码": login.code };
 			try
 			{

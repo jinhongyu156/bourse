@@ -1,4 +1,6 @@
 import "react-native-gesture-handler";
+import "react-native-get-random-values"
+
 import React from "react";
 import { StyleSheet, Image } from "react-native";
 
@@ -20,6 +22,7 @@ import I18n from "./i18n/index.js";
 // used by StackNavigator
 import Login from "./pages/login.js";
 import Register from "./pages/register.js";
+import Disclaimer from "./pages/disclaimer.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -82,8 +85,11 @@ export default function()
 			<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
 				<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
+				<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
 				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 			</Stack.Navigator>
 		</NavigationContainer>
 	</Provider>;
 };
+
+// 
