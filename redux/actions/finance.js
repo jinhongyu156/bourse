@@ -49,7 +49,6 @@ export function fetchStatement()
 {
 	return async function( dispatch, getState )
 	{
-		console.log( "===========" );
 		const { finance } = getState();
 		const params = { "提交": "获取明细", "交易区": finance.tabIndex === 0 ? "积分明细" : finance.tabIndex === 1 ? "ETUSD明细" : finance.tabIndex === 2 ? "USDT明细" : finance.tabIndex === 3 ? "交易金" : "" };
 		try
@@ -58,15 +57,14 @@ export function fetchStatement()
 			const res = await fetchPost( "/ETC.php", params );
 			if( isObject( res ) )
 			{
-				console.log( "res", res );
 				const dataArr = Object.values( res[ "明细报表" ] )[ 0 ].map( function( item, index )
 				{
 					item[ "流水金额" ] = getNum( item[ "流水金额" ], 2 );
 					item[ "用户余额" ] = getNum( item[ "用户余额" ], 2 );
-					return item
+					return item;
 				} );
 				// const dataArr = [];
-				dispatch( setStatementData( dataArr ) );
+				dispatch( setStatementData( [ ...dataArr, ...dataArr, ...dataArr, ...dataArr ] ) );
 				dispatch( setFecthStatementError( null ) )
 				dispatch( setIsloading( false ) );
 			} else

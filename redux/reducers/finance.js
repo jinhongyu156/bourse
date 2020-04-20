@@ -21,7 +21,6 @@ export default function( state = defaultState, action )
 			return Object.assign( {}, state, { tabIndex: action.payload } );
 
 		case ACTION_SET_FINANCE_STATEMENTDATA:
-			console.log( "收到 action", action );
 			return Object.assign( {}, state, { statementData: action.payload } );
 
 		case ACTION_SET_FINANCE_ISLOADING:

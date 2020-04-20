@@ -15,17 +15,20 @@ const TABBARHEIGHT = 50;
 // 选项页头部高度
 const TABITEMHEADERHEIGHT = 30;
 
-// ScrollView 高度
-const SCROLLVIEWHEIGHT = SCREENHEIGHT - 120 - 50 - 50 - 30;		// 头部: 120, 底部导航: 50, 选项卡高度: 50, 选项页头部高度: 30
+// 选项页列表行高度
+const TABITEMROWHEIGHT = 50;
+
+// ScrollView 最大高度
+const SCROLLVIEWHEIGHT = SCREENHEIGHT - 120 - 50 - TABBARHEIGHT;			// 头部: 120, 底部导航: 50, 选项卡高度: 50, 选项页头部高度: 30
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, marginTop: 6 },
+	container: { marginTop: 6 },
 	tabBar: { height: TABBARHEIGHT, backgroundColor: "#FFFFFF" },
 	// tabItemContainer: { flex: 1, maxHeight: SCROLLVIEWHEIGHT, height: SCROLLVIEWHEIGHT, backgroundColor: "red" },
-	tabItemContainer: { flex: 1, backgroundColor: "red" },
+	tabItemContainer: { backgroundColor: "red" },
 	tabItemHeader: { flexDirection: "row", alignItems: "center", backgroundColor: "#F6F6F6", height: TABITEMHEADERHEIGHT, paddingHorizontal: 10 },
+	tabItemRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: TABITEMROWHEIGHT, paddingHorizontal: 10 },
 	tabItemHeaderText: { flex: 1, color: "#000000", textAlign: "center" },
-	tabItemRow: { flexDirection: "row", backgroundColor: "#FFFFFF", paddingVertical: 20, paddingHorizontal: 10 },
 	tabItemRowText: { flex: 1, color: "#777777", textAlign: "center" },
 	errorBox: { height: 100, paddingHorizontal: 10, justifyContent: "center" },
 	errorText: { color: "#F00" },
@@ -61,90 +64,99 @@ const TabItemHeader = React.memo( function()
 // 选项卡页
 const TabItem = React.memo( function( { offEnabled, onEnabled, isloading, statementData, fecthStatementError } )
 {
-	console.log( "statementData", statementData );
-	return <React.Fragment>
+	if( fecthStatementError )
 	{
-		fecthStatementError
-			? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ fecthStatementError }</Text></View>
-			: isloading
-				? <ActivityIndicator size = "small" color = "#696DAC" />
-				: statementData.length
-					? <View style = { styles.tabItemContainer }>
-						<ScrollView
-							stickyHeaderIndices = { [ 0 ] }
-							showsVerticalScrollIndicator = { false }
-							onTouchStart = { offEnabled }
-							onTouchEnd = { onEnabled }
-							onMomentumScrollEnd = { onEnabled }
-						>
-							<TabItemHeader />
-							{
-								statementData.map( function( item, index )
-								{
-									console.log("===============" )
-									return <React.Fragment>
-										<TabItemRow data = { item } key = { index + 0 } />
-										<TabItemRow data = { item } key = { index + 1 } />
-										<TabItemRow data = { item } key = { index + 2 } />
-										<TabItemRow data = { item } key = { index + 3 } />
-										<TabItemRow data = { item } key = { index + 4 } />
-									</React.Fragment>
-								} )
-							}
-						</ScrollView>
-					</View>
-					: <View style = { styles.noDataBox }><Text style = { styles.noDataText }>未查询到数据</Text></View>
-	}
-	</React.Fragment>
+		return <View style = { styles.errorBox }>
+			<Text style = { styles.errorText }>{ fecthStatementError }</Text>
+		</View>;
+	};
+
+	if( isloading && statementData.length === 0 )
+	{
+		return <ActivityIndicator size = "small" color = "#696DAC" />;
+	};
+
+	if( !isloading && statementData.length === 0 )
+	{
+		return <View style = { styles.noDataBox }>
+			<Text style = { styles.noDataText }>未查询到数据</Text>
+		</View>
+	};
+
+	if( !isloading && statementData.length )
+	{
+		const realHeight = statementData.length * TABITEMROWHEIGHT + TABITEMHEADERHEIGHT;
+
+		const scrollViewHeight = ( realHeight > SCROLLVIEWHEIGHT ) ? SCROLLVIEWHEIGHT : realHeight;
+
+		console.log( "scrollViewHeight", scrollViewHeight );
+
+		return <View style = { { height: scrollViewHeight } }>
+			<ScrollView
+				stickyHeaderIndices = { [ 0 ] }
+				showsVerticalScrollIndicator = { false }
+				onTouchStart = { offEnabled }
+				onTouchEnd = { onEnabled }
+				onMomentumScrollEnd = { onEnabled }
+			>
+				<TabItemHeader />
+				{
+					statementData.map( function( item, index )
+					{
+						return <TabItemRow data = { item } key = { index } />
+					} )
+				}
+			</ScrollView>
+		</View>
+	};
 } );
 
 export default React.memo( function Statement( { offEnabled, onEnabled, tabIndex, setTabIndex, isloading, statementData, fecthStatementError } )
 {
-	const onChangeTab = React.useCallback( function( o )
-	{
-		setTabIndex( o.i );
-	}, [] );
 
-	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
+	const renderTabBar = function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />;
-	}, [] );
+	};
 
-	return <View style = { styles.container }>
-		<Tab renderTabBar = { renderTabBar } initialPage = { tabIndex } onChangeTab = { onChangeTab }>
 
-			<TabItem
-				tabLabel = { "积分" }
-				offEnabled = { offEnabled }
-				onEnabled = { onEnabled }
-				isloading = { isloading }
-				statementData = { statementData }
-				fecthStatementError = { fecthStatementError }
-			/>
-			<TabItem
-				tabLabel = { "ETUSD" }
-				offEnabled = { offEnabled }
-				onEnabled = { onEnabled }
-				isloading = { isloading }
-				statementData = { statementData }
-				fecthStatementError = { fecthStatementError }
-			/>
-			<TabItem
-				tabLabel = { "USDT" }
-				offEnabled = { offEnabled }
-				onEnabled = { onEnabled }
-				isloading = { isloading }
-				statementData = { statementData }
-				fecthStatementError = { fecthStatementError }
-			/>
-			<TabItem
-				tabLabel = { "交易金" }
-				offEnabled = { offEnabled }
-				onEnabled = { onEnabled }
-				isloading = { isloading }
-				statementData = { statementData }
-				fecthStatementError = { fecthStatementError }
-			/>
-		</Tab>
-	</View>;
+	return <Tab
+		renderTabBar = { renderTabBar }
+		containerStyle = { styles.container }
+		initialPage = { tabIndex }
+		onChangeTab = { setTabIndex }
+	>
+		<TabItem
+			tabLabel = { "积分" }
+			offEnabled = { offEnabled }
+			onEnabled = { onEnabled }
+			isloading = { isloading }
+			statementData = { statementData }
+			fecthStatementError = { fecthStatementError }
+		/>
+		<TabItem
+			tabLabel = { "ETUSD" }
+			offEnabled = { offEnabled }
+			onEnabled = { onEnabled }
+			isloading = { isloading }
+			statementData = { statementData }
+			fecthStatementError = { fecthStatementError }
+		/>
+		<TabItem
+			tabLabel = { "USDT" }
+			offEnabled = { offEnabled }
+			onEnabled = { onEnabled }
+			isloading = { isloading }
+			statementData = { statementData }
+			fecthStatementError = { fecthStatementError }
+		/>
+		<TabItem
+			tabLabel = { "交易金" }
+			offEnabled = { offEnabled }
+			onEnabled = { onEnabled }
+			isloading = { isloading }
+			statementData = { statementData }
+			fecthStatementError = { fecthStatementError }
+		/>
+	</Tab>
 } );

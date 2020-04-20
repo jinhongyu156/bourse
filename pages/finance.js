@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -41,20 +41,11 @@ const Finance = function ( props )
 
 	console.log( "scrollEnabled", scrollEnabled );
 
-	return <Statement
-		offEnabled = { offEnabled }
-		onEnabled = { onEnabled }
-		tabIndex = { props.tabIndex }
-		setTabIndex = { props.setTabIndex }
-		isloading = { props.isloading }
-		statementData = { props.statementData }
-		fecthStatementError = { props.fecthStatementError }
-	/>;
-
 	return <React.Fragment>
 		<Header />
 		<View style = { styles.container }>
 			<ScrollView scrollEnabled = { scrollEnabled } showsVerticalScrollIndicator = { false }>
+
 				<Notice msg = { props.noticeMessage } />
 				<Exchange />
 				<UserInfo />
@@ -68,6 +59,7 @@ const Finance = function ( props )
 					fecthStatementError = { props.fecthStatementError }
 				/>
 			</ScrollView>
+			
 		</View>
 	</React.Fragment>
 };

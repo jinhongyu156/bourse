@@ -20,6 +20,9 @@ import ActionSheet from "./../components/actionSheet.js";
 
 import { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
 
+// 屏幕高度
+const SCREENHEIGHT = Dimensions.get( "window" ).height;
+
 // LOGO 容器高
 const ICONBOXHEIGHT = 130;
 
@@ -78,7 +81,7 @@ const styles = StyleSheet.create( {
 	registerBox: { width: LISTITEMWIDTH, height: REGISTERBTNHEIGHT, justifyContent: "center", alignItems: "center" },
 	registerText: { fontSize: 14, color: "#696DAC", paddingVertical: 10, paddingHorizontal: 40 },
 
-	optionsBox: { width: LISTITEMWIDTH, paddingVertical: 14, flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
+	optionsBox: { width: LISTITEMWIDTH, paddingVertical: 14, marginTop: 20, flexDirection: "row", justifyContent: "space-between" },
 	optionsText: { paddingVertical: 10 },
 
 	errorBox: { width: LISTITEMWIDTH, height: ERRORBOXHEIGHT, justifyContent: "center" },
@@ -192,40 +195,38 @@ const Login = function( props )
 	return <KeyboardAvoidingView style = { styles.container } behavior = "position" keyboardVerticalOffset = { -KEYBOARDVERTICALOFFSET }>
 		<Logo />
 		<View style = { styles.errorBox }><Text style = { styles.errorColor }>{ props.fetchLoginError }</Text></View>
-		<View style = { styles.tabBox }>
-			<Tab contentProps = { { pageMargin: PAGEMARGIN } } renderTabBar = { renderTabBar } initialPage = { props.loginType } onChangeTab = { onChangeTab }>
-				<InputBox
-					tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
-					loginType = { props.loginType }
-					setInputText = { props.setInputText }
+		<Tab width = { LISTITEMWIDTH } containerStyle = { styles.tabBox } renderTabBar = { renderTabBar } initialPage = { props.loginType } onChangeTab = { onChangeTab }>
+			<InputBox
+				tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
+				loginType = { props.loginType }
+				setInputText = { props.setInputText }
 
-					phoneNumber = { props.phoneNumber }
-					emailText = { props.emailText }
-					password = { props.password }
-					code = { props.code }
-					inputError = { props.inputError }
+				phoneNumber = { props.phoneNumber }
+				emailText = { props.emailText }
+				password = { props.password }
+				code = { props.code }
+				inputError = { props.inputError }
 
-					imageBlob = { props.imageBlob }
-					fetchImageCode = { props.fetchImageCode }
-					fetchImageError = { props.fetchImageError }
-				/>
-				<InputBox
-					tabLabel = { I18n.t( "login.loginType.email" ) }
-					loginType = { props.loginType }
-					setInputText = { props.setInputText }
+				imageBlob = { props.imageBlob }
+				fetchImageCode = { props.fetchImageCode }
+				fetchImageError = { props.fetchImageError }
+			/>
+			<InputBox
+				tabLabel = { I18n.t( "login.loginType.email" ) }
+				loginType = { props.loginType }
+				setInputText = { props.setInputText }
 
-					phoneNumber = { props.phoneNumber }
-					emailText = { props.emailText }
-					password = { props.password }
-					code = { props.code }
-					inputError = { props.inputError }
+				phoneNumber = { props.phoneNumber }
+				emailText = { props.emailText }
+				password = { props.password }
+				code = { props.code }
+				inputError = { props.inputError }
 
-					imageBlob = { props.imageBlob }
-					fetchImageCode = { props.fetchImageCode }
-					fetchImageError = { props.fetchImageError }
-				/>
-			</Tab>
-		</View>
+				imageBlob = { props.imageBlob }
+				fetchImageCode = { props.fetchImageCode }
+				fetchImageError = { props.fetchImageError }
+			/>
+		</Tab>
 		<View style = { styles.forgotBox }>
 			<TouchableOpacity onPress = { gotoForget }>
 				<Text style = { styles.forgotText }>{ I18n.t( "login.forgetPassword" ) }</Text>

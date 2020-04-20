@@ -1,8 +1,6 @@
 import React from "react";
 
-import { Dimensions, View, ScrollView, Platform, StyleSheet } from "react-native";
-
-import ViewPager from "@react-native-community/viewpager";
+import { Dimensions, Text, View, ScrollView, Platform, StyleSheet } from "react-native";
 
 // 选项卡宽度
 const CONTAINERWIDTH = Dimensions.get( "window" ).width;
@@ -12,7 +10,6 @@ const styles = StyleSheet.create( { container: { flex: 1 } } );
 
 const SceneComponent = React.memo( function( { children, tabViewStyle, shouldUpdated } )
 {
-	console.log( "children", children, tabViewStyle );
 	return <View style = { tabViewStyle } collapsable = { false }>{ children }</View>;
 
 }, function( prevProps, nextProps )
@@ -62,6 +59,7 @@ function newSceneKeys( { prevKeys = [], currentPage = 0, numOfSibling, children 
 export default React.memo( function(
 {
 	children,
+	width = CONTAINERWIDTH,																// 选项卡宽度
 	containerStyle = {},																// 容器样式
 	tabViewStyle = {},																	// 选项卡页样式
 	initialPage = 0,																	// 初始加载页码
@@ -79,94 +77,72 @@ export default React.memo( function(
 	const [ currentPage, setCurrentPage ] = React.useState( initialPage );
 	const [ sceneKeys, setSceneKeys ] = React.useState( () => newSceneKeys( { currentPage: initialPage, numOfSibling: numOfSibling, children: pureChildren } ) );
 
-	const composeScenes = React.useCallback( function()
+	const setState = React.useCallback( function( nextPage )							// 更新 state 并调用 onChangeTab
+	{
+		console.log( "收到 nextPage: ", nextPage );
+
+		setCurrentPage( nextPage );
+		setSceneKeys( newSceneKeys( { prevKeys: sceneKeys, currentPage: nextPage, numOfSibling: numOfSibling, children: pureChildren } ) );
+
+		onChangeTab( nextPage );
+
+	}, [ sceneKeys, numOfSibling, pureChildren ] );
+
+
+	const composeScenes = function()													// 渲染子元素
 	{
 		return pureChildren.map( function( child, idx )
 		{
 			const key = makeSceneKey( child, idx );
 			return <SceneComponent
 				key = { key }
-				tabViewStyle = { tabViewStyle }
+				style = { { width } }
+				tabViewStyle = { [ tabViewStyle, { width } ] }
 				shouldUpdated = { shouldRenderSceneKey( idx, currentPage, numOfSibling ) }>
 				{ keyExists( sceneKeys, key ) ? child : <View tabLabel = { child.props.tabLabel } /> }
 			</SceneComponent>;
 		} );
-	}, [ pureChildren, currentPage, numOfSibling, sceneKeys ] );
-	
-	const goToPage = React.useCallback( function( pageNumber )							// 跳转页面函数
-	{
-		Platform.OS === "ios"
-			? tabViewRef.current.scrollTo( { x: pageNumber * CONTAINERWIDTH, y: 0, animated: animation } )
-		: Platform.OS === "android"
-			? animation
-				? tabViewRef.current.setPage( pageNumber )
-				: tabViewRef.current.setPageWithoutAnimation( pageNumber )
-		: undefined;
-
-	}, [ animation ] );
-
-	const setState = React.useCallback( function( { nextPage, callback = () => {} } )	// 更新 state 并调用 bindOnChangeTab
-	{
-		setCurrentPage( nextPage );
-		setSceneKeys( newSceneKeys( { prevKeys: sceneKeys, currentPage: nextPage, numOfSibling: numOfSibling, children: pureChildren } ) );
-		callback();
-	}, [ sceneKeys, numOfSibling, pureChildren ] );
-
-	const bindOnChangeTab = function( prevPage, currentPage )							// bindOnChangeTab: 含有参数的 onChangeTab
-	{
-		onChangeTab( { i: currentPage, ref: pureChildren[ currentPage ], from: prevPage } );
 	};
 
-	const update = function( e )														// android 与 ios 调用 setState
+	const goToPage = function( pageNumber )												// 跳转页面函数
 	{
-		const nextPage = typeof e === "object" ? e.nativeEvent.position : e;
-		currentPage !== nextPage && setState( { nextPage: nextPage, callback: bindOnChangeTab( currentPage, nextPage ) } );
+		console.log( "pageNumber, currentPage", pageNumber, currentPage )
+		if ( pageNumber !== currentPage )
+		{
+			tabViewRef.current.scrollTo( { x: pageNumber * width, y: 0, animated: true } );
+			setState( pageNumber );
+		};
 	};
 
-	const updateIOS = function( e )														// ios 调用 setState( 未测试 )
+	const update = function( e )														// ios 调用( 未测试 )
 	{
-		const nextPage = Math.round( e.nativeEvent.contentOffset.x / CONTAINERWIDTH );
-		// const offset = page * CONTAINERWIDTH;
-		// tabViewRef.current.scrollTo( { x: offset, y: 0, animated: !this.animation } );
-		currentPage !== nextPage && update( nextPage );
+		const nextPage = Math.round( e.nativeEvent.contentOffset.x / width );
+		currentPage !== nextPage && setState( nextPage );
 	};
 
 	const tabBarProps = { goToPage: goToPage, activeTab: currentPage, tabs: pureChildren.map( child => child.props.tabLabel ) };
 
-	return <View style = { [ styles.container, containerStyle ] }>
+	return <View style = { containerStyle }>
+		<Text onPress = { () => goToPage( 2 ) } >{ currentPage }-----------------------</Text>
 		{ tabBarPosition === "top" && renderTabBar( tabBarProps ) }
-		{
-			Platform.OS === "ios"
-				? <ScrollView
-					ref = { tabViewRef }
-					horizontal = { true }
-					pagingEnabled = { true }
-					scrollsToTop = { false }
-					scrollEnabled = { !locked }
-					alwaysBounceVertical = { false }
-					directionalLockEnabled = { true }
-					showsHorizontalScrollIndicator = { false }
-					automaticallyAdjustContentInsets = { false }
-					scrollEventThrottle = { 16 }
-					keyboardDismissMode = "on-drag"
-					contentOffset = { { x: initialPage * CONTAINERWIDTH } }
-					onMomentumScrollEnd = { updateIOS }
-					{ ...contentProps }
-				>
-					{ composeScenes() }
-				</ScrollView>
-				: <ViewPager
-					ref = { tabViewRef }
-					style = { styles.container }
-					initialPage = { initialPage }
-					scrollEnabled = { !locked }
-					keyboardDismissMode = "on-drag"
-					onPageSelected = { update }
-					{ ...contentProps }
-				>
-					{ composeScenes() }
-				</ViewPager>
-		}
+		<ScrollView
+			ref = { tabViewRef }
+			horizontal = { true }
+			pagingEnabled = { true }
+			scrollsToTop = { false }
+			scrollEnabled = { !locked }
+			alwaysBounceVertical = { false }
+			directionalLockEnabled = { true }
+			showsHorizontalScrollIndicator = { false }
+			automaticallyAdjustContentInsets = { false }
+			scrollEventThrottle = { 16 }
+			keyboardDismissMode = "on-drag"
+			contentOffset = { { x: initialPage * width } }
+			onMomentumScrollEnd = { update }
+			{ ...contentProps }
+		>
+			{ composeScenes() }
+		</ScrollView>
 		{ tabBarPosition === "bottom" && renderTabBar( tabBarProps ) }
 	</View>;
 } );

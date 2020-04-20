@@ -22,6 +22,9 @@ import CheckBox from "./../components/checkBox.js";
 import { setRegisterType, setInputText, toggleAgree, fetchImageCode, fetchRegister, clear } from "./../redux/actions/register.js";
 import { sendCode } from "./../redux/actions/sendCode.js";
 
+// 屏幕高度
+const SCREENHEIGHT = Dimensions.get( "window" ).height;
+
 // 错误信息提示框 高
 const ERRORBOXHEIGHT = 30;
 
@@ -39,12 +42,6 @@ const SUBMITBTNHEIGHT = 50;
 
 // 登录按钮高度
 const LOGINBTNHEIGHT = 40;
-
-// 页面 padding
-const PAGEMARGIN =  Dimensions.get( "window" ).width * 0.2;
-
-// used by KeyboardAvoidingView
-// const KEYBOARDVERTICALOFFSET = Dimensions.get( "window" ).height - ICONBOXHEIGHT - ERRORBOXHEIGHT - TABBARHEIGHT - LISTITEMHEIGIT * 3 - LISTITEMHEIGIT - SUBMITBTNHEIGHT - REGISTERBTNHEIGHT;
 
 const styles = StyleSheet.create( {
 
@@ -73,6 +70,7 @@ const styles = StyleSheet.create( {
 	errorBox: { width: LISTITEMWIDTH, minHeight: ERRORBOXHEIGHT, maxHeight: ERRORBOXHEIGHT * 4, justifyContent: "center" },
 	errorColor: { fontSize: 12, color: "#F00" },
 } );
+
 
 // 注册方式
 const InputBox = React.memo( function( {
@@ -232,63 +230,62 @@ const Register = function( props )
 				{ props.fetchRegisterError ? <Text style = { styles.errorColor }>{ props.fetchRegisterError }</Text> : null }
 				{ props.sendCodeError ? <Text style = { styles.errorColor }>{ props.sendCodeError }</Text> : null }
 			</View>
-			<View style = { [ styles.tabBox, { height: LISTITEMHEIGIT * ( pageType === "register" ? 6 : 5 ) + TABBARHEIGHT } ] }>
-				<Tab
-					contentProps = { { pageMargin: PAGEMARGIN } }
-					renderTabBar = { renderTabBar }
-					initialPage = { props.registerType }
-					onChangeTab = { onChangeTab }
-				>
-					<InputBox
-						tabLabel = { pageType === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }
-						registerType = { props.registerType }
-						setInputText = { props.setInputText }
+			<Tab
+				width = { LISTITEMWIDTH }
+				containerStyle = { [ styles.tabBox, { height: LISTITEMHEIGIT * ( pageType === "register" ? 6 : 5 ) + TABBARHEIGHT } ] }
+				renderTabBar = { renderTabBar }
+				initialPage = { props.registerType }
+				onChangeTab = { onChangeTab }
+			>
+				<InputBox
+					tabLabel = { pageType === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }
+					registerType = { props.registerType }
+					setInputText = { props.setInputText }
 
-						pageType = { pageType }
-						phoneNumber = { props.phoneNumber }
-						emailText = { props.emailText }
-						name = { props.name }
-						referee = { props.referee }
-						password = { props.password }
-						newPassword = { props.newPassword }
-						code = { props.code }
-						imageCode = { props.imageCode }
-						inputError = { props.inputError }
+					pageType = { pageType }
+					phoneNumber = { props.phoneNumber }
+					emailText = { props.emailText }
+					name = { props.name }
+					referee = { props.referee }
+					password = { props.password }
+					newPassword = { props.newPassword }
+					code = { props.code }
+					imageCode = { props.imageCode }
+					inputError = { props.inputError }
 
-						imageBlob = { props.imageBlob }
-						fetchImageCode = { props.fetchImageCode }
-						fetchImageError = { props.fetchImageError }
+					imageBlob = { props.imageBlob }
+					fetchImageCode = { props.fetchImageCode }
+					fetchImageError = { props.fetchImageError }
 
-						sendCode = { props.sendCode }
-						countdown = { props.countdown }
-						sendCodeStatus = { props.sendCodeStatus }
-					/>
-					<InputBox
-						tabLabel = { pageType === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
-						registerType = { props.registerType }
-						setInputText = { props.setInputText }
+					sendCode = { props.sendCode }
+					countdown = { props.countdown }
+					sendCodeStatus = { props.sendCodeStatus }
+				/>
+				<InputBox
+					tabLabel = { pageType === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
+					registerType = { props.registerType }
+					setInputText = { props.setInputText }
 
-						pageType = { pageType }
-						phoneNumber = { props.phoneNumber }
-						emailText = { props.emailText }
-						name = { props.name }
-						referee = { props.referee }
-						password = { props.password }
-						newPassword = { props.newPassword }
-						code = { props.code }
-						imageCode = { props.imageCode }
-						inputError = { props.inputError }
+					pageType = { pageType }
+					phoneNumber = { props.phoneNumber }
+					emailText = { props.emailText }
+					name = { props.name }
+					referee = { props.referee }
+					password = { props.password }
+					newPassword = { props.newPassword }
+					code = { props.code }
+					imageCode = { props.imageCode }
+					inputError = { props.inputError }
 
-						imageBlob = { props.imageBlob }
-						fetchImageCode = { props.fetchImageCode }
-						fetchImageError = { props.fetchImageError }
+					imageBlob = { props.imageBlob }
+					fetchImageCode = { props.fetchImageCode }
+					fetchImageError = { props.fetchImageError }
 
-						sendCode = { props.sendCode }
-						countdown = { props.countdown }
-						sendCodeStatus = { props.sendCodeStatus }
-					/>
-				</Tab>
-			</View>
+					sendCode = { props.sendCode }
+					countdown = { props.countdown }
+					sendCodeStatus = { props.sendCodeStatus }
+				/>
+			</Tab>
 			{
 				pageType === "register"
 					? <View style = { styles.adviceNoteBox }>
