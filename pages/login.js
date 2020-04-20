@@ -153,8 +153,7 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 			inputStyle = { styles.codeTextInput }
 			setInputText = { setInputText }
 			renderInputRight = { renderCodeImage }
-		>
-		</Input>
+		/>
 	</React.Fragment>;
 } );
 

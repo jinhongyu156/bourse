@@ -7,6 +7,12 @@ export function setSearch( { url, params } )
 	return ( url ? url.concat( "?" ) : "" ).concat( Object.keys( params ).map( item => `${ item }=${ params[ item ] }` ).join( "&" ) );
 };
 
+// 传入数字字符串str 保留 num 位小数, 并且不四舍五入
+export function getNum( str, num )
+{
+	return str.substring( 0, str.indexOf( "." ) + num + 1 );
+};
+
 // 判断是否为对象
 export function isObject( obj )
 {
@@ -52,6 +58,7 @@ export function fetchPost( url, data, config = {} )
 	{
 		fetch( domain.concat( url ), mergeConfig ).then( function( response )
 		{
+			console.log( "成功返回", response );
 			if( response.status === 200 )
 			{
 				return response.text();

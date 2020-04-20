@@ -1,10 +1,14 @@
-import { fetchPost, isObject } from "./../../javascripts/util.js";
+import Ws from "./../../javascripts/ws.js";
+
+import { fetchPost, isObject, getNum } from "./../../javascripts/util.js";
 
 /* action type */
 export const ACTION_SET_FINANCE_TABINDEX = "ACTION_SET_FINANCE_TABINDEX";
 export const ACTION_SET_FINANCE_STATEMENTDATA = "ACTION_SET_FINANCE_STATEMENTDATA";
 export const ACTION_SET_FINANCE_ISLOADING = "ACTION_SET_FINANCE_ISLOADING";
 export const ACTION_SET_FINANCE_FECTHSTATEMENTERROR = "ACTION_SET_FINANCE_FECTHSTATEMENTERROR";
+
+export const ACTION_SET_FINANCE_NOTICEMESSAGE = "ACTION_SET_FINANCE_NOTICEMESSAGE";
 /* action create */
 // 设置当前选项卡 index
 export function setTabIndex( tabIndex )
@@ -34,11 +38,18 @@ export function setFecthStatementError( fecthStatementError )
 	return { type: ACTION_SET_FINANCE_FECTHSTATEMENTERROR, payload: fecthStatementError };
 };
 
+// 设置通知消息
+export function setNoticeMessage( noticeMessage )
+{
+	return { type: ACTION_SET_FINANCE_NOTICEMESSAGE, payload: noticeMessage };
+};
+
 // 请求流水数据
 export function fetchStatement()
 {
 	return async function( dispatch, getState )
 	{
+		console.log( "===========" );
 		const { finance } = getState();
 		const params = { "提交": "获取明细", "交易区": finance.tabIndex === 0 ? "积分明细" : finance.tabIndex === 1 ? "ETUSD明细" : finance.tabIndex === 2 ? "USDT明细" : finance.tabIndex === 3 ? "交易金" : "" };
 		try
@@ -47,7 +58,15 @@ export function fetchStatement()
 			const res = await fetchPost( "/ETC.php", params );
 			if( isObject( res ) )
 			{
-				dispatch( setStatementData( Object.values( res[ "明细报表" ] )[ 0 ] ) );
+				console.log( "res", res );
+				const dataArr = Object.values( res[ "明细报表" ] )[ 0 ].map( function( item, index )
+				{
+					item[ "流水金额" ] = getNum( item[ "流水金额" ], 2 );
+					item[ "用户余额" ] = getNum( item[ "用户余额" ], 2 );
+					return item
+				} );
+				// const dataArr = [];
+				dispatch( setStatementData( dataArr ) );
 				dispatch( setFecthStatementError( null ) )
 				dispatch( setIsloading( false ) );
 			} else
@@ -66,4 +85,26 @@ export function fetchStatement()
 		};
 
 	};
+};
+
+export function wsNotice()
+{
+	return async function( dispatch )
+	{
+		const ws = Ws.getInstance( "ws://tcp.slb.one:8308/", {
+			heartCheck: function()
+			{
+				ws.sendMessage( "1" );
+			},
+			onopen: function()
+			{
+				ws.sendMessage( "1" );
+			},
+			onmessage: function( res )
+			{
+				dispatch( setNoticeMessage( res ) );
+			}
+		} );
+		ws.initWebSocket();
+	}
 };

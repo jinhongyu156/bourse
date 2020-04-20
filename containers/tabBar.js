@@ -16,7 +16,7 @@ const checkboxStyles = StyleSheet.create( {
 
 const underlineStyles = {
 	tabBarItem: { flex: 1, alignItems: "center" },
-	tabBarItemLine: { flex: 1, width: 40, height: 4, marginTop: 6, backgroundColor: "#696DAC" },
+	tabBarItemLine: { width: 40, height: 4, marginTop: 6, backgroundColor: "#696DAC" },
 	tabBarItemText: { fontSize: 16 },
 	active: { color: "#696DAC", fontWeight: "bold" },
 	inactive: { color: "#888888" }

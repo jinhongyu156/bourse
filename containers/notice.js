@@ -11,7 +11,7 @@ const NOTICEICONHEIGHT = NOTICEHEIGHT * .5;
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center", height: NOTICEHEIGHT, backgroundColor: "#FFFFFF" },
 	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginHorizontal: 10 },
-	noticeText: { fontSize: 16, color: "#656565" }
+	noticeText: { color: "#656565" }
 	
 } );
 

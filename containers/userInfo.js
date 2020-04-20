@@ -5,13 +5,13 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import I18n from "i18n-js";
 
 // 用户信息展示容器高度
-const USERINFOHEIGHT = 300;
+const USERINFOHEIGHT = 270;
 
 // 用户信息展示行高度
 const USERINFOROWHEIGHT = USERINFOHEIGHT / 3;
 
 // 用户信息展示项目 icon 宽高
-const USERINFOITEMICONSIZE = 36;
+const USERINFOITEMICONSIZE = 30;
 
 const styles = StyleSheet.create( {
 	container: { marginTop: 6, height: USERINFOHEIGHT, backgroundColor: "#FFFFFF" },

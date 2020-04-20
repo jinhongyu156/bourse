@@ -10,10 +10,10 @@ const CONTAINERWIDTH = Dimensions.get( "window" ).width;
 // 样式
 const styles = StyleSheet.create( { container: { flex: 1 } } );
 
-const SceneComponent = React.memo( function( { children, shouldUpdated } )
+const SceneComponent = React.memo( function( { children, tabViewStyle, shouldUpdated } )
 {
-
-	return <View collapsable = { false }>{ children }</View>;
+	console.log( "children", children, tabViewStyle );
+	return <View style = { tabViewStyle } collapsable = { false }>{ children }</View>;
 
 }, function( prevProps, nextProps )
 {
@@ -62,6 +62,8 @@ function newSceneKeys( { prevKeys = [], currentPage = 0, numOfSibling, children 
 export default React.memo( function(
 {
 	children,
+	containerStyle = {},																// 容器样式
+	tabViewStyle = {},																	// 选项卡页样式
 	initialPage = 0,																	// 初始加载页码
 	locked = false,																		// 禁止滑动切换
 	animation = true,																	// 是否带有动画(仅在点击导航时)
@@ -84,6 +86,7 @@ export default React.memo( function(
 			const key = makeSceneKey( child, idx );
 			return <SceneComponent
 				key = { key }
+				tabViewStyle = { tabViewStyle }
 				shouldUpdated = { shouldRenderSceneKey( idx, currentPage, numOfSibling ) }>
 				{ keyExists( sceneKeys, key ) ? child : <View tabLabel = { child.props.tabLabel } /> }
 			</SceneComponent>;
@@ -130,7 +133,7 @@ export default React.memo( function(
 
 	const tabBarProps = { goToPage: goToPage, activeTab: currentPage, tabs: pureChildren.map( child => child.props.tabLabel ) };
 
-	return <View style = { styles.container }>
+	return <View style = { [ styles.container, containerStyle ] }>
 		{ tabBarPosition === "top" && renderTabBar( tabBarProps ) }
 		{
 			Platform.OS === "ios"
