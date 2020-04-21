@@ -20,38 +20,21 @@ const styles = StyleSheet.create( {
 
 const Finance = function ( props )
 {
-	const [ scrollEnabled, setScrollEnabled ] = React.useState( true );
-
-	const offEnabled = React.useCallback( function()
-	{
-		setScrollEnabled( false );
-	}, [] );
-
-	const onEnabled = React.useCallback( function()
-	{
-		setScrollEnabled( true );
-	}, [] );
-
 	React.useEffect( function()
 	{
-		console.log( "React.useEffect" );
+		console.log( "发送请求" );
 		props.fetchStatement();
 		props.wsNotice();
 	}, [] );
 
-	console.log( "scrollEnabled", scrollEnabled );
-
 	return <React.Fragment>
 		<Header />
 		<View style = { styles.container }>
-			<ScrollView scrollEnabled = { scrollEnabled } showsVerticalScrollIndicator = { false }>
-
+			<ScrollView showsVerticalScrollIndicator = { false }>
 				<Notice msg = { props.noticeMessage } />
 				<Exchange />
 				<UserInfo />
 				<Statement
-					offEnabled = { offEnabled }
-					onEnabled = { onEnabled }
 					tabIndex = { props.tabIndex }
 					setTabIndex = { props.setTabIndex }
 					isloading = { props.isloading }

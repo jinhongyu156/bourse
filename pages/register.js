@@ -190,10 +190,6 @@ const Register = function( props )
 		return <TabBar tabs = { tabs } type = { "checkBox" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
 	}, [] );
 
-	const onChangeTab = React.useCallback( function( o ) {
-		props.setRegisterType( o.i )
-	}, [] );
-
 	const gotoLogin = React.useCallback( function()
 	{
 		props.navigation.navigate( "Login" );
@@ -235,7 +231,7 @@ const Register = function( props )
 				containerStyle = { [ styles.tabBox, { height: LISTITEMHEIGIT * ( pageType === "register" ? 6 : 5 ) + TABBARHEIGHT } ] }
 				renderTabBar = { renderTabBar }
 				initialPage = { props.registerType }
-				onChangeTab = { onChangeTab }
+				onChangeTab = { props.setRegisterType }
 			>
 				<InputBox
 					tabLabel = { pageType === "register" ? I18n.t( "register.registerType.phoneNumber" ) : I18n.t( "register.findType.phoneNumber" ) }

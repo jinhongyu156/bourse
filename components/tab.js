@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Dimensions, Text, View, ScrollView, Platform, StyleSheet } from "react-native";
+import { Dimensions, View, ScrollView, Platform, StyleSheet } from "react-native";
 
 // 选项卡宽度
 const CONTAINERWIDTH = Dimensions.get( "window" ).width;
@@ -79,8 +79,6 @@ export default React.memo( function(
 
 	const setState = React.useCallback( function( nextPage )							// 更新 state 并调用 onChangeTab
 	{
-		console.log( "收到 nextPage: ", nextPage );
-
 		setCurrentPage( nextPage );
 		setSceneKeys( newSceneKeys( { prevKeys: sceneKeys, currentPage: nextPage, numOfSibling: numOfSibling, children: pureChildren } ) );
 
@@ -88,12 +86,18 @@ export default React.memo( function(
 
 	}, [ sceneKeys, numOfSibling, pureChildren ] );
 
+	React.useEffect( function()															// 处理安卓默认的初始位置 contentOffset
+	{
+		( Platform.OS === "android" ) && tabViewRef.current.scrollTo( { x: initialPage * width, y: 0, animated: false } );
+	}, [] )
 
 	const composeScenes = function()													// 渲染子元素
 	{
+		
 		return pureChildren.map( function( child, idx )
 		{
 			const key = makeSceneKey( child, idx );
+
 			return <SceneComponent
 				key = { key }
 				style = { { width } }
@@ -106,12 +110,8 @@ export default React.memo( function(
 
 	const goToPage = function( pageNumber )												// 跳转页面函数
 	{
-		console.log( "pageNumber, currentPage", pageNumber, currentPage )
-		if ( pageNumber !== currentPage )
-		{
-			tabViewRef.current.scrollTo( { x: pageNumber * width, y: 0, animated: true } );
-			setState( pageNumber );
-		};
+		tabViewRef.current.scrollTo( { x: pageNumber * width, y: 0, animated: true } );
+		currentPage !== pageNumber && setState( pageNumber );
 	};
 
 	const update = function( e )														// ios 调用( 未测试 )
@@ -123,7 +123,6 @@ export default React.memo( function(
 	const tabBarProps = { goToPage: goToPage, activeTab: currentPage, tabs: pureChildren.map( child => child.props.tabLabel ) };
 
 	return <View style = { containerStyle }>
-		<Text onPress = { () => goToPage( 2 ) } >{ currentPage }-----------------------</Text>
 		{ tabBarPosition === "top" && renderTabBar( tabBarProps ) }
 		<ScrollView
 			ref = { tabViewRef }

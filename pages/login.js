@@ -162,6 +162,7 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 
 const Login = function( props )
 {
+
 	// componentWillUnmount
 	useFocusEffect(
 		React.useCallback( function()
@@ -174,12 +175,13 @@ const Login = function( props )
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
-		return <TabBar tabs = { tabs } type = { "checkBox" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
-	}, [] );
-
-	const onChangeTab = React.useCallback( function( o )
-	{
-		props.setLoginType( o.i );
+		return <TabBar
+			type = { "checkBox" }
+			tabs = { tabs }
+			tabBarStyle = { styles.tabBar }
+			activeTab = { activeTab }
+			goToPage = { goToPage }
+		/>
 	}, [] );
 
 	const gotoRegister = React.useCallback( function()
@@ -195,7 +197,14 @@ const Login = function( props )
 	return <KeyboardAvoidingView style = { styles.container } behavior = "position" keyboardVerticalOffset = { -KEYBOARDVERTICALOFFSET }>
 		<Logo />
 		<View style = { styles.errorBox }><Text style = { styles.errorColor }>{ props.fetchLoginError }</Text></View>
-		<Tab width = { LISTITEMWIDTH } containerStyle = { styles.tabBox } renderTabBar = { renderTabBar } initialPage = { props.loginType } onChangeTab = { onChangeTab }>
+		<Tab
+			width = { LISTITEMWIDTH }
+			containerStyle = { styles.tabBox }
+			renderTabBar = { renderTabBar }
+			initialPage = { props.loginType }
+			numOfSibling = { 0 }
+			onChangeTab = { props.setLoginType }
+		>
 			<InputBox
 				tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
 				loginType = { props.loginType }

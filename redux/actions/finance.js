@@ -16,6 +16,7 @@ export function setTabIndex( tabIndex )
 	return function( dispatch )
 	{
 		dispatch( { type: ACTION_SET_FINANCE_TABINDEX, payload: tabIndex } );
+		dispatch( setStatementData( [] ) );
 		dispatch( fetchStatement() );
 	};
 };
@@ -55,7 +56,8 @@ export function fetchStatement()
 		{
 			dispatch( setIsloading( true ) );
 			const res = await fetchPost( "/ETC.php", params );
-			if( isObject( res ) )
+
+			if( isObject( res ) && res[ "明细报表" ] )
 			{
 				const dataArr = Object.values( res[ "明细报表" ] )[ 0 ].map( function( item, index )
 				{
@@ -64,13 +66,13 @@ export function fetchStatement()
 					return item;
 				} );
 				// const dataArr = [];
-				dispatch( setStatementData( [ ...dataArr, ...dataArr, ...dataArr, ...dataArr ] ) );
+				dispatch( setStatementData( dataArr ) );
 				dispatch( setFecthStatementError( null ) )
 				dispatch( setIsloading( false ) );
 			} else
 			{
 				dispatch( setStatementData( [] ) );
-				dispatch( setFecthStatementError( res ) )
+				dispatch( setFecthStatementError( null ) )
 				dispatch( setIsloading( false ) );
 			};
 

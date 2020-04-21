@@ -53,7 +53,7 @@ const UnderlineTabBarItem = React.memo( function( { index, title, isActive, onPr
 // 选项卡导航栏
 const TabBar = React.memo( function( { tabs, type, tabBarStyle, activeTab, goToPage } )
 {
-	const onPress = React.useCallback( i => goToPage( i ), [] );
+	const onPress = React.useCallback( i => goToPage( i ), [ goToPage ] );
 
 	return <View style = { [ globalStyles.tabBar, tabBarStyle ] }>
 	{

@@ -19,15 +19,15 @@ const TABITEMHEADERHEIGHT = 30;
 const TABITEMROWHEIGHT = 50;
 
 // ScrollView 最大高度
-const SCROLLVIEWHEIGHT = SCREENHEIGHT - 120 - 50 - TABBARHEIGHT;			// 头部: 120, 底部导航: 50, 选项卡高度: 50, 选项页头部高度: 30
+const SCROLLVIEWHEIGHT = SCREENHEIGHT - 120 - 50 - TABBARHEIGHT - TABITEMHEADERHEIGHT;			// 头部: 120, 底部导航: 50, 选项卡高度: 50, 选项页头部高度: 30
 
 const styles = StyleSheet.create( {
 	container: { marginTop: 6 },
 	tabBar: { height: TABBARHEIGHT, backgroundColor: "#FFFFFF" },
-	// tabItemContainer: { flex: 1, maxHeight: SCROLLVIEWHEIGHT, height: SCROLLVIEWHEIGHT, backgroundColor: "red" },
-	tabItemContainer: { backgroundColor: "red" },
+	tabItemContainer: { backgroundColor: "#F6F6F6" },
+	tabItemScrollView: { flex: 1 },
 	tabItemHeader: { flexDirection: "row", alignItems: "center", backgroundColor: "#F6F6F6", height: TABITEMHEADERHEIGHT, paddingHorizontal: 10 },
-	tabItemRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: TABITEMROWHEIGHT, paddingHorizontal: 10 },
+	tabItemRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: TABITEMROWHEIGHT, paddingHorizontal: 10, marginTop: 2 },
 	tabItemHeaderText: { flex: 1, color: "#000000", textAlign: "center" },
 	tabItemRowText: { flex: 1, color: "#777777", textAlign: "center" },
 	errorBox: { height: 100, paddingHorizontal: 10, justifyContent: "center" },
@@ -62,7 +62,7 @@ const TabItemHeader = React.memo( function()
 } );
 
 // 选项卡页
-const TabItem = React.memo( function( { offEnabled, onEnabled, isloading, statementData, fecthStatementError } )
+const TabItem = React.memo( function( { isloading, statementData, fecthStatementError } )
 {
 	if( fecthStatementError )
 	{
@@ -89,17 +89,13 @@ const TabItem = React.memo( function( { offEnabled, onEnabled, isloading, statem
 
 		const scrollViewHeight = ( realHeight > SCROLLVIEWHEIGHT ) ? SCROLLVIEWHEIGHT : realHeight;
 
-		console.log( "scrollViewHeight", scrollViewHeight );
-
-		return <View style = { { height: scrollViewHeight } }>
+		return <View style = { [ styles.tabItemContainer, { height: scrollViewHeight } ] }>
+			<TabItemHeader />
 			<ScrollView
-				stickyHeaderIndices = { [ 0 ] }
+				style = { styles.tabItemScrollView }
 				showsVerticalScrollIndicator = { false }
-				onTouchStart = { offEnabled }
-				onTouchEnd = { onEnabled }
-				onMomentumScrollEnd = { onEnabled }
+				nestedScrollEnabled = { true }							// 嵌套滚动( Android 属性, ios 默认支持 )
 			>
-				<TabItemHeader />
 				{
 					statementData.map( function( item, index )
 					{
@@ -111,14 +107,13 @@ const TabItem = React.memo( function( { offEnabled, onEnabled, isloading, statem
 	};
 } );
 
-export default React.memo( function Statement( { offEnabled, onEnabled, tabIndex, setTabIndex, isloading, statementData, fecthStatementError } )
+export default React.memo( function Statement( { tabIndex, setTabIndex, isloading, statementData, fecthStatementError } )
 {
 
-	const renderTabBar = function( { tabs, activeTab, goToPage } )
+	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />;
-	};
-
+	}, [] );
 
 	return <Tab
 		renderTabBar = { renderTabBar }
@@ -128,32 +123,24 @@ export default React.memo( function Statement( { offEnabled, onEnabled, tabIndex
 	>
 		<TabItem
 			tabLabel = { "积分" }
-			offEnabled = { offEnabled }
-			onEnabled = { onEnabled }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
 		/>
 		<TabItem
 			tabLabel = { "ETUSD" }
-			offEnabled = { offEnabled }
-			onEnabled = { onEnabled }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
 		/>
 		<TabItem
 			tabLabel = { "USDT" }
-			offEnabled = { offEnabled }
-			onEnabled = { onEnabled }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
 		/>
 		<TabItem
 			tabLabel = { "交易金" }
-			offEnabled = { offEnabled }
-			onEnabled = { onEnabled }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
