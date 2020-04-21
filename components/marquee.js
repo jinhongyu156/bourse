@@ -19,6 +19,7 @@ const styles = StyleSheet.create( {
  * @list				{Array}			[description] 滚动的文字数组
  * @width				{number}		[description] 容器宽度 默认: Dimensions.get( "window" ).width( 别使用 flex )
  * @height				{number}		[description] 容器高度 默认: 50( 别使用 flex )
+ * @direction			{string}		[description] 运动方向
  * @duration			{number}		[description] 执行整个动画的完成时间 默认 600
  * @delay				{number}		[description] 文本停顿时间(ms) 默认 1200
  * @viewStyle			{Object}		[description] View 样式
@@ -28,92 +29,31 @@ const styles = StyleSheet.create( {
  * @return				{ele}			[description]
  **/
 
-// [ 1, 2, 3, 4 ] => [ 4, 1, 2, 3, 4, 1 ]
+const Row = React.memo( function ( { viewStyle, textStyle, text } )
+{
+	return <View style = { viewStyle }>
+		<Text style = { textStyle }>{ text }</Text>
+	</View>;
+} );
 
-class MarqueeVertical extends React.Component {
-	constructor( props ) {
-		super( props );
 
-		this.state = { animation: null, index: props.direction === "down" ? props.list.length : 1 };
-		this.animatedTransformY = new Animated.Value( -this.state.index * this.props.height );
-	}
-
- /*   componentWillReceiveProps(nextProps){
-		let newText = nextProps.list || [];
-		let oldText = this.props.list || [];
-		let newDirection = nextProps.direction || "up";
-		if (newText !== oldText) {
-			this.state.animation && this.state.animation.stop();
-			this.setState({
-				list : newText,
-				textIndex : newText.length,
-				index : newDirection == "down" ? newText.length : 1,
-				animation: null,
-			});
-		}
-	}*/
-	componentDidUpdate()
+const List = React.memo( function( { list, width, height, viewStyle, textStyle, animatedTransform, onClick } )
+{
+	const _viewStyle = [ styles.viewStyle, { width, height }, viewStyle ];
+	const _textStyle = [ styles.textStyle, textStyle ];
+	if( list.length === 0 )
 	{
-		if( !this.state.animation )
-		{
-			let value = 0;
-			let toValue = 0;
-			if( this.props.direction === "down" )
-			{
-				// console.log( "----------------------", this.state.index );
-				if( this.state.index === 0 )
-				{
-					value = this.props.list.length * this.props.height;
-					toValue = ( this.props.list.length - 1 ) * this.props.height;
-					console.log( "更改前: ", toValue );
-					this.setState( { index: this.props.list.length } );
-				} else
-				{
-					value = this.state.index * this.props.height;
-					toValue = ( this.state.index - 1 ) * this.props.height;
-					console.log( "hahah前: ", value );
-					this.setState( { index: this.state.index - 1 } );
-				};
-			};
-			if( this.props.direction === "up" )
-			{
-				if( this.state.index === this.props.list.length + 1 )
-				{
-					console.log( "更改前: ", this.state.index, 2 * this.props.height )
-					value = 1 * this.props.height;
-					toValue = 2 * this.props.height;
-					this.setState( { index: 2 }, () => console.log( "更改后: ", this.state.index ) );
-				} else
-				{
-					value = this.state.index * this.props.height;
-					toValue = ( this.state.index + 1 ) * this.props.height;
-					this.setState( { index: this.state.index + 1 } );
-				};
-			};
-			console.log( "----------------------", -value );
-			this.animatedTransformY.setValue( -value );
+		return null;
+	};
 
-			this.setState( { animation: Animated.timing( this.animatedTransformY, {
-				toValue: -toValue, easing: Easing.linear, delay : this.props.delay, duration: this.props.duration, useNativeDriver: true
-			} ) }, () => {
-				this.state.animation && this.state.animation.start( () => this.setState( { animation: null } ) )
-			} );
-		}
-	}
-
-	componentWillUnmount()
+	if ( list.length === 1 )
 	{
-		this.state.animation && this.state.animation.stop();
-	}
+		return <Row viewStyle = { _viewStyle } textStyle = { _textStyle } text = { list[ 0 ].value } />;
+	};
 
-	singleLineTextView()
+	if ( list.length > 1 )
 	{
-		if( !this.props.list.length )
-		{
-			return null
-		};
-
-		const _listText = Array.from( this.props.list );
+		const _listText = Array.from( list );
 		const _listView = [];
 
 		_listText.push( _listText[ 0 ] );
@@ -122,41 +62,123 @@ class MarqueeVertical extends React.Component {
 		for( let i = 0; i < _listText.length; i++ )
 		{
 			_listView.push(
-				this.props.onClick
-					? <TouchableOpacity key = { i } onPress = { () => this.props.onClick( _listText[ i ].index ) }>
-						<View style = { [ styles.viewStyle, { width: this.props.width, height: this.props.height }, this.props.viewStyle ] }>
-							<Text style = { [ styles.textStyle, this.props.textStyle ] }>{ _listText[ i ].value }</Text>
-						</View>
+				onClick
+					? <TouchableOpacity key = { i } onPress = { () => onClick( _listText[ i ].index ) }>
+						<Row viewStyle = { _viewStyle } textStyle = { _textStyle } text = { _listText[ i ].value } />
 					</TouchableOpacity>
-					: <View style = { [ styles.viewStyle, { width: this.props.width, height: this.props.height }, this.props.viewStyle ] }>
-						<Text style = { [ styles.textStyle, this.props.textStyle ] }>{ _listText[ i ].value }</Text>
-					</View>
+					: <Row viewStyle = { _viewStyle } textStyle = { _textStyle } text = { _listText[ i ].value } />
 			);
 		};
 
-		return <Animated.View style = { { width: this.props.width, transform: [ { translateY: this.animatedTransformY } ] } }>
+		return <Animated.View style = { { width, transform: [ { translateY: animatedTransform } ] } }>
 		{
 			_listView
 		}
 		</Animated.View>;
-	}
-	render()
+	};
+} );
+
+export default React.memo( function( {
+	list = [],
+	width = MARQUEEHEIGHT,
+	height = height,
+	direction = "up",
+	duration = 1600,
+	delay = 1200,
+	viewStyle = {},
+	textStyle = {},
+	containerStyle = {},
+	onClick
+} )
+{
+	console.log( "re-render" );
+	const timer = React.useRef( null );
+	const listRef = React.useRef( list )
+	const indexRef = React.useRef( direction === "down" ? listRef.current.length : 1 );
+
+	const animatedTransform = React.useRef( new Animated.Value( indexRef.current * height * -1 ) );
+
+	if( listRef.current !== list )
 	{
-		return <View style = { [ styles.container, { width: this.props.width, height: this.props.height }, this.props.containerStyle ] }>
+		if ( list.length > 1 )
 		{
-			this.singleLineTextView()
-		}
-		</View>;
-	}
-};
+			if ( list.length > listRef.current.length )
+			{
+				clearInterval( timer.current );
+				Animated.timing( animatedTransform.current, {
+					toValue: list.length * height * -1, easing: Easing.linear, duration: duration, useNativeDriver: true
+				} ).start( () => {
+					timer.current = setInterval( run, delay + duration );
+				} );
+			};
+		} else
+		{
+			clearInterval( timer.current );
+		};
+		listRef.current = list;
+		indexRef.current = listRef.current.length;
+	};
 
-MarqueeVertical.defaultProps = {
-	list: [],
-	delay: 1200,
-	duration: 600, 
-	direction: "up",
-	width: MARQUEEHEIGHT,
-	height: MARQUEEWIDTH
-};
+	function run()
+	{
+		console.log( "setInterval", listRef.current, indexRef.current );
+		if( direction === "down" )
+		{
+			const initIndex = listRef.current.length;
 
-export default MarqueeVertical;
+			if( indexRef.current === 0 )
+			{
+				indexRef.current = initIndex - 1;
+				animatedTransform.current.setValue( initIndex * height * -1 );
+			} else
+			{
+				indexRef.current = indexRef.current - 1;
+			};
+
+		};
+		if( direction === "up" )
+		{
+			const initIndex = 1;
+
+			if( indexRef.current === listRef.current.length + 1 )
+			{
+				indexRef.current = initIndex + 1;
+				animatedTransform.current.setValue( initIndex * height * -1 );
+			} else
+			{
+				indexRef.current = indexRef.current + 1;
+			};
+		};
+
+		Animated.timing( animatedTransform.current, {
+			toValue: indexRef.current * height * -1, easing: Easing.linear, duration: duration, useNativeDriver: true
+		} ).start();
+	};
+
+	React.useEffect( function()
+	{
+		
+		console.log( "useEffect bind" );
+		if ( listRef.current.length > 1 )
+		{
+			console.log( "useEffect 执行定时器" );
+			timer.current = setInterval( run, delay + duration );
+		};
+		return function()
+		{
+			console.log( "useEffect unbind" )
+			clearInterval( timer.current );
+		};
+	}, [] );
+	return <View style = { [ styles.container, { width, height }, containerStyle ] }>
+		<List
+			list = { listRef.current }
+			width = { width }
+			height = { height }
+			viewStyle = { viewStyle }
+			textStyle = { textStyle }
+			animatedTransform = { animatedTransform.current }
+			onClick = { onClick }
+		/>
+	</View>;
+} );

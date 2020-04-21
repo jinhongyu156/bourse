@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, Dimensions, StyleSheet } from "react-native";
 
 import MarqueeVertical from "./../components/marquee.js";
 
@@ -10,32 +10,60 @@ const NOTICEHEIGHT = 40;
 // 通知栏 icon 宽高
 const NOTICEICONHEIGHT = NOTICEHEIGHT * .5;
 
+// 通知栏 icon marginHorizontal
+const NOTICEICONMARGINHORIZONTAL = 10;
+
+// 通知栏宽度
+const NOTICEWIDTH = Dimensions.get( "window" ).width - NOTICEICONHEIGHT - NOTICEICONMARGINHORIZONTAL * 2;
+
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center", height: NOTICEHEIGHT, backgroundColor: "#FFFFFF" },
-	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginHorizontal: 10 },
-	noticeText: { color: "#656565" }
+	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginHorizontal: NOTICEICONMARGINHORIZONTAL },
+	noticeView: { paddingHorizontal: 10 },
+    noticeText: { color: "#656565" }
 	
 } );
 
 export default React.memo( function Notice( { msg } )
 {
-	return <View style = { styles.container }>
-		{/*<Image style = { styles.noticeIcon } source = { require( "./../images/notice.png" ) } />
-		<Text style = { styles.noticeText }>{ msg }</Text>*/}
-		                <MarqueeVertical
-                    list = {[
-                        { index: 1, value : 'item1:一闪一闪亮晶晶，满天都是小星星'},
-                        { index: 2, value : 'item2:两只老虎跑的快'},
-                        { index: 3, value : 'item3:蓝蓝的天上白云飘，白云下面小肥羊儿跑'},
-                        { index: 4, value : 'item4:哈哈哈哈哈哈哈'},
-                    ]}
-                    direction = { "down" }
-                    // height = { NOTICEHEIGHT }
-                    containerStyle = {{backgroundColor : '#FFFF00'}}
-                    textStyle = {{fontSize : 16,color : '#FF0000'}}
-                    onTextClick = {(item) => {
-                        alert(''+JSON.stringify(item));
-                    }}
-                />
-	</View>;
+    // { index: 1, value: "message 1" }
+    const [ data, setData ] = React.useState( [{ index: 1, value : "meaasge 1" }, { index: 2, value : "meaasge 2" }] );
+	return <View>
+        <Text onPress = { () => {
+            setData( c => {
+                if( c.length )
+                {
+                    return [ ...c, { index: c.length + 1, value : `meaasge ${ c.length + 1 }` } ]
+                } else
+                {
+                    return [ { index: 1, value : "meaasge 1" } ]
+                };
+            } )
+        } }>add: { JSON.stringify( data ) }</Text>
+         <Text onPress = { () => {
+            setData( c => {
+                if( c.length )
+                {
+
+                    return c.filter( (k, i) => i != 0 )
+                } else
+                {
+                    return [ { index: 1, value : "meaasge 1" } ]
+                };
+            } )
+        } }>--: { JSON.stringify( data ) }</Text>
+        <View style = { styles.container }>
+    		<Image style = { styles.noticeIcon } source = { require( "./../images/notice.png" ) } />
+    		<MarqueeVertical
+                list = { data }
+                width = { NOTICEWIDTH }
+                height = { NOTICEHEIGHT }
+                textStyle = { styles.noticeText }
+                containerStyle = { styles.noticeView }
+                onClick = { index => {
+                    console.log( "index", index )
+                }}
+            />
+    	</View>
+    </View>
 } );

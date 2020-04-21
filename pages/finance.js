@@ -31,7 +31,7 @@ const Finance = function ( props )
 		<Header />
 		<View style = { styles.container }>
 			<ScrollView showsVerticalScrollIndicator = { false }>
-				<Notice msg = { props.noticeMessage } />
+				<Notice msg = { "props.noticeMessage" } />
 				<Exchange />
 				<UserInfo />
 				<Statement
