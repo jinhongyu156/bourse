@@ -62,8 +62,8 @@ export default {
 	},
 	finance: {
 		exchange: {
-			exchangeText: "potint",
-			potintExchange: "potint exchange"
+			exchangeText: "Potint",
+			potintExchange: "Potint exchange"
 		},
 		userInfo: {
 			point: "Point",
@@ -75,6 +75,16 @@ export default {
 			todayEarnings: "Today earnings",
 			yesterdayEarnings: "Yesterday Earnings",
 			allEarnings: "All Earnings"
+		},
+		statement: {
+			direction: "Direction",
+			amount: "Amount",
+			balance: "Balance",
+			time: "Time",
+			note: "Note",
+			point: "Point",
+			trading: "Trading",
+			noData: "No data was queried"
 		}
 	}
 };

@@ -2,6 +2,12 @@ import React from "react";
 
 import { View, Text, Image, Dimensions, StyleSheet } from "react-native";
 
+import { bindActionCreators } from "redux";
+
+import { connect } from "react-redux";
+
+import { wsNotice } from "./../redux/actions/finance.js";
+
 import MarqueeVertical from "./../components/marquee.js";
 
 // 通知栏高度
@@ -20,50 +26,62 @@ const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center", height: NOTICEHEIGHT, backgroundColor: "#FFFFFF" },
 	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginHorizontal: NOTICEICONMARGINHORIZONTAL },
 	noticeView: { paddingHorizontal: 10 },
-    noticeText: { color: "#656565" }
-	
+	noticeText: { fontSize: 14, color: "#656565" }
 } );
 
-export default React.memo( function Notice( { msg } )
+let seed = 0;
+
+const Notice = React.memo( function( { wsNotice, noticeMessage: msg } )
 {
-    // { index: 1, value: "message 1" }
-    const [ data, setData ] = React.useState( [{ index: 1, value : "meaasge 1" }, { index: 2, value : "meaasge 2" }] );
-	return <View>
-        <Text onPress = { () => {
-            setData( c => {
-                if( c.length )
-                {
-                    return [ ...c, { index: c.length + 1, value : `meaasge ${ c.length + 1 }` } ]
-                } else
-                {
-                    return [ { index: 1, value : "meaasge 1" } ]
-                };
-            } )
-        } }>add: { JSON.stringify( data ) }</Text>
-         <Text onPress = { () => {
-            setData( c => {
-                if( c.length )
-                {
+	console.log( "Notice re-render" );
 
-                    return c.filter( (k, i) => i != 0 )
-                } else
-                {
-                    return [ { index: 1, value : "meaasge 1" } ]
-                };
-            } )
-        } }>--: { JSON.stringify( data ) }</Text>
-        <View style = { styles.container }>
-    		<Image style = { styles.noticeIcon } source = { require( "./../images/notice.png" ) } />
-    		<MarqueeVertical
-                list = { data }
-                width = { NOTICEWIDTH }
-                height = { NOTICEHEIGHT }
-                textStyle = { styles.noticeText }
-                containerStyle = { styles.noticeView }
-                onClick = { index => {
-                    console.log( "index", index )
-                }}
-            />
-    	</View>
-    </View>
+	const msgArr = React.useRef( msg );
+
+	const [ data, setData ] = React.useState( [] );
+
+	React.useEffect( function()
+	{
+		wsNotice();
+	}, [] )
+
+	if( msgArr.current != msg )
+	{
+		msgArr.current = msg;
+		setData( data => [ ...data, { index: seed++, value: msg } ] );
+	};
+
+	const onUnitLoopEnd = React.useCallback( function()
+	{
+		if( data.length > 1 )
+		{
+			setData( data => [ data[ data.length - 1 ] ] )
+		};
+	}, [ data ] );
+
+	return <View style = { styles.container }>
+		<Image style = { styles.noticeIcon } source = { require( "./../images/notice.png" ) } />
+		<MarqueeVertical
+			list = { data }
+			width = { NOTICEWIDTH }
+			height = { NOTICEHEIGHT }
+			textStyle = { styles.noticeText }
+			containerStyle = { styles.noticeView }
+			onUnitLoopEnd = { onUnitLoopEnd }
+		/>
+	</View>;
 } );
+
+export default connect(
+	function mapStateToProps( state, ownProps )
+	{
+		const financeData = state.finance;
+
+		return {
+			noticeMessage: financeData.noticeMessage
+		};
+	},
+	function mapDispatchToProps( dispatch, ownProps )
+	{
+		return bindActionCreators( { wsNotice }, dispatch );
+	}
+)( Notice );

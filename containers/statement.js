@@ -2,6 +2,8 @@ import React from "react";
 
 import { View, ScrollView, Text, ActivityIndicator, StyleSheet, Dimensions } from "react-native";
 
+import I18n from "i18n-js";
+
 import Tab from "./../components/tab.js";
 
 import TabBar from "./../containers/tabBar.js";
@@ -53,11 +55,11 @@ const TabItemRow = React.memo( function( { data } )
 const TabItemHeader = React.memo( function()
 {
 	return <View style = { styles.tabItemHeader }>
-		<Text style = { styles.tabItemHeaderText }>流水方向</Text>
-		<Text style = { styles.tabItemHeaderText }>流水金额</Text>
-		<Text style = { styles.tabItemHeaderText }>用户余额</Text>
-		<Text style = { styles.tabItemHeaderText }>流水时间</Text>
-		<Text style = { styles.tabItemHeaderText }>备注</Text>
+		<Text style = { styles.tabItemHeaderText }>{ I18n.t( "finance.statement.direction" ) }</Text>
+		<Text style = { styles.tabItemHeaderText }>{ I18n.t( "finance.statement.amount" ) }</Text>
+		<Text style = { styles.tabItemHeaderText }>{ I18n.t( "finance.statement.balance" ) }</Text>
+		<Text style = { styles.tabItemHeaderText }>{ I18n.t( "finance.statement.time" ) }</Text>
+		<Text style = { styles.tabItemHeaderText }>{ I18n.t( "finance.statement.note" ) }</Text>
 	</View>
 } );
 
@@ -79,7 +81,7 @@ const TabItem = React.memo( function( { isloading, statementData, fecthStatement
 	if( !isloading && statementData.length === 0 )
 	{
 		return <View style = { styles.noDataBox }>
-			<Text style = { styles.noDataText }>未查询到数据</Text>
+			<Text style = { styles.noDataText }>{ I18n.t( "finance.statement.noData" ) }</Text>
 		</View>
 	};
 
@@ -122,7 +124,7 @@ export default React.memo( function Statement( { tabIndex, setTabIndex, isloadin
 		onChangeTab = { setTabIndex }
 	>
 		<TabItem
-			tabLabel = { "积分" }
+			tabLabel = { I18n.t( "finance.statement.point" ) }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
@@ -140,10 +142,11 @@ export default React.memo( function Statement( { tabIndex, setTabIndex, isloadin
 			fecthStatementError = { fecthStatementError }
 		/>
 		<TabItem
-			tabLabel = { "交易金" }
+			tabLabel = { I18n.t( "finance.statement.trading" ) }
 			isloading = { isloading }
 			statementData = { statementData }
 			fecthStatementError = { fecthStatementError }
 		/>
 	</Tab>
 } );
+

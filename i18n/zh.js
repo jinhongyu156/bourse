@@ -72,7 +72,16 @@ export default {
 			todayEarnings: "今日收益",
 			yesterdayEarnings: "昨日等级",
 			allEarnings: "累计收益"
+		},
+		statement: {
+			direction: "流水方向",
+			amount: "流水金额",
+			balance: "用户余额",
+			time: "流水时间",
+			note: "备注",
+			point: "积分",
+			trading: "交易金",
+			noData: "未查询到数据"
 		}
 	}
 };
-
