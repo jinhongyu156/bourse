@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Modal, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Modal, TextInput, ActivityIndicator, TouchableOpacity, ToastAndroid, Image, StyleSheet, Dimensions } from "react-native";
 
 import I18n from "i18n-js";
 
@@ -16,7 +16,7 @@ const EXCHANGEICONSIZE = 58;
 const MODALWIDTH = Dimensions.get( "window" ).width * 0.8;
 
 // Modal 高度
-const MODALHEIGHT = Dimensions.get( "window" ).height * 0.5;
+const MODALHEIGHT = Dimensions.get( "window" ).height * 0.45;
 
 // Modal 标题高度
 const MODALTITLEBOXHEIGHT = MODALHEIGHT * 0.25;			// 25
@@ -45,69 +45,99 @@ const styles = StyleSheet.create( {
 	modalTitle: { width: MODALWIDTH, height: MODALTITLEBOXHEIGHT, justifyContent: "center", alignItems: "center" },
 	modalTitleText: { fontSize: 22 },
 	modalInputBox: { width: MODALWIDTH, height: MODALINPUTHEIGHT, justifyContent: "space-around", alignItems: "center" },
-	modalInput: { fontSize: 18, textAlign: "center", width: MODALINPUTBOXWIDTH, height: MODALINPUTHEIGHT * 0.5, borderWidth: 1, borderColor: "#ECECEC" },
+	modalInput: { fontSize: 18, textAlign: "center", width: MODALINPUTBOXWIDTH, height: MODALINPUTHEIGHT * 0.5, borderWidth: 1 },
 	modalInputTip: { fontSize: 12, color: "#6D6E77" },
 	modalOptionBox: { flexDirection: "row", width: MODALWIDTH, height: MODALOPTIONBOXHEIGHT },
 	modalOptionBoxItem: { flex: 1, justifyContent: "center", alignItems: "center" },
-	modalOptionBoxItemText: { fontSize: 20, fontWeight: "bold", borderRadius: 50, paddingVertical: 10, paddingHorizontal: 40 },
-	modalCancelBtn: { color: "#88898A", borderWidth: 2, borderColor: "#88898A" },
+	modalOptionBoxItemText: { fontSize: 18, fontWeight: "bold", borderRadius: 50, paddingVertical: 10, paddingHorizontal: 40 },
+	modalCancelBtn: { color: "#88898A", borderWidth: 1, borderColor: "#88898A" },
 	modalConfirmBtn: { color: "#FFFFFF", backgroundColor: "#696DAC" },
 	modalInfoBox: { width: MODALWIDTH, height: MODALINFOBOXHEIGHT, flexDirection: "row", justifyContent: "space-around", alignItems: "center" },
 	modalInfoItem: { alignItems: "center" },
-	modalInfoBoxText: { fontSize: 12, color: "#6D6E77" }
+	modalInfoBoxText: { fontSize: 12, color: "#6D6E77" },
+
+	correctBorderColor: { borderColor: "#ECECEC" },
+	errorBorderColor: { borderColor: "#F00" },
+	errorColor: { fontSize: 12, color: "#F00" }
 } );
 
-const ModalCard = React.memo( function( { title, tip, modalVisible, modalInputText, setModalText, hideModal } )
+/*
+
+
+*/
+
+const ModalCard = React.memo( function( { callback, visible, title, text, inputError, fecthError, isloading, tip, setModalText, hideModal } )
 {
-	console.log( "title, tip", title, tip );
-	return <Modal visible = { modalVisible } animationType = "none" transparent onRequestClose = { hideModal }>
+	// 关闭 modal, 不发送请求
+	const hide = React.useCallback( function()
+	{
+		hideModal( 0 );
+	}, [] );
+
+	// 关闭 modal, 发送请求
+	const submit = React.useCallback( function()
+	{
+		hideModal( 1, () => {
+			callback();
+			ToastAndroid.show( I18n.t( "finance.exchange.exchangeSuccess" ), ToastAndroid.SHORT );
+		} );
+	}, [] );
+
+	return <Modal visible = { visible } animationType = "none" transparent onRequestClose = { hide }>
 		<View style = { styles.modalWrapper }>
-			<Text style = { styles.modalOverlay } onPress = { hideModal } />
+			<Text style = { styles.modalOverlay } onPress = { hide } />
 			<View style = { styles.modalContainer }>
 				<View style = { styles.modalTitle }>
 					<Text style = { styles.modalTitleText }>{ title }</Text>
+					{ fecthError ? <Text style = { styles.errorColor }>{ fecthError }</Text> : null }
 				</View>
 				<View style = { styles.modalInputBox }>
 					<TextInput
-						style = { styles.modalInput }
-						value = { modalInputText }
+						style = { [ styles.modalInput, inputError ? styles.errorBorderColor : styles.correctBorderColor ] }
+						value = { text }
 						keyboardType = { "numeric" }
-						placeholder = { "输入兑换数量" }
+						placeholder = { I18n.t( "finance.exchange.placeholder" ) }
 						onChangeText = { setModalText }
 					/>
 					<Text style = { styles.modalInputTip }>{ tip }</Text>
 				</View>
 				<View style = { styles.modalOptionBox }>
-					<TouchableOpacity style = { styles.modalOptionBoxItem } onPress = { hideModal }>
-						<Text style = { [ styles.modalOptionBoxItemText, styles.modalCancelBtn ] }>取消</Text>
+					<TouchableOpacity style = { styles.modalOptionBoxItem } onPress = { hide }>
+						<Text style = { [ styles.modalOptionBoxItemText, styles.modalCancelBtn ] }>{ I18n.t( "finance.exchange.cancelText" ) }</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style = { styles.modalOptionBoxItem }>
-						<Text style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>兑换</Text>
+					<TouchableOpacity style = { styles.modalOptionBoxItem } disabled = { isloading } onPress = { submit }>
+					{
+						isloading
+							? <View style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>
+								<ActivityIndicator size = "small" color = "#FFFFFF" />
+							</View>
+							: <Text style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>{ I18n.t( "finance.exchange.exchangeText" ) }</Text>
+					}
 					</TouchableOpacity>
 				</View>
 				<View style = { styles.modalInfoBox }>
 					<View style = { styles.modalInfoItem }>
-						<Text style = { styles.modalInfoBoxText }>ETUSD余额</Text>
+						<Text style = { styles.modalInfoBoxText }>{ I18n.t( "finance.exchange.balance", { name: "ETUSD" } ) }</Text>
 						<Text style = { styles.modalInfoBoxText }>0.00</Text>
 					</View>
 					<View style = { styles.modalInfoItem }>
-						<Text style = { styles.modalInfoBoxText }>USDT余额</Text>
+						<Text style = { styles.modalInfoBoxText }>{ I18n.t( "finance.exchange.balance", { name: "USDT" } ) }</Text>
 						<Text style = { styles.modalInfoBoxText }>0.00</Text>
 					</View>
 					<View style = { styles.modalInfoItem }>
-						<Text style = { styles.modalInfoBoxText }>积分余额</Text>
+						<Text style = { styles.modalInfoBoxText }>{ I18n.t( "finance.exchange.balance", { name: I18n.t( "finance.exchange.point" ) } ) }</Text>
 						<Text style = { styles.modalInfoBoxText }>0.00</Text>
 					</View>
 				</View>
 			</View>
 		</View>
-	</Modal>
+	</Modal>;
 } );
 
 
-export default React.memo( function Exchange( { modalVisible, modalData, modalInputText, setModalText, showModal, hideModal } )
+export default React.memo( function Exchange( { modalData, callback, setModalText, showModal, hideModal } )
 {
-	console.log( "modalData", modalData );
+	console.log( "Exchange", "re-render", modalData );
 
 	return <View style = { styles.container }>
 		<TouchableOpacity style = { styles.exchangeItem } onPress = { () => showModal( "USD兑换ETU" ) }>
@@ -131,16 +161,6 @@ export default React.memo( function Exchange( { modalVisible, modalData, modalIn
 				<Text style = { styles.exchangeItemText }>ETUSD</Text>
 			</React.Fragment>
 		</TouchableOpacity>
-		{
-			modalData
-				? <ModalCard
-					{ ...modalData }
-					modalVisible = { modalVisible }
-					modalInputText = { modalInputText }
-					setModalText = { setModalText }
-					hideModal = { hideModal }
-				/>
-				: null
-		}
+		{ modalData ? <ModalCard { ...modalData } callback = { callback } setModalText = { setModalText } hideModal = { hideModal } /> : null }
 	</View>;
 } );

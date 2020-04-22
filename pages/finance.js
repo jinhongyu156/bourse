@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideModal, setModalText } from "./../redux/actions/finance.js";
+import { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText } from "./../redux/actions/finance.js";
 
 import Header from "./../containers/header.js";
 import Exchange from "./../containers/exchange.js";
@@ -19,12 +19,13 @@ const styles = StyleSheet.create( {
 
 const Finance = function ( props )
 {
-	const fetchData = function()
+	console.log( "Finance re-render", props );
+	const fetchData = React.useCallback( function()
 	{
 		console.log( "发送请求" );
 		props.fetchStatement();
 		props.fetchUserDetailData();
-	};
+	}, [] );
 
 	React.useEffect( function()
 	{
@@ -39,12 +40,11 @@ const Finance = function ( props )
 				refreshControl = { <RefreshControl refreshing = { props.isloadingUserDetailData } onRefresh = { fetchData } /> }
 			>
 				<Exchange
-					modalVisible = { props.modalVisible }
 					modalData = { props.modalData }
-					modalInputText = { props.modalInputText }
+					callback = { fetchData }
 					setModalText = { props.setModalText }
 					showModal = { props.showExchangeModal }
-					hideModal = { props.hideModal }
+					hideModal = { props.hideExchangeModal }
 				/>
 				<UserInfo />
 				<Statement
@@ -74,13 +74,14 @@ export default connect(
 			userDetailData: financeData.userDetailData,
 			isloadingUserDetailData: financeData.isloadingUserDetailData,
 
-			modalInputText: financeData.modalInputText,
-			modalVisible: financeData.modalVisible,
 			modalData: financeData.modalData
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideModal, setModalText }, dispatch );
+		return bindActionCreators( { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText }, dispatch );
 	}
 )( Finance );
+
+
+

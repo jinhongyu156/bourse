@@ -33,7 +33,7 @@ let seed = 0;
 
 const Notice = React.memo( function( { wsNotice, noticeMessage: msg } )
 {
-	console.log( "Notice re-render" );
+	// console.log( "Notice re-render" );
 
 	const msgArr = React.useRef( msg );
 

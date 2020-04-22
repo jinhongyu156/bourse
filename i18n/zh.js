@@ -60,7 +60,16 @@ export default {
 	finance: {
 		exchange: {
 			exchangeText: "兑换",
-			potintExchange: "积分兑换"
+			cancelText: "取消",
+			potintExchange: "积分兑换",
+
+			exchangeSuccess: "兑换成功",
+			exchangeFailure: "兑换失败",
+			placeholder: "输入兑换数量",
+			inputError: "请填写正确的金额",
+			point: "积分",
+
+			balance: "%{name}余额"
 		},
 		userInfo: {
 			point: "积分金额",

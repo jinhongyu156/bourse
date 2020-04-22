@@ -58,7 +58,7 @@ export function fetchPost( url, data, config = {} )
 	{
 		fetch( domain.concat( url ), mergeConfig ).then( function( response )
 		{
-			console.log( "成功返回", response );
+			// console.log( "成功返回", response );
 			if( response.status === 200 )
 			{
 				return response.text();
@@ -68,8 +68,8 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			console.log( "请求参数", data );
-			console.log( "请求结果", res );
+			// console.log( "请求参数", data );
+			// console.log( "请求结果", res );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

@@ -62,8 +62,18 @@ export default {
 	},
 	finance: {
 		exchange: {
-			exchangeText: "Potint",
-			potintExchange: "Potint exchange"
+			exchangeText: "Exchange",
+			cancelText: "Cancel",
+			potintExchange: "Potint Exchange",
+
+			exchangeSuccess: "Exchange successful",
+			exchangeFailure: "Exchange Failure",
+			placeholder: "Input quantity",
+			inputError: "Please fill in the correct amount",
+			point: "Point",
+
+
+			balance: "%{name} balance"
 		},
 		userInfo: {
 			point: "Point",
