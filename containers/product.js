@@ -36,13 +36,13 @@ const Item = React.memo( function ( { name, price, onPress } )
 	</TouchableOpacity>;
 } );
 
-export default React.memo( function ( { contractData, setProductId } )
+export default React.memo( function ( { data, setId } )
 {
 	return <View style = { styles.container }>
 	{
-		contractData.map( function( item, index )
+		data.map( function( item, index )
 		{
-			return <Item key = { item.name } name = { item.name } price = { item.newprice } onPress = { setProductId } />;
+			return <Item key = { item.name } name = { item.name } price = { item.newprice } onPress = { setId } />;
 		} )
 	}
 	</View>

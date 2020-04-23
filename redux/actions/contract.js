@@ -15,7 +15,16 @@ export function setTabIndex( tabIndex )
 // 设置当前 product id
 export function setProductId( productId )
 {
-	return { type: ACTIONS_SET_CONTRACT_PRODUCTID, payload: productId };
+	return function( dispatch, getState )
+	{
+		const { contract } = getState();
+
+		const currentProduct = contract.contractData.filter( function( item, index )
+		{
+			return item.name === productId;
+		} )[ 0 ].feilv;
+		dispatch( { type: ACTIONS_SET_CONTRACT_PRODUCTID, payload: { productId, currentProduct } } );
+	};
 };
 
 // 设置合约页面数据
@@ -31,7 +40,6 @@ export function fetchContractData()
 	{
 		const { contract } = getState();
 		const params = { "提交": "返回登录参数", "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" };
-
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", params );

@@ -13,6 +13,7 @@ import Tab from "./../components/tab.js";
 import Header from "./../containers/header.js";
 import TabBar from "./../containers/tabBar.js";
 import Product from "./../containers/product.js";
+import ProductHandle from "./../containers/productHandle.js";
 import Notice from "./../containers/notice.js";
 
 import { setTabIndex, setProductId, fetchContractData } from "./../redux/actions/contract.js";
@@ -41,11 +42,12 @@ const styles = StyleSheet.create( {
 	errorText: { fontSize: 16 }
 } );
 
-const Content = React.memo( function ( { setProductId, contractData } )
+const Content = React.memo( function ( { setProductId, contractData, currentProduct } )
 {
 	return <React.Fragment>
-		<Product contractData = { contractData } setProductId = { setProductId } />
+		<Product data = { contractData } setId = { setProductId } />
 		<Notice />
+		<ProductHandle data = { currentProduct } />
 	</React.Fragment>
 } )
 
@@ -67,7 +69,6 @@ const Contract = React.memo( function ( props )
 	}, [] );
 
 	return <View style = { styles.container }>
-		<Text>{ props.productId }-- { props.tabIndex }</Text>
 		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
 			<View style = { styles.headerRightViewItem }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
@@ -84,16 +85,19 @@ const Contract = React.memo( function ( props )
 						tabLabel = { "USDT" }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
+						currentProduct = { props.currentProduct }
 					/>
 					<Content
 						tabLabel = { "交易金" }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
+						currentProduct = { props.currentProduct }
 					/>
 					<Content
 						tabLabel = { "SLBT" }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
+						currentProduct = { props.currentProduct }
 					/>
 				</Tab>
 		}
@@ -109,6 +113,7 @@ export default connect(
 			productId: contractData.productId,
 			fetchDataError: contractData.fetchDataError,
 			contractData: contractData.contractData,
+			currentProduct: contractData.currentProduct,
 			userOrderData: contractData.userOrderData,
 			userDetailData: contractData.userDetailData
 		};

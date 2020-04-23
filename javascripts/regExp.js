@@ -4,3 +4,5 @@ export const passwordReg = /^\S{3,25}$/;
 export const refereeReg = /^[0-9]+$/;
 export const nameReg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
 export const amountReg = /^(([1-9]\d*)(\.\d{1,2})?)$|(0\.0?([1-9]\d?))$/;
+export const numberReg = /^[0-9]+$/;
+
