@@ -1,8 +1,7 @@
 import {
 	ACTION_SET_FINANCE_TABINDEX, ACTION_SET_FINANCE_STATEMENTDATA, ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, ACTION_SET_FINANCE_FECTHSTATEMENTERROR,
 	ACTION_SET_FINANCE_USERDETAILDATA, ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA,
-	ACTION_SET_FINANCE_MODALDATA,
-	ACTION_SET_FINANCE_NOTICEMESSAGE
+	ACTION_SET_FINANCE_MODALDATA
 } from "./../actions/finance.js";
 
 import { defaultModalData } from "./../actions/finance.js";
@@ -16,9 +15,7 @@ const defaultState = {
 	userDetailData: {},									// 用户详细数据
 	isloadingUserDetailData: false,						// 是否正在请求用户详细数据
 
-	modalData: defaultModalData,						// Modal 框所需数据
-
-	noticeMessage: ""
+	modalData: defaultModalData							// Modal 框所需数据
 };
 
 export default function( state = defaultState, action )
@@ -45,9 +42,6 @@ export default function( state = defaultState, action )
 
 		case ACTION_SET_FINANCE_MODALDATA:
 			return Object.assign( {}, state, { modalData: action.payload } );
-
-		case ACTION_SET_FINANCE_NOTICEMESSAGE:
-			return Object.assign( {}, state, { noticeMessage: action.payload } );
 
 		default:
 			return state;

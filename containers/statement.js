@@ -8,6 +8,9 @@ import Tab from "./../components/tab.js";
 
 import TabBar from "./../containers/tabBar.js";
 
+import { HEADERHEIGHT } from "./header.js";
+import { NOTICEHEIGHT } from "./notice.js";
+
 // 屏幕高度
 const SCREENHEIGHT = Dimensions.get( "window" ).height;
 
@@ -21,7 +24,7 @@ const TABITEMHEADERHEIGHT = 30;
 const TABITEMROWHEIGHT = 50;
 
 // ScrollView 最大高度
-const SCROLLVIEWHEIGHT = SCREENHEIGHT - 120 - 50 - TABBARHEIGHT - TABITEMHEADERHEIGHT;			// 头部: 120, 底部导航: 50, 选项卡高度: 50, 选项页头部高度: 30
+const SCROLLVIEWHEIGHT = SCREENHEIGHT - HEADERHEIGHT - NOTICEHEIGHT - TABITEMROWHEIGHT - TABITEMHEADERHEIGHT - 50;
 
 const styles = StyleSheet.create( {
 	container: { marginTop: 6 },
@@ -29,7 +32,7 @@ const styles = StyleSheet.create( {
 	tabItemContainer: { backgroundColor: "#F6F6F6" },
 	tabItemScrollView: { flex: 1 },
 	tabItemHeader: { flexDirection: "row", alignItems: "center", backgroundColor: "#F6F6F6", height: TABITEMHEADERHEIGHT, paddingHorizontal: 10 },
-	tabItemRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: TABITEMROWHEIGHT, paddingHorizontal: 10, marginTop: 2 },
+	tabItemRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: TABITEMROWHEIGHT, paddingHorizontal: 10 },
 	tabItemHeaderText: { flex: 1, color: "#000000", textAlign: "center" },
 	tabItemRowText: { flex: 1, color: "#777777", textAlign: "center" },
 	errorBox: { height: 100, paddingHorizontal: 10, justifyContent: "center" },
@@ -111,7 +114,6 @@ const TabItem = React.memo( function( { isloading, statementData, fecthStatement
 
 export default React.memo( function Statement( { tabIndex, setTabIndex, isloading, statementData, fecthStatementError } )
 {
-
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />;

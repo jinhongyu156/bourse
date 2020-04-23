@@ -13,10 +13,27 @@ export function getNum( str, num )
 	return str.substring( 0, str.indexOf( "." ) + num + 1 );
 };
 
+// 将对象中指定的 key 对应的 value 值做 getNum 操作
+export function objectValueGetNum( obj, keys = [], num = 2 )
+{
+	const newObj = Object.assign( {}, obj );
+	for ( let i = keys.length - 1; i >= 0; i-- )
+	{
+		newObj[ keys[ i ] ] = getNum( String( newObj[ keys[ i ] ] ), num );
+	};
+	return newObj;
+};
+
 // 判断是否为对象
 export function isObject( obj )
 {
 	return Object.prototype.toString.call( obj ) === "[object Object]";
+};
+
+// 判断是否为数组
+export function isArray( array )
+{
+	return Object.prototype.toString.call( array ) === "[object Array]";
 };
 
 // 判断字符串是否为 json
@@ -69,7 +86,7 @@ export function fetchPost( url, data, config = {} )
 		} ).then( function( res )
 		{
 			// console.log( "请求参数", data );
-			// console.log( "请求结果", res );
+			// console.log( "请求结果", unicodeToChinese( res ) );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

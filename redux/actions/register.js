@@ -168,7 +168,7 @@ export function fetchImageCode()
 			} catch( err )
 			{
 				dispatch( { type: ACTION_SET_REGISTER_IMAGEBLOB, payload: null } );
-				dispatch( { type: ACTION_SET_REGISTER_FETCHIMAGEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchImageCodeError" ) }` : err.toString() } );
+				dispatch( { type: ACTION_SET_REGISTER_FETCHIMAGEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchImageCodeError" ) }` : err.err.toString() } );
 			}
 		};
 	};
@@ -227,7 +227,7 @@ export function fetchRegister( type, callback )
 				};
 			} catch( err )
 			{
-				dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchRegisterError" ) }` : err.toString() } );
+				dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "register.fetchRegisterError" ) }` : err.err.toString() } );
 				dispatch( { type: ACTION_SET_REGISTER_ISLOADING, payload: false } );
 			};
 		} else

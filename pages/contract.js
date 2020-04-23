@@ -1,14 +1,122 @@
 import React from "react";
 
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+
+import { bindActionCreators } from "redux";
+
+import { connect } from "react-redux";
+
+import I18n from "i18n-js";
+
+import Tab from "./../components/tab.js";
+
+import Header from "./../containers/header.js";
+import TabBar from "./../containers/tabBar.js";
+import Product from "./../containers/product.js";
+import Notice from "./../containers/notice.js";
+
+import { setTabIndex, setProductId, fetchContractData } from "./../redux/actions/contract.js";
+
+// 头部操作 icon 宽高
+const HEADERHANDLESIZE = 36;
+
+// 选项卡导航高度
+const TABBARHEIGHT = 66;
+
+// 选项卡导航宽度
+const TABBARWIDTH = Dimensions.get( "window" ).width;
 
 const styles = StyleSheet.create( {
-	container: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#FFFFFF" },
+	container: { flex: 1 },
+	headerRightViewItem: { alignItems: "center", justifyContent: "flex-end", marginLeft: 10 },
+	headerRightViewItemImage: { width: HEADERHANDLESIZE, height: HEADERHANDLESIZE },
+	headerRightViewItemText: { fontSize: 12, color: "#FFFFFF" },
+
+	tabBarBox: { width: TABBARWIDTH, height: TABBARHEIGHT },
+	tabBar: { position: "absolute", top: 0, left: 0, right: 0, height: TABBARHEIGHT, borderRadius: 40, backgroundColor: "#FFFFFF" },
+	tabBarPlaceHolder: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#F6F6F6", height: TABBARHEIGHT * 0.5 },
+	tab: { flex: 1, backgroundColor: "#F6F6F6" },
+
+	errorBox: { height: 100, justifyContent: "center", alignItems: "center" },
+	errorText: { fontSize: 16 }
 } );
 
-export default React.memo( function Contract( {} )
+const Content = React.memo( function ( { setProductId, contractData } )
 {
+	return <React.Fragment>
+		<Product contractData = { contractData } setProductId = { setProductId } />
+		<Notice />
+	</React.Fragment>
+} )
+
+const Contract = React.memo( function ( props )
+{
+	React.useEffect( function()
+	{
+		props.fetchContractData();
+	}, [] )
+
+	 console.log( "props", props );
+
+	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
+	{
+		return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.tabBarBox }>
+			<View style = { styles.tabBarPlaceHolder } />
+			<TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
+		</ImageBackground>
+	}, [] );
+
 	return <View style = { styles.container }>
-		<Text>Contract</Text>
-	</View>;
+		<Text>{ props.productId }-- { props.tabIndex }</Text>
+		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
+			<View style = { styles.headerRightViewItem }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
+			</View>
+		</Header>
+		{
+			props.fetchDataError
+				? <View style = { styles.errorBox }>
+					<Text style = { styles.errorText }>{ props.fetchDataError }</Text>
+				</View>
+				: <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab } initialPage = { props.tabIndex } onChangeTab = { props.setTabIndex }>
+					<Content
+						tabLabel = { "USDT" }
+						setProductId = { props.setProductId }
+						contractData = { props.contractData }
+					/>
+					<Content
+						tabLabel = { "交易金" }
+						setProductId = { props.setProductId }
+						contractData = { props.contractData }
+					/>
+					<Content
+						tabLabel = { "SLBT" }
+						setProductId = { props.setProductId }
+						contractData = { props.contractData }
+					/>
+				</Tab>
+		}
+	</View>
 } );
+
+export default connect(
+	function mapStateToProps( state, ownProps )
+	{
+		const contractData = state.contract;
+		return {
+			tabIndex: contractData.tabIndex,
+			productId: contractData.productId,
+			fetchDataError: contractData.fetchDataError,
+			contractData: contractData.contractData,
+			userOrderData: contractData.userOrderData,
+			userDetailData: contractData.userDetailData
+		};
+	},
+	function mapDispatchToProps( dispatch, ownProps )
+	{
+		return bindActionCreators( { setTabIndex, setProductId, fetchContractData }, dispatch );
+	}
+)( Contract );
+
+

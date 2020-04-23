@@ -56,11 +56,18 @@ export default {
 		info: "cannot send if condition is not satisfied"
 	},
 	header: {
-		trading: "Trading",
-		investment: "investment",
-		benefits: "Get the benefits"
+		trading: "Trading"
 	},
 	finance: {
+		header: {
+			tip: "Note: minimum exchange of 300 trading gold minimum investment",
+			trading: "trading",
+			hashrate: "hashrate",
+			fetchGetBenefitsError: "Failure to collect proceeds",
+			investETU: "investETU",
+			investment: "Investment",
+			benefits: "Get benefits"
+		},
 		exchange: {
 			exchangeText: "Exchange",
 			cancelText: "Cancel",
@@ -94,7 +101,14 @@ export default {
 			note: "Note",
 			point: "Point",
 			trading: "Trading",
-			noData: "No data was queried"
+			noData: "No data was queried",
+			fetchStatementError: "Failed to obtain flow data"
 		}
+	},
+	contract: {
+		header: {
+			chart: "Charts"
+		},
+		fetchDataError: "Data acquisition failure"
 	}
 };

@@ -44,7 +44,7 @@ const styles = StyleSheet.create( { image: { width: ICONSIZE, height: ICONSIZE }
 function TabNavigator( props )
 {
 	return <Tab.Navigator
-		initialRouteName = { "Finance" }
+		initialRouteName = { "Contract" }
 		tabBarOptions = { { activeTintColor: "#696DAC", inactiveTintColor: "#dEE1E4", style: { height: 50 } } }
 	>
 		<Tab.Screen name = "Finance" component = { Finance } options = { {

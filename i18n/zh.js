@@ -54,10 +54,17 @@ export default {
 	},
 	header: {
 		trading: "交易金",
-		investment: "投资",
-		benefits: "领取收益"
 	},
 	finance: {
+		header: {
+			tip: "注: 最低兑换 300 交易金起投",
+			trading: "交易金",
+			hashrate: "算力",
+			fetchGetBenefitsError: "领取收益失败",
+			investETU: "投资ETU金融",
+			investment: "投资",
+			benefits: "领取收益"
+		},
 		exchange: {
 			exchangeText: "兑换",
 			cancelText: "取消",
@@ -72,14 +79,14 @@ export default {
 			balance: "%{name}余额"
 		},
 		userInfo: {
-			point: "积分金额",
+			point: "积分余额",
 			trading: "交易金",
 			power: "算力",
 			communityPerformance: "社区业绩",
 			communityLevel: "社区等级",
 			numberOfTeam: "团队人数",
 			todayEarnings: "今日收益",
-			yesterdayEarnings: "昨日等级",
+			yesterdayEarnings: "昨日收益",
 			allEarnings: "累计收益"
 		},
 		statement: {
@@ -90,7 +97,14 @@ export default {
 			note: "备注",
 			point: "积分",
 			trading: "交易金",
-			noData: "未查询到数据"
+			noData: "未查询到数据",
+			fetchStatementError: "获取流水数据失败"
 		}
+	},
+	contract: {
+		header: {
+			chart: "走势"
+		},
+		fetchDataError: "数据获取失败"
 	}
 };

@@ -1,11 +1,10 @@
 import { ToastAndroid } from "react-native";
-import Ws from "./../../javascripts/ws.js";
 import { amountReg } from "./../../javascripts/regExp.js";
-import { fetchPost, isObject, getNum } from "./../../javascripts/util.js";
+import { fetchPost, isObject, getNum, objectValueGetNum } from "./../../javascripts/util.js";
 
 import I18n from "i18n-js";
 
-export const defaultModalData = { visible: false, title: "", text: "", inputError: null, fecthError: null, isloading: false, tip: "" };
+export const defaultModalData = { visible: false, key: "", title: "", text: "", times: 0, inputError: null, fecthError: null, isloading: false, tip: "" };
 
 /* action type */
 export const ACTION_SET_FINANCE_TABINDEX = "ACTION_SET_FINANCE_TABINDEX";
@@ -18,8 +17,20 @@ export const ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA = "ACTION_SET_FINANCE_IS
 
 export const ACTION_SET_FINANCE_MODALDATA = "ACTION_SET_FINANCE_MODALDATA";
 
-export const ACTION_SET_FINANCE_NOTICEMESSAGE = "ACTION_SET_FINANCE_NOTICEMESSAGE";
 /* action create */
+
+// 设置用户流水信息
+function setStatementData( statementData, fecthStatementError )
+{
+	return { type: ACTION_SET_FINANCE_STATEMENTDATA, payload: { statementData, fecthStatementError } };
+};
+
+// 设置是否正在加载流水数据
+function setIsloadingStatementData( isloadingStatementData )
+{
+	return { type: ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, payload: isloadingStatementData };
+};
+
 // 设置当前选项卡 index
 export function setTabIndex( tabIndex )
 {
@@ -29,18 +40,6 @@ export function setTabIndex( tabIndex )
 		dispatch( setStatementData( [], null ) );
 		dispatch( fetchStatement() );
 	};
-};
-
-// 设置用户流水信息
-export function setStatementData( statementData, fecthStatementError )
-{
-	return { type: ACTION_SET_FINANCE_STATEMENTDATA, payload: { statementData, fecthStatementError } };
-};
-
-// 设置是否正在加载流水数据
-export function setIsloadingStatementData( isloadingStatementData )
-{
-	return { type: ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, payload: isloadingStatementData };
 };
 
 // 设置用户详细信息
@@ -61,7 +60,18 @@ function getTip( key, number, rate )
 	return key === "USD兑换ETU" ? `${ number } USTD = ${ ( number / rate ).toFixed( 2 ) } ETUSD`
 		: key === "积分兑USDT" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ number } USDT`
 		: key === "积分兑ETUSD" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ ( number / rate ).toFixed( 3 ) } USDT`
-		: ""
+		: key === "投资ETU金融" ? `${ I18n.t( "finance.header.tip" ) } \n ${ ( number * 300 / rate ).toFixed( 0 ) } ETUSD = ${ ( number * 300 ).toFixed( 2 ) } ${ I18n.t( "finance.header.trading" ) } + ${ ( number * 5.3 ).toFixed( 2 ) }T ${ I18n.t( "finance.header.hashrate" ) }`
+		: "";
+};
+
+// 翻译 title
+function getTitle( key )
+{
+	return key === "USD兑换ETU" ? `USDT ${ I18n.t( "finance.exchange.exchangeText" ) } ETU`
+		: key === "积分兑USDT" ? `${ I18n.t( "finance.exchange.potintExchange" ) } USDT`
+		: key === "积分兑ETUSD" ? `${ I18n.t( "finance.exchange.potintExchange" ) } ETUSD`
+		: key === "投资ETU金融" ? `${ I18n.t( "finance.header.investETU" ) }`
+		: "";
 };
 
 // 设置模态框输入文本
@@ -72,20 +82,20 @@ export function setModalText( text )
 		const { finance } = getState();
 		const payload = Object.assign( {}, finance.modalData, {
 			text: text, inputError: !amountReg.test( text ),
-			tip: getTip( finance.modalData.title, amountReg.test( text ) ? Number( text ) : 0, finance.userDetailData.rate )
+			tip: getTip( finance.modalData.key, amountReg.test( text ) ? Number( text ) : 0, finance.userDetailData.rate )
 		} );
 		dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: payload } );
 	};
 };
 
 // 打开兑换模态框
-export function showExchangeModal( title )
+export function showExchangeModal( key )
 {
 	return function( dispatch, getState )
 	{
 		const { finance } = getState();
 		const payload = Object.assign( {}, defaultModalData, {
-			title: title, visible: true, tip: getTip( title, 0, finance.userDetailData.rate )
+			key: key, title: getTitle( key ), visible: true, times: key === "投资ETU金融" ? 300 : 0, tip: getTip( key, 0, finance.userDetailData.rate )
 		} );
 		dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: payload } );
 	};
@@ -104,7 +114,7 @@ export function hideExchangeModal( submit, callback = function() {} )
 				try
 				{
 					dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: Object.assign( {}, finance.modalData, { isloading: true } ) } );
-					const res = await fetchPost( "/ETC.php", { "提交": finance.modalData.title, "兑换数量": finance.modalData.text } );
+					const res = await fetchPost( "/ETC.php", { "提交": finance.modalData.key, "兑换数量": finance.modalData.text } );
 					console.log( "res", res );
 					if( res === "兑换成功" )
 					{
@@ -117,7 +127,7 @@ export function hideExchangeModal( submit, callback = function() {} )
 				} catch( err )
 				{
 					console.log( "err", err );
-					const payload = Object.assign( {}, finance.modalData, { fecthError: err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.exchange.exchangeFailure" ) }` : err.toString(), isloading: false } )
+					const payload = Object.assign( {}, finance.modalData, { fecthError: err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.exchange.exchangeFailure" ) }` : err.err.toString(), isloading: false } )
 					dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: payload } );
 				};
 			} else
@@ -129,12 +139,6 @@ export function hideExchangeModal( submit, callback = function() {} )
 			dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: defaultModalData } );
 		};
 	};
-};
-
-// 设置通知消息
-export function setNoticeMessage( noticeMessage )
-{
-	return { type: ACTION_SET_FINANCE_NOTICEMESSAGE, payload: noticeMessage };
 };
 
 // 请求流水数据
@@ -169,34 +173,11 @@ export function fetchStatement()
 		} catch( err )
 		{
 			console.log( "err", err );
-			dispatch( setStatementData( [], err.type === "network" ? `${ err.status }: 获取失败` : err.toString() ) );
+			dispatch( setStatementData( [], err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.statement.fetchStatementError" ) }` : err.err.toString() ) );
 			dispatch( setIsloadingStatementData( false ) );
 		};
-
+		
 	};
-};
-
-// ws 通知
-export function wsNotice()
-{
-	return async function( dispatch )
-	{
-		const ws = Ws.getInstance( "ws://tcp.slb.one:8308/", {
-			heartCheck: function()
-			{
-				ws.sendMessage( "1" );
-			},
-			onopen: function()
-			{
-				ws.sendMessage( "1" );
-			},
-			onmessage: function( res )
-			{
-				dispatch( setNoticeMessage( res ) );
-			}
-		} );
-		ws.initWebSocket();
-	}
 };
 
 // 请求用户详细数据
@@ -209,9 +190,11 @@ export function fetchUserDetailData()
 		{
 			dispatch( setIsloadingUserDetailData( true ) );
 			const res = await fetchPost( "/ETC.php", params );
+			console.log( "res", res, params );
 			if( isObject( res ) && res[ "用户信息" ] && res[ "USDCNH" ] )
 			{
-				const data = Object.assign( {}, res[ "用户信息" ], { rate: Number( res[ "USDCNH" ][ "baojia" ] ) } )
+				const userData = objectValueGetNum( res[ "用户信息" ], [ "USDT", "ETUSD", "SLBT", "交易金", "今日收益", "团队业绩", "总计收益", "昨日收益", "机器算力", "积分余额" ] )
+				const data = Object.assign( {}, userData, { rate: Number( res[ "USDCNH" ][ "baojia" ] ) } )
 				dispatch( setUserDetailData( data ) );
 				dispatch( setIsloadingUserDetailData( false ) );
 			} else
@@ -225,6 +208,25 @@ export function fetchUserDetailData()
 			dispatch( setUserDetailData( {} ) );
 			dispatch( setIsloadingUserDetailData( false ) );
 		};
-
 	};
 };
+
+// 请求领取收益
+export function fetchGetBenefits( callback )
+{
+	return async function( dispatch )
+	{
+		const params = { "提交": "领取收益" };
+		try
+		{
+			const res = await fetchPost( "/ETC.php", params );
+			console.log( "res", res );
+			callback( res.toString() );
+		} catch( err )
+		{
+			console.log( "err", err );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.header.fetchGetBenefitsError" ) }` : err.err.toString() );
+		};
+	};
+};
+

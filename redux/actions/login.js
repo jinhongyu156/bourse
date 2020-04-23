@@ -164,7 +164,7 @@ export function fetchImageCode()
 			} catch( err )
 			{
 				dispatch( { type: ACTION_SET_LOGIN_IMAGEBLOB, payload: null } );
-				dispatch( { type: ACTION_SET_LOGIN_FETCHIMAGEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "login.fetchImageCodeError" ) }` : err.toString() } );
+				dispatch( { type: ACTION_SET_LOGIN_FETCHIMAGEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "login.fetchImageCodeError" ) }` : err.err.toString() } );
 			}
 		};
 	};
@@ -203,7 +203,7 @@ export function fetchLogin()
 			{
 				await AsyncStorage.setItem( "isLogin", "false" );
 				dispatch( setIsLogin( false ) );
-				dispatch( { type: ACTION_SET_LOGIN_FETCHLOGINERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "login.fetchLoginError" ) }` : err.toString() } );
+				dispatch( { type: ACTION_SET_LOGIN_FETCHLOGINERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "login.fetchLoginError" ) }` : err.err.toString() } );
 				dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: false } );
 			};
 		} else

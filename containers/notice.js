@@ -6,12 +6,12 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { wsNotice } from "./../redux/actions/finance.js";
+import { wsNotice } from "./../redux/actions/notice.js";
 
 import MarqueeVertical from "./../components/marquee.js";
 
 // 通知栏高度
-const NOTICEHEIGHT = 40;
+export const NOTICEHEIGHT = 40;
 
 // 通知栏 icon 宽高
 const NOTICEICONHEIGHT = NOTICEHEIGHT * .5;
@@ -74,10 +74,10 @@ const Notice = React.memo( function( { wsNotice, noticeMessage: msg } )
 export default connect(
 	function mapStateToProps( state, ownProps )
 	{
-		const financeData = state.finance;
+		const noticeData = state.notice;
 
 		return {
-			noticeMessage: financeData.noticeMessage
+			noticeMessage: noticeData.noticeMessage
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
