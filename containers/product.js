@@ -13,12 +13,37 @@ const styles = StyleSheet.create( {
 	item: { flexDirection: "row", alignItems: "center" },
 	icon: { width: PRODUCTICONSIZE, height: PRODUCTICONSIZE },
 	infoBox: { marginLeft: 10 },
-	infoTitle: { fontSize: 20 },
 	infoValue: { fontSize: 12 },
+
+	activeTitle: { fontSize: 20, fontWeight: "bold" },
+	inActiveTitle: { fontSize: 16, fontWeight: "normal" },
+
+	upColor: { color: "#F4979D" },
+	downColor: { color: "#96E89D" },
+	normalColor: { color: "#000000" }
 } );
 
-const Item = React.memo( function ( { name, price, onPress } )
+const Item = React.memo( function ( { name, price, isAvtive, onPress } )
 {
+	const prevPrice = React.useRef( price );
+	const [ state, setState ] = React.useState( 0 )
+
+	if( prevPrice.current !== price )
+	{
+		if( price > prevPrice.current )
+		{
+			setState( 1 );
+		};
+		if( price < prevPrice.current )
+		{
+			setState( -1 );
+		};
+		prevPrice.current = price;
+	};
+
+	const color = state > 0 ? styles.upColor : state < 0 ? styles.downColor : state.normalColor;
+	const font = isAvtive ? styles.activeTitle : styles.inActiveTitle;
+
 	return <TouchableOpacity style = { styles.item } onPress = { () => onPress( name ) }>
 		{
 			name === "BTC"
@@ -30,19 +55,19 @@ const Item = React.memo( function ( { name, price, onPress } )
 			: null
 		}
 		<View style = { styles.infoBox }>
-			<Text style = { styles.infoTitle }>{ name }</Text>
-			<Text style = { styles.infoValue }>{ price }</Text>
+			<Text style = { [ font ] }>{ name }</Text>
+			<Text style = { [ color, styles.infoValue ] }>{ price }</Text>
 		</View>
 	</TouchableOpacity>;
 } );
 
-export default React.memo( function ( { data, setId } )
+export default React.memo( function ( { data, id, setId } )
 {
 	return <View style = { styles.container }>
 	{
 		data.map( function( item, index )
 		{
-			return <Item key = { item.name } name = { item.name } price = { item.newprice } onPress = { setId } />;
+			return <Item key = { item.name } name = { item.name } price = { item.newprice } isAvtive = { item.name === id } onPress = { setId } />;
 		} )
 	}
 	</View>

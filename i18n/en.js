@@ -109,6 +109,14 @@ export default {
 		header: {
 			chart: "Charts"
 		},
+		trading: "Trading",
+		buyUp: "Up",
+		cashDeposit: "Deposit",
+		NumberOfHand: "Hand",
+		buyDown: "Down",
+		btc: "BTC",
+		gold: "GOLD",
+		oil: "OIL",
 		fetchDataError: "Data acquisition failure"
 	}
 };

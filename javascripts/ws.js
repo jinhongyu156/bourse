@@ -14,18 +14,6 @@ export default class Ws
 		this._onclose = this.onclose.bind( this );
 	}
 	/**
-	 * 获取 WebSocket 单例
-	 * @returns { Ws }
-	 **/
-	static getInstance( url, callback )
-	{
-		if ( !this.instance )
-		{
-			this.instance = new Ws( url, callback );
-		};
-		return this.instance;
-	}
-	/**
 	 * 初始化 WebSocket
 	 **/
 	initWebSocket()

@@ -105,6 +105,14 @@ export default {
 		header: {
 			chart: "走势"
 		},
+		trading: "交易金",
+		buyUp: "买涨",
+		cashDeposit: "保证金",
+		NumberOfHand: "手数",
+		buyDown: "买跌",
+		btc: "比特币",
+		gold: "黄金",
+		oil: "原油",
 		fetchDataError: "数据获取失败"
 	}
 };

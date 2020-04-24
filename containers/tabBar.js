@@ -39,10 +39,7 @@ const CheckBoxTabBarItem = React.memo( function( { index, title, isActive, onPre
 // 选项卡项: 带有下划线效果
 const UnderlineTabBarItem = React.memo( function( { index, title, isActive, onPress } )
 {
-	return <TouchableOpacity style = { underlineStyles.tabBarItem } onPress = { () => {
-		console.log( "===" );
-		onPress( index );
-	} }>
+	return <TouchableOpacity style = { underlineStyles.tabBarItem } onPress = { () => onPress( index ) }>
 		<Text style = { [ underlineStyles.tabBarItemText, isActive ? underlineStyles.active : underlineStyles.inactive ] }>{ title }</Text>
 		{
 			isActive

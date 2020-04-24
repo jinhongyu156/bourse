@@ -5,6 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 
 import { logout } from "./../redux/actions/login.js";
+import { setLanguage } from "./../redux/actions/language.js";
 
 import { bindActionCreators } from "redux";
 
@@ -14,11 +15,13 @@ const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#FFFFFF" },
 } );
 
+
 const User =  React.memo( function( props )
 {
 	props.isLogin || props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
-
 	return <View style = { styles.container }>
+		<Text onPress = { () => props.setLanguage( "zh" ) }>中</Text>
+		<Text onPress = { () => props.setLanguage( "en" ) }>英</Text>
 		<Text onPress = { props.logout }>退出</Text>
 	</View>;
 } );
@@ -34,6 +37,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { logout }, dispatch );
+		return bindActionCreators( { logout, setLanguage }, dispatch );
 	}
 )( User );

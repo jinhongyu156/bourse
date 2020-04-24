@@ -10,7 +10,13 @@ export function setSearch( { url, params } )
 // 传入数字字符串str 保留 num 位小数, 并且不四舍五入
 export function getNum( str, num )
 {
-	return str.substring( 0, str.indexOf( "." ) + num + 1 );
+	if( str.indexOf( "." ) === -1 )
+	{
+		return str.concat( ".00" );
+	} else
+	{
+		return str.substring( 0, str.indexOf( "." ) + num + 1 );
+	};
 };
 
 // 将对象中指定的 key 对应的 value 值做 getNum 操作

@@ -15,7 +15,7 @@ export function wsNotice()
 {
 	return async function( dispatch )
 	{
-		const ws = Ws.getInstance( "ws://tcp.slb.one:8308/", {
+		const ws = new Ws( "ws://tcp.slb.one:8308/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );
@@ -30,5 +30,5 @@ export function wsNotice()
 			}
 		} );
 		ws.initWebSocket();
-	}
+	};
 };

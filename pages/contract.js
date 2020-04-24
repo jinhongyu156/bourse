@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, ImageBackground, ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, ScrollView, ActivityIndicator, Dimensions, Keyboard, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -16,7 +16,7 @@ import Product from "./../containers/product.js";
 import ProductHandle from "./../containers/productHandle.js";
 import Notice from "./../containers/notice.js";
 
-import { setTabIndex, setProductId, fetchContractData } from "./../redux/actions/contract.js";
+import { setTabIndex, setProductId, setCount, fetchContractData } from "./../redux/actions/contract.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -42,23 +42,29 @@ const styles = StyleSheet.create( {
 	errorText: { fontSize: 16 }
 } );
 
-const Content = React.memo( function ( { setProductId, contractData, currentProduct } )
+const Content = function ( { tabIndex, productId, setProductId, setCount, contractData, currentProduct } )
 {
-	return <React.Fragment>
-		<Product data = { contractData } setId = { setProductId } />
+	return <ScrollView
+		stickyHeaderIndices = { [ 1 ] }
+		keyboardDismissMode = { "on-drag" }
+		onScrollBeginDrag = { Keyboard.dismiss }
+		showsVerticalScrollIndicator = { false }
+		// refreshControl = { <RefreshControl refreshing = { props.isloadingUserDetailData } onRefresh = { fetchData } /> }
+	>
+		<Product data = { contractData } id = { productId } setId = { setProductId } />
 		<Notice />
-		<ProductHandle data = { currentProduct } />
-	</React.Fragment>
-} )
+		<ProductHandle id = { productId } tabIndex = { tabIndex } data = { currentProduct } setCount = { setCount } />
+	</ScrollView>;
+};
 
 const Contract = React.memo( function ( props )
 {
 	React.useEffect( function()
 	{
 		props.fetchContractData();
-	}, [] )
+	}, [] );
 
-	 console.log( "props", props );
+	// console.log( "props", props );
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
@@ -83,18 +89,27 @@ const Contract = React.memo( function ( props )
 				: <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab } initialPage = { props.tabIndex } onChangeTab = { props.setTabIndex }>
 					<Content
 						tabLabel = { "USDT" }
+						tabIndex = { props.tabIndex }
+						productId = { props.productId }
+						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
 					/>
 					<Content
-						tabLabel = { "交易金" }
+						tabLabel = { I18n.t( "contract.trading" ) }
+						tabIndex = { props.tabIndex }
+						productId = { props.productId }
+						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
 					/>
 					<Content
 						tabLabel = { "SLBT" }
+						tabIndex = { props.tabIndex }
+						productId = { props.productId }
+						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
@@ -120,7 +135,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setTabIndex, setProductId, fetchContractData }, dispatch );
+		return bindActionCreators( { setTabIndex, setProductId, setCount, fetchContractData }, dispatch );
 	}
 )( Contract );
 

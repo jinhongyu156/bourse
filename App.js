@@ -45,7 +45,7 @@ function TabNavigator( props )
 {
 	return <Tab.Navigator
 		initialRouteName = { "Contract" }
-		tabBarOptions = { { activeTintColor: "#696DAC", inactiveTintColor: "#dEE1E4", style: { height: 50 } } }
+		tabBarOptions = { { activeTintColor: "#696DAC", inactiveTintColor: "#dEE1E4", keyboardHidesTabBar: true, style: { height: 50 } } }
 	>
 		<Tab.Screen name = "Finance" component = { Finance } options = { {
 			title: I18n.t( "bottomTabNavigator.finance" ),
