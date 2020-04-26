@@ -4,6 +4,8 @@ import Ws from "./../../javascripts/ws.js";
 export const ACTION_SET_NOTICE_NOTICEMESSAGE = "ACTION_SET_NOTICE_NOTICEMESSAGE";
 
 /* action create */
+let ws = null;
+
 // 设置通知消息
 function setNoticeMessage( noticeMessage )
 {
@@ -15,7 +17,9 @@ export function wsNotice()
 {
 	return async function( dispatch )
 	{
-		const ws = new Ws( "ws://tcp.slb.one:8308/", {
+		if( ws ) return;
+
+		ws = new Ws( "ws://tcp.slb.one:8308/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );
@@ -30,5 +34,6 @@ export function wsNotice()
 			}
 		} );
 		ws.initWebSocket();
+
 	};
 };

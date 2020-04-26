@@ -33,35 +33,42 @@ let seed = 0;
 
 const Notice = React.memo( function( { wsNotice, noticeMessage: msg } )
 {
-	// console.log( "Notice re-render" );
 
-	const msgArr = React.useRef( msg );
+	const msgArr = React.useRef( [] );
+	const [ state, update ] = React.useState( 0 );
 
-	const [ data, setData ] = React.useState( [] );
 
 	React.useEffect( function()
 	{
 		wsNotice();
 	}, [] )
 
-	if( msgArr.current != msg )
+	if( msg )
 	{
-		msgArr.current = msg;
-		setData( data => [ ...data, { index: seed++, value: msg } ] );
+		if( msgArr.current.length === 0 )
+		{
+			msgArr.current = [ { index: seed++, value: msg } ];
+		};
+
+		if( ( msgArr.current.length === 1 ) && ( msgArr.current[ 0 ].value !== msg ) )
+		{
+			msgArr.current = [ msgArr.current[ 0 ], { index: seed++, value: msg } ]
+		};
 	};
 
 	const onUnitLoopEnd = React.useCallback( function()
 	{
-		if( data.length > 1 )
+		if( msgArr.current.length > 1 )
 		{
-			setData( data => [ data[ data.length - 1 ] ] )
+			msgArr.current = [ msgArr.current[ 1 ] ];
+			update( c => c + 1 );
 		};
-	}, [ data ] );
+	}, [ msgArr.current ] );
 
 	return <View style = { styles.container }>
 		<Image style = { styles.noticeIcon } source = { require( "./../images/notice.png" ) } />
 		<MarqueeVertical
-			list = { data }
+			list = { msgArr.current }
 			width = { NOTICEWIDTH }
 			height = { NOTICEHEIGHT }
 			textStyle = { styles.noticeText }

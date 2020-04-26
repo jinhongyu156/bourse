@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create( {
 	submitBtn: { borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: "#696DAC" },

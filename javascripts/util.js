@@ -7,12 +7,15 @@ export function setSearch( { url, params } )
 	return ( url ? url.concat( "?" ) : "" ).concat( Object.keys( params ).map( item => `${ item }=${ params[ item ] }` ).join( "&" ) );
 };
 
-// 传入数字字符串str 保留 num 位小数, 并且不四舍五入
+// 传入数字字符串str 保留 num 位小数, 并且不四舍五入( 若小数点后不足 num 个, 则补齐 )
 export function getNum( str, num )
 {
 	if( str.indexOf( "." ) === -1 )
 	{
 		return str.concat( ".00" );
+	} else if( str.length - 1 - str.indexOf( "." ) < num )
+	{
+		return str.concat( "0".repeat( num - ( str.length - 1 - str.indexOf( "." ) ) ) );
 	} else
 	{
 		return str.substring( 0, str.indexOf( "." ) + num + 1 );
@@ -40,6 +43,13 @@ export function isObject( obj )
 export function isArray( array )
 {
 	return Object.prototype.toString.call( array ) === "[object Array]";
+};
+
+// 将时间戳转化为时间字符串
+export function dateFormat( timestamp )
+{
+	const time = new Date( timestamp );
+	return `${ time.getFullYear() }-${ time.getMonth() + 1 }-${ time.getDate() } ${ time.getHours() }:${ time.getMinutes() }:${ time.getSeconds() }`
 };
 
 // 判断字符串是否为 json

@@ -23,7 +23,7 @@ const styles = StyleSheet.create( {
 	normalColor: { color: "#000000" }
 } );
 
-const Item = React.memo( function ( { name, price, isAvtive, onPress } )
+const Item = function ( { name, price, isAvtive, onPress } )
 {
 	const prevPrice = React.useRef( price );
 	const [ state, setState ] = React.useState( 0 )
@@ -59,9 +59,9 @@ const Item = React.memo( function ( { name, price, isAvtive, onPress } )
 			<Text style = { [ color, styles.infoValue ] }>{ price }</Text>
 		</View>
 	</TouchableOpacity>;
-} );
+};
 
-export default React.memo( function ( { data, id, setId } )
+export default function ( { data, id, setId } )
 {
 	return <View style = { styles.container }>
 	{
@@ -71,5 +71,5 @@ export default React.memo( function ( { data, id, setId } )
 		} )
 	}
 	</View>
-} );
+};
 

@@ -15,8 +15,9 @@ import TabBar from "./../containers/tabBar.js";
 import Product from "./../containers/product.js";
 import ProductHandle from "./../containers/productHandle.js";
 import Notice from "./../containers/notice.js";
+import Order from "./../containers/order.js";
 
-import { setTabIndex, setProductId, setCount, fetchContractData } from "./../redux/actions/contract.js";
+import { setTabIndex, setProductId, setCount, fetchContractData, fetchSubmit, fetchClosing } from "./../redux/actions/contract.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -28,7 +29,7 @@ const TABBARHEIGHT = 66;
 const TABBARWIDTH = Dimensions.get( "window" ).width;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1 },
+	container: { flex: 1, backgroundColor: "#F6F6F6" },
 	headerRightViewItem: { alignItems: "center", justifyContent: "flex-end", marginLeft: 10 },
 	headerRightViewItemImage: { width: HEADERHANDLESIZE, height: HEADERHANDLESIZE },
 	headerRightViewItemText: { fontSize: 12, color: "#FFFFFF" },
@@ -42,18 +43,13 @@ const styles = StyleSheet.create( {
 	errorText: { fontSize: 16 }
 } );
 
-const Content = function ( { tabIndex, productId, setProductId, setCount, contractData, currentProduct } )
+const Content = function ( { productId, setProductId, setCount, contractData, currentProduct, userOrderData, fetchSubmit, fetchClosing } )
 {
-	return <ScrollView
-		stickyHeaderIndices = { [ 1 ] }
-		keyboardDismissMode = { "on-drag" }
-		onScrollBeginDrag = { Keyboard.dismiss }
-		showsVerticalScrollIndicator = { false }
-		// refreshControl = { <RefreshControl refreshing = { props.isloadingUserDetailData } onRefresh = { fetchData } /> }
-	>
+	return <ScrollView keyboardDismissMode = { "on-drag" } onScrollBeginDrag = { Keyboard.dismiss } showsVerticalScrollIndicator = { false }>
 		<Product data = { contractData } id = { productId } setId = { setProductId } />
 		<Notice />
-		<ProductHandle id = { productId } tabIndex = { tabIndex } data = { currentProduct } setCount = { setCount } />
+		<ProductHandle data = { currentProduct } setCount = { setCount } submit = { fetchSubmit } />
+		<Order data = { userOrderData } submit = { fetchClosing } />
 	</ScrollView>;
 };
 
@@ -64,8 +60,6 @@ const Contract = React.memo( function ( props )
 		props.fetchContractData();
 	}, [] );
 
-	// console.log( "props", props );
-
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.tabBarBox }>
@@ -75,7 +69,7 @@ const Contract = React.memo( function ( props )
 	}, [] );
 
 	return <View style = { styles.container }>
-		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
+		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
 			<View style = { styles.headerRightViewItem }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
@@ -89,30 +83,36 @@ const Contract = React.memo( function ( props )
 				: <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab } initialPage = { props.tabIndex } onChangeTab = { props.setTabIndex }>
 					<Content
 						tabLabel = { "USDT" }
-						tabIndex = { props.tabIndex }
 						productId = { props.productId }
 						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
+						userOrderData = { props.userOrderData }
+						fetchSubmit = { props.fetchSubmit }
+						fetchClosing = { props.fetchClosing }
 					/>
 					<Content
 						tabLabel = { I18n.t( "contract.trading" ) }
-						tabIndex = { props.tabIndex }
 						productId = { props.productId }
 						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
+						userOrderData = { props.userOrderData }
+						fetchSubmit = { props.fetchSubmit }
+						fetchClosing = { props.fetchClosing }
 					/>
 					<Content
 						tabLabel = { "SLBT" }
-						tabIndex = { props.tabIndex }
 						productId = { props.productId }
 						setCount = { props.setCount }
 						setProductId = { props.setProductId }
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
+						userOrderData = { props.userOrderData }
+						fetchSubmit = { props.fetchSubmit }
+						fetchClosing = { props.fetchClosing }
 					/>
 				</Tab>
 		}
@@ -135,7 +135,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setTabIndex, setProductId, setCount, fetchContractData }, dispatch );
+		return bindActionCreators( { setTabIndex, setProductId, setCount, fetchContractData, fetchSubmit, fetchClosing }, dispatch );
 	}
 )( Contract );
 

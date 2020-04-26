@@ -117,6 +117,22 @@ export default {
 		btc: "BTC",
 		gold: "GOLD",
 		oil: "OIL",
-		fetchDataError: "Data acquisition failure"
+		submitMessage: "Determine whether to close the position",
+		cancel: "cancel",
+		confirm: "confirm",
+		closing: "closing",
+		submitSuccess: "Submit Successfully",
+		submitError: "Submit Failure",
+		fetchDataError: "Data acquisition failure",
+
+		time: "Warehousing time",
+		orderId: "The order number",
+		unsubscribe: "Entrusted to unsubscribe",
+		currentValue: "The current value",
+		amount: "The amount paid",
+		serviceFee: "The service fee",
+		buy: "Buy",
+		sell: "Sell"
 	}
 };
+

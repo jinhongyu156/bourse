@@ -1,6 +1,6 @@
 import {
 	ACTIONS_SET_CONTRACT_TABINDEX, ACTIONS_SET_CONTRACT_PRODUCTID, ACTIONS_SET_CONTRACT_FETCHDATAERROR,
-	ACTIONS_SET_CONTRACT_ALLDATA, ACTIONS_SET_CONTRACT_CONTRACTDATA, ACTIONS_SET_CONTRACT_CURRENTPRODUCT
+	ACTIONS_SET_CONTRACT_ALLDATA, ACTIONS_SET_CONTRACT_PARTDATA
 } from "./../actions/contract.js";
 
 const defaultState = {
@@ -26,11 +26,8 @@ export default function( state = defaultState, action )
 		case ACTIONS_SET_CONTRACT_ALLDATA:
 			return Object.assign( {}, state, action.payload );
 
-		case ACTIONS_SET_CONTRACT_CONTRACTDATA:
-			return Object.assign( {}, state, { contractData: action.payload.contractData, currentProduct: action.payload.currentProduct } );
-
-		case ACTIONS_SET_CONTRACT_CURRENTPRODUCT:
-			return Object.assign( {}, state, { currentProduct: action.currentProduct } )
+		case ACTIONS_SET_CONTRACT_PARTDATA:
+			return Object.assign( {}, state, action.payload );
 
 		case ACTIONS_SET_CONTRACT_FETCHDATAERROR:
 			return Object.assign( {}, state, { fetchDataError: action.payload } )

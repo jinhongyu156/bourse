@@ -1,5 +1,5 @@
 import Ws from "./../../javascripts/ws.js";
-import { fetchPost, isObject, isArray, getNum } from "./../../javascripts/util.js";
+import { fetchPost, isObject, isArray, getNum, objectValueGetNum, dateFormat } from "./../../javascripts/util.js";
 import { numberReg } from "./../../javascripts/regExp.js";
 
 import I18n from "i18n-js";
@@ -7,42 +7,94 @@ import I18n from "i18n-js";
 export const ACTIONS_SET_CONTRACT_TABINDEX = "ACTIONS_SET_CONTRACT_TABINDEX";
 export const ACTIONS_SET_CONTRACT_PRODUCTID = "ACTIONS_SET_CONTRACT_PRODUCTID";
 export const ACTIONS_SET_CONTRACT_ALLDATA = "ACTIONS_SET_CONTRACT_ALLDATA";
-export const ACTIONS_SET_CONTRACT_CONTRACTDATA = "ACTIONS_SET_CONTRACT_CONTRACTDATA";
+export const ACTIONS_SET_CONTRACT_PARTDATA = "ACTIONS_SET_CONTRACT_PARTDATA";
 export const ACTIONS_SET_CONTRACT_FETCHDATAERROR = "ACTIONS_SET_CONTRACT_FETCHDATAERROR";
-export const ACTIONS_SET_CONTRACT_CURRENTPRODUCT = "ACTIONS_SET_CONTRACT_CURRENTPRODUCT";
 /* action create */
 
-function getTotal( tabIndex, count, float, unit )
+let ws = null;
+
+// 计算总价格
+function getTotal( productId, tabIndex, count, float, unit )
 {
-	const col30Message = tabIndex === "BTC" ? getNum( String( count * ( float * unit ) / 20 ), 2 )
-		: tabIndex === "GOLD" ? getNum( String( count * ( float * unit ) / 100 ), 2 )
-		: tabIndex === "OIL" ? getNum( String( count * ( float * unit ) / 50 ), 2 )
-		: "";
+	return ( productId === "BTC" ? getNum( String( count * ( float * unit ) / 20 ), 2 )
+		: productId === "GOLD" ? getNum( String( count * ( float * unit ) / 100 ), 2 )
+		: productId === "OIL" ? getNum( String( count * ( float * unit ) / 50 ), 2 )
+		: "" ).concat( tabIndex === 0 ? "USDT"
+			: tabIndex === 1 ? I18n.t( "contract.trading" )
+			: tabIndex === 2 ? "SLBT"
+			: "" );
 };
 
-// 整理 contractData
-function getNewContractData( contractData )
+// 获取中文注释
+function getMessage( code, productId )
 {
-	for ( let i = contractData.length - 1; i >= 0; i-- )
+	return code.replace( productId, productId === "BTC" ? I18n.t( "contract.btc" )
+		: productId === "GOLD" ? I18n.t( "contract.gold" )
+		: productId === "OIL" ? I18n.t( "contract.oil" )
+		: ""
+	);
+};
+
+// 整理 contractData 将新属性 count, msg, total 放入其中
+function getNewContractData( contractData, tabIndex )
+{
+	const newContractData = contractData.slice( 0 );
+
+	for ( let i = newContractData.length - 1; i >= 0; i-- )
 	{
-		for ( let j = contractData[ i ].feilv.length - 1; j >= 0; j-- )
+		for ( let j = newContractData[ i ].feilv.length - 1; j >= 0; j-- )
 		{
-			// getTotal(  )
-			Object.assign( contractData[ i ].feilv[ j ], { unit: contractData[ i ].newprice, total: "", count: "1" } );
+			const count = newContractData[ i ].feilv[ j ].count ? newContractData[ i ].feilv[ j ].count : "1"
+
+			const msg = getMessage( newContractData[ i ].feilv[ j ].code, newContractData[ i ].name );
+
+			const total = getTotal( newContractData[ i ].name, tabIndex, Number( count ), Number( newContractData[ i ].feilv[ j ][ "波动盈亏" ] ), newContractData[ i ].newprice );
+
+			Object.assign( newContractData[ i ].feilv[ j ], { count, msg, total } );
 		};
 	};
+	return newContractData;
+};
 
-	return contractData;
+// 整理 userOrderData 将新属性 newprice 放入其中( 新属性来自 contractData ), 并将某些字段保留 3 位小数
+function getNewUserOrderData( userOrderData, contractData )
+{
+	const newUserOrderData = userOrderData.slice( 0 );
+
+	for ( let i = newUserOrderData.length - 1; i >= 0; i-- )
+	{
+		for ( let j = contractData.length - 1; j >= 0; j-- )
+		{
+			if( newUserOrderData[ i ][ "产品代码" ].includes( contractData[ j ].name ) )
+			{
+				newUserOrderData[ i ][ "newprice" ] = getNum( String( contractData[ j ].newprice ), 3 );
+				break;
+			};
+		};
+		newUserOrderData[ i ] = objectValueGetNum( newUserOrderData[ i ], [ "总金额", "总手续费", "建仓点数", "止损价", "止盈价" ], 3 );
+		newUserOrderData[ i ][ "id" ] = newUserOrderData[ i ][ "订单号" ];
+		newUserOrderData[ i ][ "time" ] = dateFormat( newUserOrderData[ i ][ "建仓时间" ] * 1000 );
+	};
+	return newUserOrderData;
 };
 
 // 获取当前产品数据
 function getCurrentProduct( contractData, productId )
 {
-	return contractData.filter( item => item.name === productId )[ 0 ].feilv;
+	let currentProduct = [];
+	for ( let i = contractData.length - 1; i >= 0; i-- )
+	{
+		if( contractData[ i ].name === productId )
+		{
+			currentProduct = contractData[ i ].feilv;
+			break;
+		};
+	};
+	return currentProduct;
 };
 
 // 设置 contractData, productId, currentProduct, userOrderData, userDetailData, fetchDataError
-function setData( contractData, productId, currentProduct, userOrderData, userDetailData, fetchDataError )
+function setAllData( contractData, productId, currentProduct, userOrderData, userDetailData, fetchDataError )
 {
 	return { type: ACTIONS_SET_CONTRACT_ALLDATA, payload: { contractData, productId, currentProduct, userOrderData, userDetailData, fetchDataError } };
 };
@@ -53,16 +105,10 @@ function setFetchDataError( fetchDataError )
 	return { type: ACTIONS_SET_CONTRACT_FETCHDATAERROR, payload: fetchDataError };
 };
 
-// 设置 currentProduct
-function setCurrentProduct( currentProduct )
-{
-	return { type: ACTIONS_SET_CONTRACT_CURRENTPRODUCT, payload: currentProduct };
-};
-
 // 设置 contractData 和 currentProduct
-function setContractData( contractData, currentProduct )
+function setPartData( contractData, currentProduct, userOrderData )
 {
-	return { type: ACTIONS_SET_CONTRACT_CONTRACTDATA, payload: { contractData, currentProduct } };
+	return { type: ACTIONS_SET_CONTRACT_PARTDATA, payload: userOrderData ? { contractData, currentProduct, userOrderData } : { contractData, currentProduct } };
 };
 
 // 设置当前 tabIndex
@@ -86,44 +132,51 @@ export function setProductId( productId )
 	};
 };
 
-/*
-	const col30Message = ( id === "BTC" ? getNum( String( count * ( float * price ) / 20 ), 2 )
-		: id === "GOLD" ? getNum( String( count * ( float * price ) / 100 ), 2 )
-		: id === "OIL" ? getNum( String( count * ( float * price ) / 50 ), 2 )
-		: "" ).concat( index === 0 ? "USDT"
-			: index === 1 ? I18n.t( "contract.trading" )
-			: index === 2 ? "SLBT"
-			: ""
-		);
-*/
-
-// 用户写入数据
-export function setCount( count, code )
+// 用户写入数据, 更新 count, total
+export function setCount( text, code )
 {
 	return function( dispatch, getState )
 	{
 		const { contract } = getState();
-		console.log( "count", count )
-		console.log( "code", code )
-		// numberReg.test( text ) ? text : "1", code
-		const currentProduct = contract.currentProduct.map( function( item )
+
+		const newContractData = contract.contractData.slice( 0 );;
+
+		for ( let i = newContractData.length - 1; i >= 0; i-- )
 		{
-			console.log( item.code, ( code === item.code ), ( code === item.code ) ? Object.assign( {}, item, { count: count } ) : item );
-			return ( code === item.code ) ? Object.assign( {}, item, { count: count } ) : item;
-		} );
-		console.log( "currentProduct", currentProduct )
-		dispatch( setCurrentProduct( currentProduct ) );
+			const contractDataItem = newContractData[ i ];
+			if( contractDataItem.name === contract.productId )
+			{
+				for ( let j = contractDataItem.feilv.length - 1; j >= 0; j-- )
+				{
+					const currentProductItem = contractDataItem.feilv[ j ];
+					if( currentProductItem.code === code )
+					{
+						const count = numberReg.test( text ) ? text : "1";
+						const total = getTotal( contractDataItem.name, contract.tabIndex, Number( count ), Number( currentProductItem[ "波动盈亏" ] ), contractDataItem.newprice );
+						Object.assign( newContractData[ i ].feilv[ j ], { count, total } );
+						break;
+					};
+				};
+				break;
+			};
+		};
+
+		const currentProduct = getCurrentProduct( newContractData, contract.productId );
+
+		dispatch( setPartData( newContractData, currentProduct ) );
 	};
 };
 
-// 获取产品报价
+// 获取 newprice 字段最新值
 function wsContract()
 {
 	return function( dispatch, getState )
 	{
+		if( ws ) return;
+
 		const keys = [ "BTC", "GOLD", "OIL" ];
 
-		const ws = new Ws( "ws://tcp.slb.one:9595/", {
+		ws = new Ws( "ws://tcp.slb.one:9595/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );
@@ -141,11 +194,13 @@ function wsContract()
 					// 同步 contractData newprice 字段
 					const contractData = contract.contractData.map( item => res.includes( item.name ) ? Object.assign( {}, item, { newprice: Number( res.split( "," )[ 1 ] ) } ) : item );
 					// 整理 contractData 数据
-					const newContractData = getNewContractData( contractData );
+					const newContractData = getNewContractData( contractData, contract.tabIndex );
+					// 同步 userOrderData newprice 字段
+					const newUserOrderData = getNewUserOrderData( contract.userOrderData, contractData );
 					// 获取 currentProduct 数据
 					const currentProduct = getCurrentProduct( newContractData, contract.productId );
 					// 更新
-					dispatch( setContractData( newContractData, currentProduct ) );
+					dispatch( setPartData( newContractData, currentProduct, newUserOrderData ) );
 				};
 			}
 		} );
@@ -168,13 +223,14 @@ export function fetchContractData()
 			{
 				const contractData = ( res[ "biaojialist" ] && res[ "biaojialist" ][ "baojias" ] && isArray( res[ "biaojialist" ][ "baojias" ] ) && res[ "biaojialist" ][ "baojias" ].length ) ? res[ "biaojialist" ][ "baojias" ] : [];
 				const userOrderData = isArray( res[ "用户订单" ] ) ? res[ "用户订单" ] : [];
-				const userDetailData = res[ "登录参数" ] ? res[ "登录参数" ] : {};
+				const userDetailData = res[ "登录参数" ] ? objectValueGetNum( res[ "登录参数" ], [ "USDT", "SLBT", "交易金" ] ) : {};
 
-				const newContractData = getNewContractData( contractData )
 				const productId = contract.productId ? contract.productId : ( contractData.length ? contractData[ 0 ].name : "" )
+				const newContractData = getNewContractData( contractData, contract.tabIndex );
+				const newUserOrderData = getNewUserOrderData( userOrderData, contractData );
 				const currentProduct = getCurrentProduct( newContractData, productId );
 
-				dispatch( setData( newContractData, productId, currentProduct, userOrderData, userDetailData, null ) );
+				dispatch( setAllData( newContractData, productId, currentProduct, newUserOrderData, userDetailData, null ) );
 				dispatch( wsContract() );
 			} else
 			{
@@ -188,3 +244,55 @@ export function fetchContractData()
 	};
 };
 
+// 请求购买
+export function fetchSubmit( params, callback )
+{
+	return async function( dispatch, getState )
+	{
+		const { contract } = getState();
+		try
+		{
+			const res = await fetchPost( "/new_heyue.php", { "提交": "下单购买", "产品代码": params.code, "购买数量": params.count, "产品方向": params.direction, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" } );
+			console.log( "res", res );
+			if( res === "ok" )
+			{
+				dispatch( fetchContractData() );
+				callback( I18n.t( "contract.submitSuccess" ) )
+			} else
+			{
+				callback( res );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
+		};
+	};
+};
+
+// 请求平仓
+export function fetchClosing( params, callback )
+{
+	return async function( dispatch, getState )
+	{
+		const { contract } = getState();
+		console.log( "canshu: ", { "提交": "平仓", "订单号": params.id, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" }  );
+		try
+		{
+			const res = await fetchPost( "/new_heyue.php", { "提交": "平仓", "订单号": params.id, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" } );
+			console.log( "res", res );
+			if( res === "ok" )
+			{
+				dispatch( fetchContractData() );
+				callback( I18n.t( "contract.submitSuccess" ) )
+			} else
+			{
+				callback( res );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
+		};
+	};
+};

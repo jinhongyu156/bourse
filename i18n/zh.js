@@ -113,6 +113,22 @@ export default {
 		btc: "比特币",
 		gold: "黄金",
 		oil: "原油",
-		fetchDataError: "数据获取失败"
+		submitMessage: "确定是否平仓",
+		cancel: "取消",
+		confirm: "确定",
+		closing: "平仓",
+		submitSuccess: "提交成功",
+		submitError: "提交失败",
+		fetchDataError: "数据获取失败",
+
+		time: "建仓时间",
+		orderId: "订单号",
+		unsubscribe: "委托退订",
+		currentValue: "当前价值",
+		amount: "已缴金额",
+		serviceFee: "服务费",
+		buy: "购买",
+		sell: "出售"
 	}
 };
+
