@@ -150,5 +150,20 @@ export default {
 		turn: "Turn",
 
 		fetchDataError: "Fail to get"
+	},
+	recharge: {
+		title: "Charge",
+		address: "Address",
+		getAddress: "Get",
+		copy: "Copy",
+		placeholderNumber: "Please enter the charge amount",
+		number: "Number",
+		placeholderNote: "It is recommended to fill in the ID number of this platform",
+		note: "Remark",
+		submitText: "Submit",
+		tip1: "1. The valid time of this coin charging address is 120 minutes ",
+		tip2: "2. The current receipt address of the company is a one-time address. The address will be changed next time.",
+		tip3: "3. Please be sure to click Submit after charging.",
+		tip4: "4. If the bill doesn't arrive after 10 minutes, please call 18244444404 service hotline."
 	}
 };

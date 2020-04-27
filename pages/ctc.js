@@ -95,57 +95,61 @@ const ListHeader = React.memo( function()
 	</View>;
 } );
 
-const SectionRow = React.memo( function( { type, title, number, unit, total, unitRate, totalRate } )
+const SectionRowTitle = React.memo( function( { title, number, unit, total, unitRate, totalRate } )
 {
-	// console.log( "type, title, number, unit", type, title, number, unit );
+	return <View style = { styles.sectionRowBox }>
+		<View style = { [ styles.sectionRowItem, styles.sectionRowItemHorizontal, styles.sectionRowItemFirst ] }>
+			<Image style = { styles.sectionRowItemImage } source = { IMAGESMAP[ title ] } />
+			<Text style = { styles.sectionRowItemTitleText }>{ title }</Text>
+		</View>
+		<View style = { styles.sectionRowItem }>
+			<Text style = { styles.sectionRowItemUnitText }>${ unit }</Text>
+			<Text style = { styles.sectionRowItemTotalText }>￥{ unitRate }</Text>
+		</View>
+		<View style = { styles.sectionRowItem }>
+			<Text style = { styles.sectionRowItemNumberText }>{ number }</Text>
+		</View>
+		<View style = { [ styles.sectionRowItem, styles.sectionRowItemEnd ] }>
+			<Text style = { styles.sectionRowItemUnitText }>${ total }</Text>
+			<Text style = { styles.sectionRowItemTotalText }>￥{ totalRate }</Text>
+		</View>
+	</View>;
+} );
+
+const SectionRowContent = React.memo( function( { type, title, goTorecharge } )
+{
+	return <View style = { styles.sectionRowContentBox }>
+		<View style = { styles.sectionRowContentItem }>
+			<Text>{ I18n.t( "ctc.number" ) }: </Text>
+			<View style = { styles.sectionRowContentItemRight }>
+				<Counter count = { 1 } setCount = { () => {} } />
+			</View>
+		</View>
+		<View style = { styles.sectionRowContentItem }>
+			<Text>{ I18n.t( "ctc.price" ) }: </Text>
+			<Text style = { styles.sectionRowContentItemRight }>100.346</Text>
+		</View>
+		<View style = { [ styles.sectionRowContentItem, styles.sectionRowContentItemAround ] }>
+			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type ? () => {} : goTorecharge( title ) }>
+				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.sell" ) :I18n.t( "ctc.charge" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.sectionRowContentBtn }>
+				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.buy" ) : I18n.t( "ctc.mention" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.sectionRowContentBtn }>
+				<Text style = { styles.sectionRowContentBtnText }>{ I18n.t( "ctc.turn" ) }</Text>
+			</TouchableOpacity>
+		</View>
+	</View>;
+} );
+
+const SectionRow = React.memo( function( { type, title, number, unit, total, unitRate, totalRate, goTorecharge } )
+{
 	return <AccordionItem
 		index = { title }
 		expanded = { [] }
-		renderTitle = { () => {
-			return <View style = { styles.sectionRowBox }>
-				<View style = { [ styles.sectionRowItem, styles.sectionRowItemHorizontal, styles.sectionRowItemFirst ] }>
-					<Image style = { styles.sectionRowItemImage } source = { IMAGESMAP[ title ] } />
-					<Text style = { styles.sectionRowItemTitleText }>{ title }</Text>
-				</View>
-				<View style = { styles.sectionRowItem }>
-					<Text style = { styles.sectionRowItemUnitText }>${ unit }</Text>
-					<Text style = { styles.sectionRowItemTotalText }>￥{ unitRate }</Text>
-				</View>
-				<View style = { styles.sectionRowItem }>
-					<Text style = { styles.sectionRowItemNumberText }>{ number }</Text>
-				</View>
-				<View style = { [ styles.sectionRowItem, styles.sectionRowItemEnd ] }>
-					<Text style = { styles.sectionRowItemUnitText }>${ total }</Text>
-					<Text style = { styles.sectionRowItemTotalText }>￥{ totalRate }</Text>
-				</View>
-			</View>;
-		} }
-		renderContent = { () => {
-
-			return <View style = { styles.sectionRowContentBox }>
-				<View style = { styles.sectionRowContentItem }>
-					<Text>{ I18n.t( "ctc.number" ) }: </Text>
-					<View style = { styles.sectionRowContentItemRight }>
-						<Counter count = { 1 } setCount = { () => {} } />
-					</View>
-				</View>
-				<View style = { styles.sectionRowContentItem }>
-					<Text>{ I18n.t( "ctc.price" ) }: </Text>
-					<Text style = { styles.sectionRowContentItemRight }>100.346</Text>
-				</View>
-				<View style = { [ styles.sectionRowContentItem, styles.sectionRowContentItemAround ] }>
-					<TouchableOpacity style = { styles.sectionRowContentBtn }>
-						<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.sell" ) :I18n.t( "ctc.charge" ) }</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style = { styles.sectionRowContentBtn }>
-						<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.buy" ) : I18n.t( "ctc.mention" ) }</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style = { styles.sectionRowContentBtn }>
-						<Text style = { styles.sectionRowContentBtnText }>{ I18n.t( "ctc.turn" ) }</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		} }
+		renderTitle = { () => <SectionRowTitle title = { title } number = { number } unit = { unit } total = { total } unitRate = { unitRate } totalRate = { totalRate } /> }
+		renderContent = { () => <SectionRowContent type = { type } title = { title } goTorecharge = { goTorecharge } /> }
 	/>;
 } );
 
@@ -185,6 +189,11 @@ const Ctc = React.memo( function( props )
 		props.fetchData();
 	}, [] );
 
+	const goTorecharge = React.useCallback( function( title )
+	{
+		props.navigation.push( "Recharge", { name: title } )
+	}, [] );
+
 	// console.log( "props", props );
 
 	return <View style = { styles.container }>
@@ -211,6 +220,7 @@ const Ctc = React.memo( function( props )
 				total = { item.total }
 				unitRate = { item.unitRate }
 				totalRate = { item.totalRate }
+				goTorecharge = { goTorecharge }
 			/> }
 			renderSectionHeader = { ( { section: { title } } ) => <SectionHeader title = { title } /> }
 			ListEmptyComponent = { () => props.fetchLoading ? <ListLoading /> : <ListError fetchError = { props.fetchError } /> }

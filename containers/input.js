@@ -34,12 +34,11 @@ const styles = StyleSheet.create( {
 
 export default React.memo( function( { index, value, placeholder, hasError, disabled, inputBoxStyle, inputStyle, renderInputRight, renderInputLeft, setInputText } )
 {
-	const keyboardType = ( index === "phoneNumber" || index === "referee" ) ? "numeric" : ( index === "password" || index === "newPassword" ) ? "default" : index === "emailText" ? "email-address" : "default";
+	const keyboardType = ( index === "phoneNumber" || index === "referee" || index === "number" ) ? "numeric" : ( index === "password" || index === "newPassword" ) ? "default" : index === "emailText" ? "email-address" : "default";
 	const isPassword = index === "password" || index === "newPassword";
 	const isCode = index === "code" || index === "imageCode";
 
 	return <View style = { inputBoxStyle }>
-		
 		<View style = { styles.inputRow }>
 			{ renderInputLeft && renderInputLeft() }
 			<TextInput

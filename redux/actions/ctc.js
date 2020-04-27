@@ -13,9 +13,9 @@ let keys = [ "USDT", "ETUSD", "ETH", "SLBT", "BTC", "DASH", "ZEC", "LTC", "NEO",
 
 /* action create */
 // 设置 data, fetchLoading, fetchError
-function setFetchState( data, fetchLoading, fetchError )
+function setFetchState( id, data, fetchLoading, fetchError )
 {
-	return { type: ACTIONS_SET_CTC_FETCHSTATE, payload: { data, fetchLoading, fetchError } };
+	return { type: ACTIONS_SET_CTC_FETCHSTATE, payload: { id, data, fetchLoading, fetchError } };
 };
 
 // 设置 fetchLoading
@@ -55,10 +55,30 @@ function wsData()
 			onmessage: function( res )
 			{
 				const resArr = res.split( "," );
-
+				const isUSDCNH = resArr[ 0 ] === "USDCNH";
 				const isNeed = keys.some( item => res.includes( item ) );
 
-				function getNewData()
+				if( isUSDCNH )
+				{
+					dispatch( setRate( Number( resArr[ 1 ] ) ) );
+					const { ctc } = getState();
+					const newData = ctc.data.slice( 0 );
+
+					for ( let i = newData.length - 1; i >= 0; i-- )
+					{
+						for ( let j = newData[ i ][ "data" ].length - 1; j >= 0; j-- )
+						{
+							const unit = Number( newData[ i ][ "data" ][ j ][ "unit" ] );
+							const number = Number( newData[ i ][ "data" ][ j ][ "number" ] );
+							const fixed = newData[ i ][ "data" ][ j ][ "key" ] === "SLBT" ? 6 : 2;
+
+							newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( unit * ctc.rate ), fixed )
+							newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 2 )
+						};
+					};
+					dispatch( setData( newData ) );
+				};
+				if( isNeed )
 				{
 					const { ctc } = getState();
 					const newData = ctc.data.slice( 0 );
@@ -69,40 +89,20 @@ function wsData()
 						{
 							if( newData[ i ][ "data" ][ j ].key === resArr[ 0 ] )
 							{
-								if( resArr[ 0 ] === "SLBT" )
-								{
-									newData[ i ][ "data" ][ j ][ "unit" ] = getNum( String( Number( resArr[ 1 ] ) ), 6 );
-									newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( Number( resArr[ 1 ] ) * Number( ctc.rate ) ), 6 );
-									console.log( "kkkkkkkkkkk", ctc.rate, resArr[ 0 ] );
-								} else
-								{
-									newData[ i ][ "data" ][ j ][ "unit" ] = getNum( resArr[ 1 ], 2 );
-									newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( Number( resArr[ 1 ] ) * Number( ctc.rate ) ), 2 );
-								};
+								const unit = Number( resArr[ 1 ] );
+								const number = Number( newData[ i ][ "data" ][ j ][ "number" ] );
+								const fixed = resArr[ 0 ] === "SLBT" ? 6 : 2;
 
-								newData[ i ][ "data" ][ j ][ "total" ] = getNum( String( Number( resArr[ 1 ] ) * Number( newData[ i ][ "data" ][ j ][ "number" ] ) ), 2 );
-								newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( Number( resArr[ 1 ] ) * Number( newData[ i ][ "data" ][ j ][ "number" ] ) * Number( ctc.rate ) ), 2 );
+								newData[ i ][ "data" ][ j ][ "unit" ] = getNum( String( unit ), fixed );
+								newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( unit * ctc.rate ), fixed );
+
+								newData[ i ][ "data" ][ j ][ "total" ] = getNum( String( unit * number ), 2 );
+								newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 2 );
 								break outerloop;
 							};
 						};
 					};
-
-					return newData;
-				};
-
-				if( resArr[ 0 ] === "USDCNH" )
-				{
-					console.log( "=============----------------------=========>", resArr[ 0 ] )
-					dispatch( setRate( resArr[ 1 ] ) );
-					dispatch( setData( getNewData() ) );
-
-				};
-
-
-				if( isNeed )
-				{
-					console.log( "======================>", resArr[ 0 ] )
-					dispatch( setData( getNewData() ) );
+					dispatch( setData( newData ) );
 				};
 			}
 		} );
@@ -127,34 +127,39 @@ export function fetchData()
 			{
 				const obj = objectValueGetNum( res, keys, 3 );
 
-
 				const data = [ {
 					title: I18n.t( "ctc.type1" ),
 					data: [
-						{ key: "USDT", number: obj[ "USDT" ], type: 0, unit: 0, total: 0 }, { key: "ETUSD", number: obj[ "ETUSD" ], type: 0, unit: 0, total: 0 },
-						{ key: "ETH", number: obj[ "ETH" ], type: 0, unit: 0, total: 0 }, { key: "SLBT", number: obj[ "SLBT" ], type: 0, unit: 0, total: 0 }
+						{ key: "USDT", number: obj[ "USDT" ], type: 0, unit: 0, total: 0 },
+						{ key: "ETUSD", number: obj[ "ETUSD" ], type: 0, unit: 0, total: 0 },
+						{ key: "ETH", number: obj[ "ETH" ], type: 0, unit: 0, total: 0 },
+						{ key: "SLBT", number: obj[ "SLBT" ], type: 0, unit: 0, total: 0 }
 					]
 				}, {
 					title: I18n.t( "ctc.type2" ),
 					data: [
-						{ key: "BTC", number: obj[ "BTC" ], type: 1, unit: 0, total: 0 }, { key: "DASH", number: obj[ "DASH" ], type: 1, unit: 0, total: 0 },
-						{ key: "ZEC", number: obj[ "ZEC" ], type: 1, unit: 0, total: 0 }, { key: "LTC", number: obj[ "LTC" ], type: 1, unit: 0, total: 0 },
-						{ key: "NEO", number: obj[ "NEO" ], type: 1, unit: 0, total: 0 }, { key: "XMR", number: obj[ "XMR" ], type: 1, unit: 0, total: 0 },
-						{ key: "OMG", number: obj[ "OMG" ], type: 1, unit: 0, total: 0 }, { key: "EOS", number: obj[ "EOS" ], type: 1, unit: 0, total: 0 },
+						{ key: "BTC", number: obj[ "BTC" ], type: 1, unit: 0, total: 0 },
+						{ key: "DASH", number: obj[ "DASH" ], type: 1, unit: 0, total: 0 },
+						{ key: "ZEC", number: obj[ "ZEC" ], type: 1, unit: 0, total: 0 },
+						{ key: "LTC", number: obj[ "LTC" ], type: 1, unit: 0, total: 0 },
+						{ key: "NEO", number: obj[ "NEO" ], type: 1, unit: 0, total: 0 },
+						{ key: "XMR", number: obj[ "XMR" ], type: 1, unit: 0, total: 0 },
+						{ key: "OMG", number: obj[ "OMG" ], type: 1, unit: 0, total: 0 },
+						{ key: "EOS", number: obj[ "EOS" ], type: 1, unit: 0, total: 0 },
 						{ key: "XRP", number: obj[ "XRP" ], type: 1, unit: 0, total: 0 }
 					]
 				} ];
-				dispatch( setFetchState( data, false, null ) );
+				dispatch( setFetchState( res.id, data, false, null ) );
 				dispatch( wsData() );
 			} else
 			{
-				dispatch( setFetchState( [], false, res ) );
+				dispatch( setFetchState( "", [], false, res ) );
 			};
 
 		} catch( err )
 		{
 			console.log( "err", err );
-			dispatch( setFetchState( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ctc.fetchDataError" ) }` : err.err.toString() ) );
+			dispatch( setFetchState( "", [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ctc.fetchDataError" ) }` : err.err.toString() ) );
 		};
 	};
 };

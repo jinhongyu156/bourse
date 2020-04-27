@@ -146,5 +146,20 @@ export default {
 		turn: "转币",
 
 		fetchDataError: "获取失败"
+	},
+	recharge: {
+		title: "充币",
+		address: "收币地址",
+		getAddress: "获取",
+		copy: "复制",
+		placeholderNumber: "请输入充币数量",
+		number: "充币数量",
+		placeholderNote: "推荐填写本平台 ID 号",
+		note: "转账备注",
+		submitText: "我已充币",
+		tip1: "1、本次充币地址有效时间120分钟",
+		tip2: "2、当前公司收币地址为一次性地址，下次充币会变更地址，请勿重复使用",
+		tip3: "3、充币后请务必点击<我已充币>",
+		tip4: "4、确认充币入账后，如果十分钟依然未到账，请拨打18244444404服务热线"
 	}
 };
