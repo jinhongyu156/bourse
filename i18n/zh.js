@@ -129,6 +129,22 @@ export default {
 		serviceFee: "服务费",
 		buy: "购买",
 		sell: "出售"
+	},
+	ctc: {
+		name: "名称",
+		unit: "最新价",
+		number: "数量",
+		total: "价值",
+		type1: "冲提币种",
+		type2: "交易币种",
+
+		price: "价值",
+		charge: "充币",
+		mention: "提币",
+		buy: "买入",
+		sell: "卖出",
+		turn: "转币",
+
+		fetchDataError: "获取失败"
 	}
 };
-

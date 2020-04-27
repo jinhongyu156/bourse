@@ -71,9 +71,15 @@ function getNewUserOrderData( userOrderData, contractData )
 				break;
 			};
 		};
-		newUserOrderData[ i ] = objectValueGetNum( newUserOrderData[ i ], [ "总金额", "总手续费", "建仓点数", "止损价", "止盈价" ], 3 );
+		newUserOrderData[ i ] = objectValueGetNum( newUserOrderData[ i ], [ "总金额", "购买数量", "总手续费", "波动盈亏", "建仓点数", "止损价", "止盈价" ], 3 );
 		newUserOrderData[ i ][ "id" ] = newUserOrderData[ i ][ "订单号" ];
 		newUserOrderData[ i ][ "time" ] = dateFormat( newUserOrderData[ i ][ "建仓时间" ] * 1000 );
+		newUserOrderData[ i ][ "profit" ] = getNum( String(
+			( Number( newUserOrderData[ i ][ "购买数量" ] ) ? -1 : 1 ) *
+			( Number( newUserOrderData[ i ][ "newprice" ] ) - Number( newUserOrderData[ i ][ "建仓点数" ] ) ) *
+			Number( newUserOrderData[ i ][ "波动盈亏" ] ) *
+			Number( newUserOrderData[ i ][ "购买数量" ] )
+		), 3 );
 	};
 	return newUserOrderData;
 };

@@ -6,6 +6,7 @@ import sendCodeReducer from "./sendCode.js";
 import noticeReducer from "./notice.js";
 import financeReducer from "./finance.js";
 import contractReducer from "./contract.js";
+import ctcReducer from "./ctc.js";
 
 import languageReducer from "./language.js";
 import storageToReduxReducer from "./storageToRedux.js";
@@ -18,6 +19,7 @@ export default combineReducers( {
 	notice: noticeReducer,
 	finance: financeReducer,
 	contract: contractReducer,
+	ctc: ctcReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

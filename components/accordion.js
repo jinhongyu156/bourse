@@ -6,9 +6,10 @@ const styles = StyleSheet.create( {
 	accordionItemContent: { overflow: "hidden" }
 } );
 
-const AccordionItem = React.memo( function( { index, rowStyle, expanded, renderTitle, renderContent, ...args } )
+export const AccordionItem = React.memo( function( { index, rowStyle, expanded, renderTitle, renderContent, ...args } )
 {
 	const [ open, setOpen ] = React.useState( expanded.includes( index ) );
+
 	return <View style = { rowStyle }>
 		<TouchableOpacity onPress = { () => setOpen( prev => !prev ) }>
 			{ renderTitle( open, index, args ) }
@@ -28,7 +29,7 @@ const AccordionItem = React.memo( function( { index, rowStyle, expanded, renderT
  * @return				{ele}			[description]
  **/
 
-export default React.memo( function Accordion( { data, rowStyle, expanded, renderTitle, renderContent } )
+export const Accordion = React.memo( function( { data, rowStyle, expanded, renderTitle, renderContent } )
 {
 	return data.map( ( item, index ) => <AccordionItem
 		key = { item.id }

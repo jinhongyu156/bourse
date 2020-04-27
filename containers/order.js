@@ -6,7 +6,7 @@ import I18n from "i18n-js";
 
 import SubmitBtn from "./../containers/submit.js";
 
-import Accordion from "./../components/accordion.js";
+import { Accordion } from "./../components/accordion.js";
 
 // 订单标题行的高度
 const ACCORDIONTITLEHEIGTH = 50;
@@ -63,7 +63,6 @@ const AccordionTitle = React.memo( function( { open, index, data } )
 
 	const color = state > 0 ? styles.upColor : state < 0 ? styles.downColor : state.normalColor;
 
-	// console.log( "data", data );
 	return <View style = { styles.accordionTitle }>
 		<View>
 			<Text style = { styles.col10Text }>{ data[ "产品代码" ] }</Text>
@@ -81,7 +80,7 @@ const AccordionTitle = React.memo( function( { open, index, data } )
 			<Text>{ data[ "购买数量" ] }</Text>
 		</React.Fragment>
 		<React.Fragment>
-			<Text>????</Text>
+			<Text style = { Number( data[ "profit" ] ) > 0 ? styles.upColor : styles.downColor }>{ data[ "profit" ] }</Text>
 		</React.Fragment>
 		<View>
 			<Text style = { styles.col50Text }>{ data[ "止盈价" ] }</Text>

@@ -133,6 +133,22 @@ export default {
 		serviceFee: "The service fee",
 		buy: "Buy",
 		sell: "Sell"
+	},
+	ctc: {
+		name: "Name",
+		unit: "Unit",
+		number: "Number",
+		total: "Total",
+		type1: "Rushed to mention currencies",
+		type2: "Trading currencies",
+
+		price: "Price",
+		charge: "Charge",
+		mention: "Mention",
+		buy: "Buy",
+		sell: "Sell",
+		turn: "Turn",
+
+		fetchDataError: "Fail to get"
 	}
 };
-
