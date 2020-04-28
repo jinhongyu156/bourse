@@ -282,7 +282,6 @@ export function fetchClosing( params, callback )
 	return async function( dispatch, getState )
 	{
 		const { contract } = getState();
-		console.log( "canshu: ", { "提交": "平仓", "订单号": params.id, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" }  );
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", { "提交": "平仓", "订单号": params.id, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" } );

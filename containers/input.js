@@ -32,9 +32,12 @@ const styles = StyleSheet.create( {
  * @return				{ele}			[description]
  **/
 
-export default React.memo( function( { index, value, placeholder, hasError, disabled, inputBoxStyle, inputStyle, renderInputRight, renderInputLeft, setInputText } )
+export default React.memo( function( { index, value, placeholder, hasError, disabled, inputBoxStyle, inputStyle, renderInputRight, renderInputLeft, setInputText, multiline } )
 {
-	const keyboardType = ( index === "phoneNumber" || index === "referee" || index === "number" ) ? "numeric" : ( index === "password" || index === "newPassword" ) ? "default" : index === "emailText" ? "email-address" : "default";
+	const keyboardType = ( index === "phoneNumber" || index === "referee" || index === "number" || index === "account" ) ? "numeric"
+		: ( index === "password" || index === "newPassword" ) ? "default"
+		: index === "emailText" ? "email-address"
+		: "default";
 	const isPassword = index === "password" || index === "newPassword";
 	const isCode = index === "code" || index === "imageCode";
 
@@ -45,12 +48,13 @@ export default React.memo( function( { index, value, placeholder, hasError, disa
 				style = { [ styles.textInput, inputStyle, disabled ? styles.inactiveColor : styles.activeColor ] }
 				value = { value }
 				editable = { !disabled }
+				multiline = { multiline }
 				secureTextEntry = { isPassword }
 				keyboardType = { keyboardType }
 				placeholder = { placeholder }
 				placeholderTextColor = { PLACEHOLDERTEXTCOLOR }
 				onChangeText = { text => setInputText( index, text ) } />
-			{ isCode && renderInputRight && renderInputRight() }
+			{ renderInputRight && renderInputRight() }
 		</View>
 		<View style = { [ styles.line, hasError ? styles.errorBgColor : {} ] } />
 	</View>

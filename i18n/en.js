@@ -149,11 +149,18 @@ export default {
 		sell: "Sell",
 		turn: "Turn",
 
-		fetchDataError: "Fail to get"
+		fetchDataError: "Fail to get",
+
+		sellSuccess: "Sell success",
+		sellError: "Sell failure",
+		buySuccess: "Buy success",
+		buyError: "Buy success"
 	},
 	recharge: {
+		copySuccess: "Copy Success",
 		title: "Charge",
 		address: "Address",
+		placeholderAddress: "Please get address first",
 		getAddress: "Get",
 		copy: "Copy",
 		placeholderNumber: "Please enter the charge amount",
@@ -164,6 +171,50 @@ export default {
 		tip1: "1. The valid time of this coin charging address is 120 minutes ",
 		tip2: "2. The current receipt address of the company is a one-time address. The address will be changed next time.",
 		tip3: "3. Please be sure to click Submit after charging.",
-		tip4: "4. If the bill doesn't arrive after 10 minutes, please call 18244444404 service hotline."
+		tip4: "4. If the bill doesn't arrive after 10 minutes, please call 18244444404 service hotline.",
+		fetchAddressError: "Failed to get address",
+		fetchSubmitError: "Top-up failure",
+		fetchSubmitSuccess: "Top-up Success",
+		submitError: "Please fill in the information correctly"
+	},
+	mention: {
+		title: "Mention",
+		usable: "Usable",
+		address: "Address",
+		number: "Number",
+		fee: "Fee",
+		password: "Password",
+
+		placeholderAddress: "Please enter ethereum-based money",
+		placeholderNumber: "Please enter the number of withdrawals",
+		placeholderPassword: "Please enter money password",
+
+		submitText: "Mention",
+		tip1: "1: The service charge will be deducted from the balance",
+		tip2: "2: Withdrawal time: 9:00 a.m. to 12:00 a.m., arrival time: within 72 hours after the withdrawal begins",
+		tip3: "3: Fund password is account login password",
+		tip4: "4: Please enter your ethereum based wallet address 0x",
+		tip5: "5: The currency you currently choose is [ETH] please check whether it is the ETH currency wallet address. If you fill in the wrong will lead to the withdrawal of COINS, which has nothing to do with the platform. Please check carefully.",
+
+		fetchUsableError: "Failed to obtain the available quantity",
+		fetchSubmitError: "Mention money failed",
+		fetchSubmitSuccess: "Mention money success",
+		submitError1: "Please fill in the information correctly",
+		submitError2: "The number of inputs must not be greater than the number available"
+	},
+	turn: {
+		title: "Turn",
+		number: "Number",
+		account: "Account",
+		password: "Password",
+
+		placeholderNumber: "Please enter the amount of money transferred",
+		placeholderAccount: "Please enter the ID number of the transfer",
+		placeholderPassword: "Please enter the fund password",
+
+		submitText: "Confirm",
+		fetchSubmitError: "Transfer currency failure",
+		fetchSubmitSuccess: "Turn money successfully",
+		submitError: "Please fill in the information correctly"
 	}
 };

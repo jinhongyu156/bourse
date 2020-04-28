@@ -1,12 +1,12 @@
 import React from "react";
 
-import { View, Image, Text, TouchableOpacity, ActivityIndicator, SectionList, StyleSheet } from "react-native";
+import { View, Image, Text, TouchableOpacity, ToastAndroid, ActivityIndicator, SectionList, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { fetchData } from "./../redux/actions/ctc.js";
+import { fetchData, fetchSell, fetchBuy, setCount } from "./../redux/actions/ctc.js";
 
 import Counter from "./../components/counter.js";
 import { AccordionItem } from "./../components/accordion.js";
@@ -71,7 +71,9 @@ const styles = StyleSheet.create( {
 	sectionRowItemSeparator: { height: ROW_SEPARATOR_HEIGHT, backgroundColor: "#F4F4F5" },
 	sectionSeparator: { height: ROW_SEPARATOR_HEIGHT, backgroundColor: "#FFFFFF" },
 
-	sectionRowContentBox: { height: ROWCONTENTHEIGHT, paddingVertical: 10, paddingHorizontal: 20, justifyContent: "space-around" },
+	sectionRowContentBox: { paddingVertical: 10, paddingHorizontal: 20, justifyContent: "space-around" },
+	sectionRowContentType0Box: { height: ROWCONTENTHEIGHT / 3 },
+	sectionRowContentType1Box: { height: ROWCONTENTHEIGHT },
 	sectionRowContentItem: { flexDirection: "row", alignItems: "center" },
 	sectionRowContentItemAround: { justifyContent: "space-around" },
 	sectionRowContentItemRight: { width: 180, marginLeft: 20 },
@@ -116,40 +118,57 @@ const SectionRowTitle = React.memo( function( { title, number, unit, total, unit
 	</View>;
 } );
 
-const SectionRowContent = React.memo( function( { type, title, goTorecharge } )
+const SectionRowContent = React.memo( function( { type, title, goToAccess, price, count, setCount, fetchSell, fetchBuy } )
 {
-	return <View style = { styles.sectionRowContentBox }>
-		<View style = { styles.sectionRowContentItem }>
-			<Text>{ I18n.t( "ctc.number" ) }: </Text>
-			<View style = { styles.sectionRowContentItemRight }>
-				<Counter count = { 1 } setCount = { () => {} } />
-			</View>
-		</View>
-		<View style = { styles.sectionRowContentItem }>
-			<Text>{ I18n.t( "ctc.price" ) }: </Text>
-			<Text style = { styles.sectionRowContentItemRight }>100.346</Text>
-		</View>
+	const bindSetCount = React.useCallback( function( text )
+	{
+		setCount( title, text );
+	}, [ title ] );
+
+	return <View style = { [ styles.sectionRowContentBox, type ? styles.sectionRowContentType1Box : styles.sectionRowContentType0Box ] }>
+		{
+			type
+				? <React.Fragment>
+					<View style = { styles.sectionRowContentItem }>
+						<Text>{ I18n.t( "ctc.number" ) }: </Text>
+						<View style = { styles.sectionRowContentItemRight }>
+							<Counter count = { count } setCount = { bindSetCount } />
+						</View>
+					</View>
+					<View style = { styles.sectionRowContentItem }>
+						<Text>{ I18n.t( "ctc.price" ) }: </Text>
+						<Text style = { styles.sectionRowContentItemRight }>{ price }</Text>
+					</View>
+				</React.Fragment>
+				: null
+		}
 		<View style = { [ styles.sectionRowContentItem, styles.sectionRowContentItemAround ] }>
-			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type ? () => {} : goTorecharge( title ) }>
+			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type
+				? fetchSell( { coin: title, number: count }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) )
+				: goToAccess( "recharge", title )
+			}>
 				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.sell" ) :I18n.t( "ctc.charge" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.sectionRowContentBtn }>
+			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type
+				? fetchBuy( { coin: title, number: count }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) )
+				: goToAccess( "mention", title )
+			}>
 				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.buy" ) : I18n.t( "ctc.mention" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.sectionRowContentBtn }>
+			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => goToAccess( "turn", title ) }>
 				<Text style = { styles.sectionRowContentBtnText }>{ I18n.t( "ctc.turn" ) }</Text>
 			</TouchableOpacity>
 		</View>
 	</View>;
 } );
 
-const SectionRow = React.memo( function( { type, title, number, unit, total, unitRate, totalRate, goTorecharge } )
+const SectionRow = React.memo( function( { type, title, number, count, price, unit, total, unitRate, totalRate, goToAccess, setCount, fetchSell, fetchBuy } )
 {
 	return <AccordionItem
 		index = { title }
 		expanded = { [] }
 		renderTitle = { () => <SectionRowTitle title = { title } number = { number } unit = { unit } total = { total } unitRate = { unitRate } totalRate = { totalRate } /> }
-		renderContent = { () => <SectionRowContent type = { type } title = { title } goTorecharge = { goTorecharge } /> }
+		renderContent = { () => <SectionRowContent type = { type } title = { title } goToAccess = { goToAccess } price = { price } count = { count } setCount = { setCount } fetchSell = { fetchSell } fetchBuy = { fetchBuy } /> }
 	/>;
 } );
 
@@ -189,9 +208,9 @@ const Ctc = React.memo( function( props )
 		props.fetchData();
 	}, [] );
 
-	const goTorecharge = React.useCallback( function( title )
+	const goToAccess = React.useCallback( function( type, title )
 	{
-		props.navigation.push( "Recharge", { name: title } )
+		props.navigation.push( "Access", { type: type, name: title } );
 	}, [] );
 
 	// console.log( "props", props );
@@ -205,7 +224,7 @@ const Ctc = React.memo( function( props )
 		</Header>
 		<Notice />
 		<SectionList
-			sections = { props.data }
+			sections = { props.fetchLoading ? [] : props.data }
 			stickySectionHeadersEnabled = { true }
 			showsVerticalScrollIndicator = { false }
 			ListHeaderComponent = { () => <ListHeader /> }
@@ -216,11 +235,16 @@ const Ctc = React.memo( function( props )
 				type = { item.type }
 				title = { item.key }
 				number = { item.number }
+				count = { item.count }
+				price = { item.price }
 				unit = { item.unit }
 				total = { item.total }
 				unitRate = { item.unitRate }
 				totalRate = { item.totalRate }
-				goTorecharge = { goTorecharge }
+				goToAccess = { goToAccess }
+				setCount = { props.setCount }
+				fetchSell = { props.fetchSell }
+				fetchBuy = { props.fetchBuy }
 			/> }
 			renderSectionHeader = { ( { section: { title } } ) => <SectionHeader title = { title } /> }
 			ListEmptyComponent = { () => props.fetchLoading ? <ListLoading /> : <ListError fetchError = { props.fetchError } /> }
@@ -242,7 +266,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { fetchData }, dispatch );
+		return bindActionCreators( { fetchData, fetchSell, fetchBuy, setCount }, dispatch );
 	}
 )( Ctc );
 

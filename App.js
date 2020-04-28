@@ -23,7 +23,7 @@ import I18n from "./i18n/index.js";
 import Login from "./pages/login.js";
 import Register from "./pages/register.js";
 import Disclaimer from "./pages/disclaimer.js";
-import Recharge from "./pages/recharge.js";
+import Access from "./pages/access.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -88,7 +88,7 @@ export default function()
 				<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
 				<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
 				<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
-				<Stack.Screen name = "Recharge" component = { Recharge } />
+				<Stack.Screen name = "Access" component = { Access } />
 			</Stack.Navigator>
 		</NavigationContainer>
 	</Provider>;

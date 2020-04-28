@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import loginReducer from "./login.js";
 import registerReducer from "./register.js";
 import sendCodeReducer from "./sendCode.js";
+import accessReducer from "./access.js";
 
 import noticeReducer from "./notice.js";
 import financeReducer from "./finance.js";
@@ -15,6 +16,7 @@ export default combineReducers( {
 	login: loginReducer,
 	register: registerReducer,
 	sendCode: sendCodeReducer,
+	access: accessReducer,
 
 	notice: noticeReducer,
 	finance: financeReducer,

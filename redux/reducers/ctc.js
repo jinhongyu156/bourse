@@ -22,7 +22,6 @@ export default function( state = defaultState, action )
 			return Object.assign( {}, state, { fetchLoading: action.payload } );
 
 		case ACTIONS_SET_CTC_RATE:
-			console.log("action", action );
 			return Object.assign( {}, state, { rate: action.payload } );
 
 		default:
