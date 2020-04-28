@@ -213,10 +213,8 @@ const Ctc = React.memo( function( props )
 		props.navigation.push( "Access", { type: type, name: title } );
 	}, [] );
 
-	// console.log( "props", props );
-
 	return <View style = { styles.container }>
-		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
+		<Header usdtInfo = { props.originalData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
 			<View style = { styles.headerRightViewItem }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
@@ -258,8 +256,11 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const ctcData = state.ctc;
+		const financeData = state.finance;
 		return {
 			data: ctcData.data,
+			userDetailData: financeData.userDetailData,
+			originalData: ctcData.originalData,
 			fetchLoading: ctcData.fetchLoading,
 			fetchError: ctcData.fetchError
 		};

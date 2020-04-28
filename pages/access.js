@@ -4,6 +4,7 @@ import { View, Text, ScrollView, TouchableOpacity, ToastAndroid, StyleSheet, Key
 
 import Clipboard from "@react-native-community/clipboard";
 
+import { fetchData } from "./../redux/actions/ctc.js";
 import { setInputText, clear, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit } from "./../redux/actions/access.js";
 
 import Input from "./../containers/input.js";
@@ -134,6 +135,7 @@ const Access = React.memo( function( props )
 			props.fetchTurnSubmit( props.route.params.name, () => {
 				ToastAndroid.show( I18n.t( "turn.fetchSubmitSuccess" ), ToastAndroid.SHORT );
 				props.navigation.goBack();
+				props.fetchData();
 			} );
 		}, [] );
 
@@ -160,6 +162,7 @@ const Access = React.memo( function( props )
 			props.fetchMentionSubmit( props.route.params.name, () => {
 				ToastAndroid.show( I18n.t( "mention.fetchSubmitSuccess" ), ToastAndroid.SHORT );
 				props.navigation.goBack();
+				props.fetchData();
 			} );
 		}, [] );
 
@@ -199,6 +202,7 @@ const Access = React.memo( function( props )
 			props.fetchRechargeSubmit( props.route.params.name, () => {
 				ToastAndroid.show( I18n.t( "recharge.fetchSubmitSuccess" ), ToastAndroid.SHORT );
 				props.navigation.goBack();
+				props.fetchData();
 			} );
 		}, [] );
 
@@ -244,6 +248,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setInputText, clear, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
+		return bindActionCreators( { setInputText, clear, fetchData, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
 	}
 )( Access );

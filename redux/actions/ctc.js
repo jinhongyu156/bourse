@@ -5,6 +5,7 @@ import I18n from "i18n-js";
 /* action type */
 export const ACTIONS_SET_CTC_FETCHSTATE = "ACTIONS_SET_CTC_FETCHSTATE";
 export const ACTIONS_SET_CTC_DATA = "ACTIONS_SET_CTC_DATA";
+export const ACTIONS_SET_CTC_ORIGINALDATA = "ACTIONS_SET_CTC_ORIGINALDATA";
 export const ACTIONS_SET_CTC_FETCHLOADING = "ACTIONS_SET_CTC_FETCHLOADING";
 export const ACTIONS_SET_CTC_RATE = "ACTIONS_SET_CTC_RATE";
 let ws = null;
@@ -28,6 +29,12 @@ function setFetchLoading( fetchLoading )
 function setData( data )
 {
 	return { type: ACTIONS_SET_CTC_DATA, payload: data };
+};
+
+// 设置原始数据
+function setOriginalData( originalData )
+{
+	return { type: ACTIONS_SET_CTC_ORIGINALDATA, payload: originalData };
 };
 
 // 设置 rate
@@ -183,6 +190,7 @@ export function fetchData()
 					]
 				} ];
 				dispatch( setFetchState( res.id, data, false, null ) );
+				dispatch( setOriginalData( objectValueGetNum( res, [ "USDT", "SLBT" ], 3 ) ) );
 				dispatch( wsData() );
 			} else
 			{

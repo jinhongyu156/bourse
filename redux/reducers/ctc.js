@@ -1,8 +1,9 @@
-import { ACTIONS_SET_CTC_FETCHSTATE, ACTIONS_SET_CTC_DATA, ACTIONS_SET_CTC_FETCHLOADING, ACTIONS_SET_CTC_RATE } from "./../actions/ctc.js";
+import { ACTIONS_SET_CTC_FETCHSTATE, ACTIONS_SET_CTC_DATA, ACTIONS_SET_CTC_ORIGINALDATA, ACTIONS_SET_CTC_FETCHLOADING, ACTIONS_SET_CTC_RATE } from "./../actions/ctc.js";
 
 const defaultState = {
 	id: "",
 	data: [],
+	originalData: {},
 	rate: 0,
 	fetchLoading: false,
 	fetchError: null
@@ -17,6 +18,9 @@ export default function( state = defaultState, action )
 
 		case ACTIONS_SET_CTC_DATA:
 			return Object.assign( {}, state, { data: action.payload } );
+
+		case ACTIONS_SET_CTC_ORIGINALDATA:
+			return Object.assign( {}, state, { originalData: action.payload } );
 
 		case ACTIONS_SET_CTC_FETCHLOADING:
 			return Object.assign( {}, state, { fetchLoading: action.payload } );
