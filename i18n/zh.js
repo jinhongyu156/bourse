@@ -217,7 +217,40 @@ export default {
 		header: {
 			chart: "推广二维码"
 		},
+		myClient: "我的客户",
+		myInfo: "我的信息",
+		editPassword: "登录密码",
+		subAccounts: "子账户列表",
+		bindSubaccount: "绑定子账号",
+		hotkey: "一键领取",
+		summarize: "资金归集",
+		downloadCenter: "下载中心",
+		introduction: "公司介绍",
+		contract: "投资合同",
+		repo: "矿机回购",
+		userCenter: "用户中心",
+		systemCenter: "系统中心",
+		newbieGuide: "新手指南",
+		vouchers: "代金券",
+		language: "语言",
+
+		trading: "交易金",
+		tailNumber: "尾号",
+		noDataText: "未查询到数据",
+		goBack: "返回上一级",
+
 		fetchUserDetailDataError: "获取用户数据失败",
-		fetchMyClientDataError: "获取客户数据失败"
+		fetchMyClientDataError: "获取客户数据失败",
+
+		oldPasswordPlaceholder: "请输入旧密码",
+		oldPassword: "旧密码",
+		newPasswordPlaceholder: "请输入新密码",
+		newPassword: "新密码",
+		confirmPassWordPlaceholder: "请重复输入新密码",
+		confirmPassWord: "确认密码",
+		editPasswordSubmit: "提交",
+		fetchEditPassWordError: "修改密码失败",
+		fetchEditPassWordSuccess: "修改密码成功",
+		inputEditPassWordError: "请将信息填写完整",
 	}
 };

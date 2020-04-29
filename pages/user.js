@@ -5,13 +5,13 @@ import { View, Text, Image, ImageBackground, ActivityIndicator, Dimensions, Styl
 // import { CommonActions } from "@react-navigation/native";
 
 // import { logout } from "./../redux/actions/login.js";
-// import { setLanguage } from "./../redux/actions/language.js";
 
 import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData } from "./../redux/actions/user.js";
+import { setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData, setInputText } from "./../redux/actions/user.js";
+import { showLanguageActionSheet, hideActionSheet } from "./../redux/actions/login.js";
 
 import I18n from "i18n-js";
 
@@ -20,7 +20,9 @@ import Tab from "./../components/tab.js";
 import Header from "./../containers/header.js";
 import TabBar from "./../containers/tabBar.js";
 
+import MyInfo from "./../containers/myInfo.js";
 import MyClient from "./../containers/myClient.js";
+import EditPassword from "./../containers/editPassword.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -35,31 +37,6 @@ const TABBARHEIGHT2 = 40;
 const SCREENWIDTH = Dimensions.get( "window" ).width;
 
 const styles = StyleSheet.create( {
-/*
-modalContainer: { width: MODALWIDTH, height: MODALHEIGHT, borderRadius: 8, backgroundColor: "#FFFFFF" },
-	modalOverlay: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, backgroundColor: "rgba( 0, 0, 0, 0.4 )" },
-	modalWrapper: { flex: 1, justifyContent: "center", alignItems: "center" },
-	modalTitle: { width: MODALWIDTH, height: MODALTITLEBOXHEIGHT, justifyContent: "center", alignItems: "center" },
-	modalTitleText: { fontSize: 22 },
-	modalInputBox: { width: MODALWIDTH, height: MODALINPUTHEIGHT, justifyContent: "space-around", alignItems: "center" },
-	modalInputView: { flexDirection: "row", alignItems: "center" },
-	modalTimeInfoText: { fontSize: 24, marginRight: 10 },
-
-	modalInput: { fontSize: 18, textAlign: "center", width: MODALINPUTBOXWIDTH, height: MODALINPUTHEIGHT * 0.5, borderWidth: 1 },
-	modalInputTip: { fontSize: 10, color: "#6D6E77" },
-	modalOptionBox: { flexDirection: "row", width: MODALWIDTH, height: MODALOPTIONBOXHEIGHT },
-	modalOptionBoxItem: { flex: 1, justifyContent: "center", alignItems: "center" },
-	modalOptionBoxItemText: { fontSize: 16, fontWeight: "bold", borderRadius: 50, paddingVertical: 10, paddingHorizontal: 40 },
-	modalCancelBtn: { color: "#88898A", borderWidth: 1, borderColor: "#88898A" },
-	modalConfirmBtn: { color: "#FFFFFF", backgroundColor: "#696DAC" },
-	modalInfoBox: { width: MODALWIDTH, height: MODALINFOBOXHEIGHT, flexDirection: "row", justifyContent: "space-around", alignItems: "center" },
-	modalInfoItem: { alignItems: "center" },
-	modalInfoBoxText: { fontSize: 12, color: "#6D6E77" },
-
-	correctBorderColor: { borderColor: "#ECECEC" },
-	errorBorderColor: { borderColor: "#F00" },
-	errorColor: { fontSize: 12, color: "#F00" }
-*/
 	container: { flex: 1 },
 	headerRightViewItem: { alignItems: "center", justifyContent: "flex-end", marginLeft: 10 },
 	headerRightViewItemImage: { width: HEADERHANDLESIZE, height: HEADERHANDLESIZE },
@@ -70,7 +47,7 @@ modalContainer: { width: MODALWIDTH, height: MODALHEIGHT, borderRadius: 8, backg
 	tabBar1: { position: "absolute", top: 0, left: 0, right: 0, height: TABBARHEIGHT1, borderRadius: 40, backgroundColor: "#FFFFFF" },
 	tabBarPlaceHolder1: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#F5F5F5", height: TABBARHEIGHT1 * 0.5 },
 
-	tab2: { flex: 1, marginTop: 10, backgroundColor: "#FFFFFF" },
+	tab2: { flex: 1, marginTop: 10 },
 	tabBar2: { width: SCREENWIDTH, height: TABBARHEIGHT2, backgroundColor: "#F6F6F6", justifyContent: "space-around", },
 
 	errorBox: { height: 100, justifyContent: "center", alignItems: "center" },
@@ -92,15 +69,20 @@ const TabBar2 = React.memo( function( { tabs, activeTab, goToPage } )
 	return <TabBar tabs = { tabs } type = { "default" } tabBarStyle = { styles.tabBar2 } activeTab = { activeTab } goToPage = { goToPage } />
 } );
 
-
 const Tab2Content = React.memo( function()
 {
 	return <View></View>
 } );
 
-const UserCenter = React.memo( function( { id, tabIndex2, setTabIndex2, myClientData, isLoadingMyClientData, fetchMyClientDataError, fetchTabData } )
+const UserCenter = React.memo( function( {
+	id, vouchers,
+	tabIndex2, setTabIndex2,
+	myClientData, isLoadingMyClientData, fetchMyClientDataError, fetchTabData,
+	userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet,
+	oldPassWord, newPassWord, confirmPassWord, isLoadingEditPassWord, fetchEditPassWordError, inputError, setInputText
+} )
 {
-	console.log( "re-render UserCenter", isLoadingMyClientData );
+	console.log( "re-render UserCenter" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
@@ -108,15 +90,34 @@ const UserCenter = React.memo( function( { id, tabIndex2, setTabIndex2, myClient
 
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
 		<MyClient
-			tabLabel = { "我的客户" }
+			tabLabel = { I18n.t( "user.myClient" ) }
 			id = { id }
 			data = { myClientData }
 			loading = { isLoadingMyClientData }
 			error = { fetchMyClientDataError }
 			fetchData = { fetchTabData }
 		/>
-		<Tab2Content tabLabel = { "我的信息" } />
-		<Tab2Content tabLabel = { "登录密码" } />
+		<MyInfo
+			tabLabel = { I18n.t( "user.myInfo" ) }
+			id = { id }
+			vouchers = { vouchers }
+			userLanguage = { userLanguage }
+			actionSheetData = { actionSheetData }
+			isShowActionSheet = { isShowActionSheet }
+			showLanguageActionSheet = { showLanguageActionSheet }
+			hideActionSheet = { hideActionSheet }
+		/>
+		<EditPassword
+			tabLabel = { I18n.t( "user.editPassword" ) }
+			oldPassWord = { oldPassWord }
+			newPassWord = { newPassWord }
+			confirmPassWord = { confirmPassWord }
+			isLoadingEditPassWord = { isLoadingEditPassWord }
+			fetchEditPassWordError = { fetchEditPassWordError }
+			inputError = { inputError }
+			setInputText = { setInputText }
+			submit = { fetchTabData }
+		/>
 	</Tab>;
 } );
 
@@ -128,10 +129,10 @@ const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, fetchTabDa
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<Tab2Content tabLabel = { "子账户列表" } />
-		<Tab2Content tabLabel = { "绑定子账号" } />
-		<Tab2Content tabLabel = { "一件领取" } />
-		<Tab2Content tabLabel = { "资金归集" } />
+		<Tab2Content tabLabel = { I18n.t( "user.subAccounts" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.bindSubaccount" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.hotkey" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.summarize" ) } />
 	</Tab>;
 } );
 
@@ -143,10 +144,10 @@ const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, fetchTabDat
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<Tab2Content tabLabel = { "下载中心" } />
-		<Tab2Content tabLabel = { "公司介绍" } />
-		<Tab2Content tabLabel = { "投资合同" } />
-		<Tab2Content tabLabel = { "矿机回购" } />
+		<Tab2Content tabLabel = { I18n.t( "user.downloadCenter" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.introduction" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.contract" ) } />
+		<Tab2Content tabLabel = { I18n.t( "user.repo" ) } />
 	</Tab>;
 } );
 
@@ -164,9 +165,7 @@ const User =  React.memo( function( props )
 			<TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar1 } activeTab = { activeTab } goToPage = { goToPage } />
 		</ImageBackground>
 	}, [] );
-
 	// console.log( "props", props );
-
 	return <View style = { styles.container }>
 		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
 			<View style = { styles.headerRightViewItem }>
@@ -182,9 +181,10 @@ const User =  React.memo( function( props )
 			: Object.keys( props.userDetailData ).length
 				? <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab1 } page = { props.tabIndex1 } onChangeTab = { props.setTabIndex1 }>
 					<UserCenter
-						tabLabel = { "用户中心" }
+						tabLabel = { I18n.t( "user.userCenter" ) }
 
 						id = { props.userDetailData[ "id" ] }
+						vouchers = { props.userDetailData[ "代金券" ] }
 
 						fetchTabData = { props.fetchTabData }
 						myClientData = { props.myClientData }
@@ -194,15 +194,29 @@ const User =  React.memo( function( props )
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 
+						actionSheetData = { props.actionSheetData }
+						isShowActionSheet = { props.isShowActionSheet }
+						showLanguageActionSheet = { props.showLanguageActionSheet }
+						hideActionSheet = { props.hideActionSheet }
+						userLanguage = { props.userLanguage }
+
+						oldPassWord = { props.oldPassWord }
+						newPassWord = { props.newPassWord }
+						confirmPassWord = { props.confirmPassWord }
+						isLoadingEditPassWord = { props.isLoadingEditPassWord }
+						fetchEditPassWordError = { props.fetchEditPassWordError }
+						inputError = { props.inputError }
+						setInputText = { props.setInputText }
+
 					/>
 					<SystemCenter
-						tabLabel = { "系统中心" }
+						tabLabel = { I18n.t( "user.systemCenter" ) }
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 						fetchTabData = { props.fetchTabData }
 					/>
 					<NewbieGuide
-						tabLabel = { "新手指南" }
+						tabLabel = { I18n.t( "user.newbieGuide" ) }
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 						fetchTabData = { props.fetchTabData }
@@ -217,6 +231,8 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const userData = state.user;
+		const loginData = state.login;
+		const languageData = state.language;
 		return {
 			tabIndex1: userData.tabIndex1,
 			tabIndex2: userData.tabIndex2,
@@ -226,12 +242,29 @@ export default connect(
 
 			myClientData: userData.myClientData,
 			isLoadingMyClientData: userData.isLoadingMyClientData,
-			fetchMyClientDataError: userData.fetchMyClientDataError
+			fetchMyClientDataError: userData.fetchMyClientDataError,
+
+			actionSheetData: loginData.actionSheetData,
+			isShowActionSheet: loginData.isShowActionSheet,
+			userLanguage: languageData.userLanguage,
+
+			oldPassWord: userData.oldPassWord,
+			newPassWord: userData.newPassWord,
+			confirmPassWord: userData.confirmPassWord,
+			isLoadingEditPassWord: userData.isLoadingEditPassWord,
+			fetchEditPassWordError: userData.fetchEditPassWordError,
+			inputError: userData.inputError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
 		// return bindActionCreators( { logout, setLanguage }, dispatch );
-		return bindActionCreators( { setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData }, dispatch );
+		return bindActionCreators( {
+			setTabIndex1, setTabIndex2,
+			fetchUserDetailData,
+			fetchTabData,
+			showLanguageActionSheet, hideActionSheet,
+			setInputText
+		}, dispatch );
 	}
 )( User );

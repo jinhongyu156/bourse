@@ -14,7 +14,7 @@ const HEADERHEIGHT = 30;
 const HANDLEBOXHEIGHT = 50;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, backgroundColor: "#F6F6F6", marginTop: 10 },
+	container: { flex: 1, marginTop: 10 },
 	row: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: ROWHEIGHT, paddingHorizontal: 10, marginTop: 1 },
 	rowText: { flex: 1, color: "#777777", textAlign: "center" },
 
@@ -40,8 +40,8 @@ const Header = React.memo( function()
 		<Text style = { styles.headerText }>ID</Text>
 		<Text style = { styles.headerText }>USDT</Text>
 		<Text style = { styles.headerText }>SLBT</Text>
-		<Text style = { styles.headerText }>交易金</Text>
-		<Text style = { styles.headerText }>电话</Text>
+		<Text style = { styles.headerText }>{ I18n.t( "user.trading" ) }</Text>
+		<Text style = { styles.headerText }>{ I18n.t( "user.tailNumber" ) }</Text>
 	</View>;
 } );
 
@@ -86,9 +86,9 @@ export default React.memo( function MyClient( { id, data, loading, error, fetchD
 		<ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } stickyHeaderIndices = { [ 0 ] }>
 			<Header />
 			{
-				error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>error</Text></View>
+				error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
 				: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />
-				: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.errorText }>未查询到数据</Text></View>
+				: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ I18n.t( "user.noDataText" ) }</Text></View>
 				: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } rowData = { item } onPress = { fetchDown } /> )
 				: null
 			}
@@ -96,7 +96,7 @@ export default React.memo( function MyClient( { id, data, loading, error, fetchD
 		<View style = { styles.handleBox }>
 			<Text style = { styles.handleInfo }>ID: { idArr.current[ idArr.current.length - 1 ] }</Text>
 			<TouchableOpacity style = { [ styles.handleBtn, disabled ? styles.inactiveBgColor : styles.activeBgColor ] } onPress = { fetchUp } disabled = { disabled }>
-				<Text style = { styles.handleBtnText }>返回上一级</Text>
+				<Text style = { styles.handleBtnText }>{ I18n.t( "user.goBack" ) }</Text>
 			</TouchableOpacity>
 		</View>
 	</React.Fragment>

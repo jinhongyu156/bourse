@@ -221,7 +221,40 @@ export default {
 		header: {
 			chart: "QR code"
 		},
+		myClient: "My Client",
+		myInfo: "My Info",
+		editPassword: "Edit Password",
+		subAccounts: "Sub Accounts",
+		bindSubaccount: "Bind Subaccount",
+		hotkey: "Hotkey",
+		summarize: "Summarize",
+		downloadCenter: "Download",
+		introduction: "Introduction",
+		contract: "Contract",
+		repo: "Repo",
+		userCenter: "User",
+		systemCenter: "System",
+		newbieGuide: "Newbie Guide",
+		vouchers: "Vouchers",
+		language: "Language",
+
+		trading: "Trading",
+		tailNumber: "Tail",
+		noDataText: "No data was queried",
+		goBack: "Go Back",
+
 		fetchUserDetailDataError: "Failed to retrieve user data",
-		fetchMyClientDataError: "Failed to obtain customer data"
+		fetchMyClientDataError: "Failed to obtain customer data",
+
+		oldPasswordPlaceholder: "Please enter the old password",
+		oldPassword: "Old password",
+		newPasswordPlaceholder: "Please enter a new password",
+		newPassword: "New password",
+		confirmPassWordPlaceholder: "Please repeat the new password",
+		confirmPassWord: "Confirm password",
+		editPasswordSubmit: "submit",
+		fetchEditPassWordError: "Password change failed",
+		fetchEditPassWordSuccess: "Password changed successfully",
+		inputEditPassWordError: "Please complete the information",
 	}
 };
