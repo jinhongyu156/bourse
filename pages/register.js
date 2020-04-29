@@ -230,7 +230,6 @@ const Register = function( props )
 				width = { LISTITEMWIDTH }
 				containerStyle = { [ styles.tabBox, { height: LISTITEMHEIGIT * ( pageType === "register" ? 6 : 5 ) + TABBARHEIGHT } ] }
 				renderTabBar = { renderTabBar }
-				initialPage = { props.registerType }
 				onChangeTab = { props.setRegisterType }
 			>
 				<InputBox

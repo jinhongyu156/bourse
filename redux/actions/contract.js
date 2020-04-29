@@ -120,7 +120,7 @@ function setPartData( contractData, currentProduct, userOrderData )
 // 设置当前 tabIndex
 export function setTabIndex( tabIndex )
 {
-	return function( dispatch, getState )
+	return function( dispatch )
 	{
 		dispatch( { type: ACTIONS_SET_CONTRACT_TABINDEX, payload: tabIndex } );
 		dispatch( fetchContractData() );

@@ -31,14 +31,20 @@ const styles = StyleSheet.create( {
 
 } );
 
-export default React.memo( function Header( { children, usdtInfo, tradingInfo, slbtInfo } )
+export default React.memo( function Header( { children, usdtInfo, tradingInfo, etusdInfo, slbtInfo } )
 {
 	return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.headerBackground }>
 		<View style = { styles.headerLeftView }>
 			<Image style = { styles.headerLeftViewLogo } source = { require( "./../images/logo.png" ) } />
 			<View style = { styles.headerLeftViewInfo }>
 				<Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text>
-				<Text style = { styles.headerLeftViewInfoText }>{ I18n.t( "header.trading" ) }: { tradingInfo }</Text>
+				{
+					tradingInfo
+						? <Text style = { styles.headerLeftViewInfoText }>{ I18n.t( "header.trading" ) }: { tradingInfo }</Text>
+					: etusdInfo
+						? <Text style = { styles.headerLeftViewInfoText }>ETUSD: { etusdInfo }</Text>
+					: null
+				}
 				<Text style = { styles.headerLeftViewInfoText }>SLBT: { slbtInfo }</Text>
 			</View>
 		</View>

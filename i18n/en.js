@@ -216,5 +216,12 @@ export default {
 		fetchSubmitError: "Transfer currency failure",
 		fetchSubmitSuccess: "Turn money successfully",
 		submitError: "Please fill in the information correctly"
+	},
+	user: {
+		header: {
+			chart: "QR code"
+		},
+		fetchUserDetailDataError: "Failed to retrieve user data",
+		fetchMyClientDataError: "Failed to obtain customer data"
 	}
 };

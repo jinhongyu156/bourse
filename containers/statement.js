@@ -122,7 +122,6 @@ export default React.memo( function Statement( { tabIndex, setTabIndex, isloadin
 	return <Tab
 		renderTabBar = { renderTabBar }
 		containerStyle = { styles.container }
-		initialPage = { tabIndex }
 		onChangeTab = { setTabIndex }
 	>
 		<TabItem

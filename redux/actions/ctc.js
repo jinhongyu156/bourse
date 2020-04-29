@@ -190,7 +190,7 @@ export function fetchData()
 					]
 				} ];
 				dispatch( setFetchState( res.id, data, false, null ) );
-				dispatch( setOriginalData( objectValueGetNum( res, [ "USDT", "SLBT" ], 3 ) ) );
+				dispatch( setOriginalData( objectValueGetNum( res, [ "USDT", "SLBT", "ETUSD" ], 3 ) ) );
 				dispatch( wsData() );
 			} else
 			{

@@ -201,8 +201,6 @@ const Login = function( props )
 			width = { LISTITEMWIDTH }
 			containerStyle = { styles.tabBox }
 			renderTabBar = { renderTabBar }
-			initialPage = { props.loginType }
-			numOfSibling = { 0 }
 			onChangeTab = { props.setLoginType }
 		>
 			<InputBox

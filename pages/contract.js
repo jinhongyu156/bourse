@@ -80,7 +80,7 @@ const Contract = React.memo( function ( props )
 				? <View style = { styles.errorBox }>
 					<Text style = { styles.errorText }>{ props.fetchDataError }</Text>
 				</View>
-				: <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab } initialPage = { props.tabIndex } onChangeTab = { props.setTabIndex }>
+				: <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab } onChangeTab = { props.setTabIndex }>
 					<Content
 						tabLabel = { "USDT" }
 						productId = { props.productId }

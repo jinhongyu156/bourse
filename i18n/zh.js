@@ -212,5 +212,12 @@ export default {
 		fetchSubmitError: "转币失败",
 		fetchSubmitSuccess: "转币成功",
 		submitError: "请正确的填写信息"
+	},
+	user: {
+		header: {
+			chart: "推广二维码"
+		},
+		fetchUserDetailDataError: "获取用户数据失败",
+		fetchMyClientDataError: "获取客户数据失败"
 	}
 };

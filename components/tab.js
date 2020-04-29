@@ -56,12 +56,14 @@ function newSceneKeys( { prevKeys = [], currentPage = 0, numOfSibling, children 
 	return newKeys;
 };
 
+// 该选项卡组件仅在 renderTabBar 中 goToPage 中更改页面
 export default React.memo( function(
 {
 	children,
 	width = CONTAINERWIDTH,																// 选项卡宽度
 	containerStyle = {},																// 容器样式
 	tabViewStyle = {},																	// 选项卡页样式
+	page,																				// 当前页面
 	initialPage = 0,																	// 初始加载页码
 	locked = false,																		// 禁止滑动切换
 	animation = true,																	// 是否带有动画(仅在点击导航时)
@@ -73,9 +75,17 @@ export default React.memo( function(
 } = {} )
 {
 	const tabViewRef = React.useRef();													// 保存 tabView
+
 	const pureChildren = getChildren( children );
+	
 	const [ currentPage, setCurrentPage ] = React.useState( initialPage );
+	
 	const [ sceneKeys, setSceneKeys ] = React.useState( () => newSceneKeys( { currentPage: initialPage, numOfSibling: numOfSibling, children: pureChildren } ) );
+	
+	if( page && ( page != currentPage ) )												// props.page != state.currentPage 时设置最新 state.currentPage
+	{
+		setCurrentPage( page );
+	};
 
 	const setState = React.useCallback( function( nextPage )							// 更新 state 并调用 onChangeTab
 	{
