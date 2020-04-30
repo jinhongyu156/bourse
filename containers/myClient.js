@@ -14,7 +14,7 @@ const HEADERHEIGHT = 30;
 const HANDLEBOXHEIGHT = 50;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, marginTop: 10 },
+	container: { flex: 1, marginTop: 10, backgroundColor: "#F6F6F6" },
 	row: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", height: ROWHEIGHT, paddingHorizontal: 10, marginTop: 1 },
 	rowText: { flex: 1, color: "#777777", textAlign: "center" },
 

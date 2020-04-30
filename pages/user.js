@@ -10,8 +10,12 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData, setInputText } from "./../redux/actions/user.js";
-import { showLanguageActionSheet, hideActionSheet } from "./../redux/actions/login.js";
+import {
+	setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData,
+	setInputText,
+	setQueryNavIndex, showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexActionSheet
+} from "./../redux/actions/user.js";
+import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
 
 import I18n from "i18n-js";
 
@@ -23,6 +27,7 @@ import TabBar from "./../containers/tabBar.js";
 import MyInfo from "./../containers/myInfo.js";
 import MyClient from "./../containers/myClient.js";
 import EditPassword from "./../containers/editPassword.js";
+import Query from "./../containers/query.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -47,7 +52,7 @@ const styles = StyleSheet.create( {
 	tabBar1: { position: "absolute", top: 0, left: 0, right: 0, height: TABBARHEIGHT1, borderRadius: 40, backgroundColor: "#FFFFFF" },
 	tabBarPlaceHolder1: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#F5F5F5", height: TABBARHEIGHT1 * 0.5 },
 
-	tab2: { flex: 1, marginTop: 10 },
+	tab2: { flex: 1, marginTop: 10, backgroundColor: "#FFFFFF" },
 	tabBar2: { width: SCREENWIDTH, height: TABBARHEIGHT2, backgroundColor: "#F6F6F6", justifyContent: "space-around", },
 
 	errorBox: { height: 100, justifyContent: "center", alignItems: "center" },
@@ -78,8 +83,9 @@ const UserCenter = React.memo( function( {
 	id, vouchers,
 	tabIndex2, setTabIndex2,
 	myClientData, isLoadingMyClientData, fetchMyClientDataError, fetchTabData,
-	userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet,
-	oldPassWord, newPassWord, confirmPassWord, isLoadingEditPassWord, fetchEditPassWordError, inputError, setInputText
+	userLanguage, languageActionSheetData, isShowLanguageActionSheet, showLanguageActionSheet, hideLanguageActionSheet,
+	oldPassWord, newPassWord, confirmPassWord, isLoadingEditPassWord, fetchEditPassWordError, inputError, setInputText,
+	queryNavIndex, queryTypeIndex, setQueryNavIndex, isShowQueryTypeIndexActionSheet, queryTypeIndexActionSheetData, showQueryTypeIndexActionSheet, hideQueryTypeIndexActionSheet, userQueryData, isLoadingUserQueryData, fetchUserQueryDataError
 } )
 {
 	console.log( "re-render UserCenter" );
@@ -102,10 +108,10 @@ const UserCenter = React.memo( function( {
 			id = { id }
 			vouchers = { vouchers }
 			userLanguage = { userLanguage }
-			actionSheetData = { actionSheetData }
-			isShowActionSheet = { isShowActionSheet }
+			actionSheetData = { languageActionSheetData }
+			isShowActionSheet = { isShowLanguageActionSheet }
 			showLanguageActionSheet = { showLanguageActionSheet }
-			hideActionSheet = { hideActionSheet }
+			hideActionSheet = { hideLanguageActionSheet }
 		/>
 		<EditPassword
 			tabLabel = { I18n.t( "user.editPassword" ) }
@@ -117,6 +123,20 @@ const UserCenter = React.memo( function( {
 			inputError = { inputError }
 			setInputText = { setInputText }
 			submit = { fetchTabData }
+		/>
+		<Query
+			tabLabel = { I18n.t( "user.query" ) }
+			queryNavIndex = { queryNavIndex }
+			queryTypeIndex = { queryTypeIndex }
+			setQueryNavIndex = { setQueryNavIndex }
+			isShowActionSheet = { isShowQueryTypeIndexActionSheet }
+			actionSheetData = { queryTypeIndexActionSheetData }
+			showQueryTypeIndexActionSheet = { showQueryTypeIndexActionSheet }
+			hideActionSheet = { hideQueryTypeIndexActionSheet }
+			fetchData = { fetchTabData }
+			data = { userQueryData }
+			loading = { isLoadingUserQueryData }
+			error = { fetchUserQueryDataError }
 		/>
 	</Tab>;
 } );
@@ -165,7 +185,9 @@ const User =  React.memo( function( props )
 			<TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar1 } activeTab = { activeTab } goToPage = { goToPage } />
 		</ImageBackground>
 	}, [] );
-	// console.log( "props", props );
+
+	console.log( "props", props );
+
 	return <View style = { styles.container }>
 		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
 			<View style = { styles.headerRightViewItem }>
@@ -194,10 +216,10 @@ const User =  React.memo( function( props )
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 
-						actionSheetData = { props.actionSheetData }
-						isShowActionSheet = { props.isShowActionSheet }
+						languageActionSheetData = { props.languageActionSheetData }
+						isShowLanguageActionSheet = { props.isShowLanguageActionSheet }
 						showLanguageActionSheet = { props.showLanguageActionSheet }
-						hideActionSheet = { props.hideActionSheet }
+						hideLanguageActionSheet = { props.hideLanguageActionSheet }
 						userLanguage = { props.userLanguage }
 
 						oldPassWord = { props.oldPassWord }
@@ -208,6 +230,16 @@ const User =  React.memo( function( props )
 						inputError = { props.inputError }
 						setInputText = { props.setInputText }
 
+						queryNavIndex = { props.queryNavIndex }
+						queryTypeIndex = { props.queryTypeIndex }
+						setQueryNavIndex = { props.setQueryNavIndex }
+						isShowQueryTypeIndexActionSheet = { props.isShowQueryTypeIndexActionSheet }
+						queryTypeIndexActionSheetData = { props.queryTypeIndexActionSheetData }
+						showQueryTypeIndexActionSheet = { props.showQueryTypeIndexActionSheet }
+						hideQueryTypeIndexActionSheet = { props.hideQueryTypeIndexActionSheet }
+						userQueryData = { props.userQueryData }
+						isLoadingUserQueryData = { props.isLoadingUserQueryData }
+						fetchUserQueryDataError = { props.fetchUserQueryDataError }
 					/>
 					<SystemCenter
 						tabLabel = { I18n.t( "user.systemCenter" ) }
@@ -244,8 +276,8 @@ export default connect(
 			isLoadingMyClientData: userData.isLoadingMyClientData,
 			fetchMyClientDataError: userData.fetchMyClientDataError,
 
-			actionSheetData: loginData.actionSheetData,
-			isShowActionSheet: loginData.isShowActionSheet,
+			languageActionSheetData: loginData.actionSheetData,
+			isShowLanguageActionSheet: loginData.isShowActionSheet,
 			userLanguage: languageData.userLanguage,
 
 			oldPassWord: userData.oldPassWord,
@@ -253,7 +285,15 @@ export default connect(
 			confirmPassWord: userData.confirmPassWord,
 			isLoadingEditPassWord: userData.isLoadingEditPassWord,
 			fetchEditPassWordError: userData.fetchEditPassWordError,
-			inputError: userData.inputError
+			inputError: userData.inputError,
+
+			queryNavIndex: userData.queryNavIndex,
+			queryTypeIndex: userData.queryTypeIndex,
+			isShowQueryTypeIndexActionSheet: userData.isShowActionSheet,
+			queryTypeIndexActionSheetData: userData.actionSheetData,
+			userQueryData: userData.userQueryData,
+			isLoadingUserQueryData: userData.isLoadingUserQueryData,
+			fetchUserQueryDataError: userData.fetchUserQueryDataError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
@@ -263,8 +303,9 @@ export default connect(
 			setTabIndex1, setTabIndex2,
 			fetchUserDetailData,
 			fetchTabData,
-			showLanguageActionSheet, hideActionSheet,
-			setInputText
+			showLanguageActionSheet, hideLanguageActionSheet,
+			setInputText,
+			setQueryNavIndex, showQueryTypeIndexActionSheet, hideQueryTypeIndexActionSheet
 		}, dispatch );
 	}
 )( User );

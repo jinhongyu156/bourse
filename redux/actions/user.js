@@ -15,6 +15,10 @@ export const ACTION_SET_USER_INPUTERROR = "ACTION_SET_USER_INPUTERROR";
 export const ACTION_SET_USER_ISLOADINGEDITPASSWORD = "ACTION_SET_USER_ISLOADINGEDITPASSWORD";
 export const ACTION_SET_USER_FETCHEDITPASSWORDERROR = "ACTION_SET_USER_FETCHEDITPASSWORDERROR";
 export const ACTION_SET_USER_CLEAREDITPASSWORD = "ACTION_SET_USER_CLEAREDITPASSWORD";
+export const ACTION_SET_USER_QUERYNAVINDEX = "ACTION_SET_USER_QUERYNAVINDEX";
+export const ACTION_SET_USER_QUERYTYPEINDEX = "ACTION_SET_USER_QUERYTYPEINDEX";
+export const ACTION_SET_USER_ISSHOWACTIONSHEET = "ACTION_SET_USER_ISSHOWACTIONSHEET";
+export const ACTION_SET_USER_USERQUERYDATA = "ACTION_SET_USER_USERQUERYDATA";
 /* action create */
 
 // 设置 tabIndex1
@@ -61,6 +65,89 @@ function setFetchEditPassWordError( fetchEditPassWordError )
 export function clearEditPassWord()
 {
 	return { type: ACTION_SET_USER_CLEAREDITPASSWORD };
+};
+
+// 请求用户查询数据
+function fetchUserQueryData()
+{
+	return async function( dispatch, getState )
+	{
+		const { user } = getState();
+		const params = {
+			"提交": user.queryTypeIndex === 0 ? "查询流水" : user.queryTypeIndex === 1 ? "OTC交易" : user.queryTypeIndex === 2 ? "C2C交易" : "",
+			"流水类型": user.queryNavIndex === 0 ? "USDT" : user.queryNavIndex === 1 ? "ETUSD" : user.queryNavIndex === 2 ? "交易金" : user.queryNavIndex === 3 ? "SLBT" : user.queryNavIndex === 4 ? "代金券" : ""
+		};
+		dispatch( setUserQueryData( [], true, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", params );
+			console.log( "res", res );
+			if( res && isArray( res ) )
+			{
+				dispatch( setUserQueryData( res, false, null ) );
+			} else
+			{
+				dispatch( setUserQueryData( [], false, null ) );
+			};
+		} catch( err )
+		{
+			dispatch( setUserQueryData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUserQueryDataError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// 设置 userQueryData
+function setUserQueryData( userQueryData, isLoadingUserQueryData, fetchUserQueryDataError )
+{
+	return { type: ACTION_SET_USER_USERQUERYDATA, payload: { userQueryData, isLoadingUserQueryData, fetchUserQueryDataError } };
+};
+
+// 设置 queryNavIndex
+export function setQueryNavIndex( queryNavIndex )
+{
+	return function( dispatch )
+	{
+		dispatch( { type: ACTION_SET_USER_QUERYNAVINDEX, payload: queryNavIndex } );
+		dispatch( fetchUserQueryData() );
+	};
+};
+
+// 设置 queryTypeIndex
+export function setQueryTypeIndex( queryTypeIndex )
+{
+	return { type: ACTION_SET_USER_QUERYTYPEINDEX, payload: queryTypeIndex }
+};
+
+//  打开 ActionSheet
+export function showActionSheet( actionSheetData )
+{
+	return { type: ACTION_SET_USER_ISSHOWACTIONSHEET, payload: { isShowActionSheet: true, actionSheetData: actionSheetData } };
+};
+
+// 关闭 ActionSheet
+export function hideActionSheet()
+{
+	return { type: ACTION_SET_USER_ISSHOWACTIONSHEET, payload: { isShowActionSheet: false, actionSheetData: {} } };
+};
+
+// 打开 queryTypeIndex 选择 ActionSheet
+export function showQueryTypeIndexActionSheet()
+{
+	return function( dispatch, getState )
+	{
+		const { user } = getState();
+
+		dispatch( showActionSheet( {
+			title: I18n.t( "user.actionSheetTitle" ), cancelButtonIndex: 3, markButtonIndex: user.queryTypeIndex,
+			options: [ I18n.t( "user.queryStatement" ), I18n.t( "user.otc" ), I18n.t( "user.c2c" ), I18n.t( "user.cancel" ) ],
+			onPress: function( index )
+			{
+				if( index !== 3 ) dispatch( setQueryTypeIndex( index ) );
+				dispatch( hideActionSheet() );
+				dispatch( fetchUserQueryData() );
+			}
+		} ) );
+	};
 };
 
 // 请求 userDetailData
@@ -183,6 +270,10 @@ export function fetchTabData( ...args )
 		if( user.tabIndex1 === 0 && user.tabIndex2 === 2 )
 		{
 			dispatch( fetchEditPassword( ...args ) );
+		};
+		if( user.tabIndex1 === 0 && user.tabIndex2 === 3 )
+		{
+			dispatch( fetchUserQueryData( ...args ) );
 		};
 	};
 };

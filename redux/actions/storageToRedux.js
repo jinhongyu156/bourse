@@ -13,11 +13,24 @@ export function asyncStorageToRedux( callback )
 		try
 		{
 			const keys = await AsyncStorage.getAllKeys();
+
+			if( !keys.includes( "userLanguage" ) )
+			{
+				await AsyncStorage.setItem( "userLanguage", systemLocale );
+				dispatch( setLanguage( systemLocale, true ) );
+			};
+			if( !keys.includes( "isLogin" ) )
+			{
+				await AsyncStorage.setItem( "isLogin", "false" );
+				dispatch( setIsLogin( false ) );
+			};
+
 			for ( let i = keys.length - 1; i >= 0; i-- )
 			{
 				if( keys[ i ] === "userLanguage" )
 				{
 					const userLanguage = await AsyncStorage.getItem( keys[ i ] );
+
 					if( userLanguage )
 					{
 						dispatch( setLanguage( userLanguage, true ) );

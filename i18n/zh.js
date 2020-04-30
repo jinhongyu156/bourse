@@ -220,6 +220,7 @@ export default {
 		myClient: "我的客户",
 		myInfo: "我的信息",
 		editPassword: "登录密码",
+		query: "查询",
 		subAccounts: "子账户列表",
 		bindSubaccount: "绑定子账号",
 		hotkey: "一键领取",
@@ -252,5 +253,32 @@ export default {
 		fetchEditPassWordError: "修改密码失败",
 		fetchEditPassWordSuccess: "修改密码成功",
 		inputEditPassWordError: "请将信息填写完整",
+
+		actionSheetTitle: "请选择查询方式",
+		queryStatement: "查询流水",
+		otc: "OTC交易",
+		c2c: "C2C交易",
+		switch: "切换",
+		cancel: "取消",
+
+		statement: "流水",
+		amount: "金额",
+		balance: "余额",
+		direction: "方向",
+		number: "数量",
+		profit: "盈亏",
+
+		openNumber: "建仓点数",
+		closeNumber: "平仓点数",
+		totalAmount: "总金额",
+		totalFee: "总手续费",
+		openTime: "建仓时间",
+		closeTime: "平仓时间",
+
+		time: "时间",
+		orderId: "订单号",
+		note: "备注",
+
+		fetchUserQueryDataError: "查询用户数据失败"
 	}
 };

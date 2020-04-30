@@ -7,7 +7,7 @@ import I18n from "i18n-js";
 import ActionSheet from "./../components/actionSheet.js";
 
 const styles = StyleSheet.create( {
-	container: { flex: 1 },
+	container: { flex: 1, marginTop: 10, backgroundColor: "#F6F6F6" },
 	row: { height: 50, paddingHorizontal: 20, marginTop: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#FFFFFF" },
 	rowKeyText: { color: "#000000", fontSize: 14 },
 	rowValueText: { color: "#333333", fontSize: 12, paddingTop: 5 }

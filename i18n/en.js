@@ -224,6 +224,7 @@ export default {
 		myClient: "My Client",
 		myInfo: "My Info",
 		editPassword: "Edit Password",
+		query: "Query",
 		subAccounts: "Sub Accounts",
 		bindSubaccount: "Bind Subaccount",
 		hotkey: "Hotkey",
@@ -256,5 +257,32 @@ export default {
 		fetchEditPassWordError: "Password change failed",
 		fetchEditPassWordSuccess: "Password changed successfully",
 		inputEditPassWordError: "Please complete the information",
+
+		actionSheetTitle: "Please select the query mode",
+		queryStatement: "Statement",
+		otc: "OTC",
+		c2c: "C2C",
+		switch: "Switch",
+		cancel: "Cancel",
+
+		statement: "Statement",
+		amount: "Amount",
+		balance: "Balance",
+		direction: "Direction",
+		number: "Number",
+		profit: "Profit",
+
+		openNumber: "OpenNumber",
+		closeNumber: "CloseNumber",
+		totalAmount: "TotalAmount",
+		totalFee: "TotalFee",
+		openTime: "OpenTime",
+		closeTime: "CloseTime",
+
+		time: "Time",
+		orderId: "OrderId",
+		note: "Note",
+
+		fetchUserQueryDataError: "Failed to query user data"
 	}
 };

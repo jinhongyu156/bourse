@@ -17,17 +17,17 @@ const INPUTBOXHEIGHT = 58;
 const SUBMITBTNHEIGHT = 48
 
 // error box 高度
-const ERRORBOXHEIGHT = 20;
+const ERRORBOXHEIGHT = 24;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, marginTop: 10 },
+	container: { flex: 1, marginTop: 10, backgroundColor: "#F6F6F6" },
 	contentContainerStyle: { alignItems: "center" },
 	inputBoxStyle: { width: INPUTBOXWIDTH, height: INPUTBOXHEIGHT, justifyContent: "center" },
 	inputStyle: { height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 
 	submitBtn: { width: INPUTBOXWIDTH, height: SUBMITBTNHEIGHT, marginTop: 30 },
 
-	errorBox: { width: INPUTBOXWIDTH, height: ERRORBOXHEIGHT },
+	errorBox: { width: INPUTBOXWIDTH, height: ERRORBOXHEIGHT, justifyContent: "center" },
 	errorText: { color: "#F00" }
 } );
 
