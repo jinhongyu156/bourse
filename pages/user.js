@@ -2,20 +2,18 @@ import React from "react";
 
 import { View, Text, Image, ImageBackground, ActivityIndicator, Dimensions, StyleSheet } from "react-native";
 
-// import { CommonActions } from "@react-navigation/native";
-
-// import { logout } from "./../redux/actions/login.js";
-
 import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
 import {
-	setTabIndex1, setTabIndex2, fetchUserDetailData, fetchTabData,
-	setInputText,
-	setQueryNavIndex, showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexActionSheet
+	setTabIndex1, setTabIndex2, setInputText, setQueryNavIndex,
+	fetchUserDetailData, fetchMyClientData, fetchUserQueryData, fetchEditPassword, fetchSubAccountsData,
+	fetchSubAccountsUnbind, fetchBindSubAccount, fetchSetHotkeyData, fetchSetSummarizeData, fetchElectronicContractData
 } from "./../redux/actions/user.js";
+import { showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexActionSheet } from "./../redux/actions/user.js";
 import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
+import { logout } from "./../redux/actions/login.js";
 
 import I18n from "i18n-js";
 
@@ -28,6 +26,12 @@ import MyInfo from "./../containers/myInfo.js";
 import MyClient from "./../containers/myClient.js";
 import EditPassword from "./../containers/editPassword.js";
 import Query from "./../containers/query.js";
+import BindSubAccount from "./../containers/bindSubAccount.js";
+import ShowText from "./../containers/showText.js";
+import Introduction from "./../containers/introduction.js";
+import ElectronicContract from "./../containers/electronicContract.js";
+import Repo from "./../containers/repo.js";
+import SubAccounts from "./../containers/subAccounts.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -59,15 +63,6 @@ const styles = StyleSheet.create( {
 	errorText: { fontSize: 16 }
 } );
 
-/*
-props.isLogin || props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
-	return <View style = { styles.container }>
-		<Text onPress = { () => props.setLanguage( "zh" ) }>中</Text>
-		<Text onPress = { () => props.setLanguage( "en" ) }>英</Text>
-		<Text onPress = { props.logout }>退出</Text>
-	</View>;
-*/
-
 // default tab bar
 const TabBar2 = React.memo( function( { tabs, activeTab, goToPage } )
 {
@@ -79,69 +74,22 @@ const Tab2Content = React.memo( function()
 	return <View></View>
 } );
 
-const UserCenter = React.memo( function( {
-	id, vouchers,
-	tabIndex2, setTabIndex2,
-	myClientData, isLoadingMyClientData, fetchMyClientDataError, fetchTabData,
-	userLanguage, languageActionSheetData, isShowLanguageActionSheet, showLanguageActionSheet, hideLanguageActionSheet,
-	oldPassWord, newPassWord, confirmPassWord, isLoadingEditPassWord, fetchEditPassWordError, inputError, setInputText,
-	queryNavIndex, queryTypeIndex, setQueryNavIndex, isShowQueryTypeIndexActionSheet, queryTypeIndexActionSheetData, showQueryTypeIndexActionSheet, hideQueryTypeIndexActionSheet, userQueryData, isLoadingUserQueryData, fetchUserQueryDataError
-} )
+const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProps, myInfoProps, editPasswordProps, queryProps, callbackForEditPassword, callbackForMyInfo, callbackForMyClient, callbackForQuery } )
 {
-	console.log( "re-render UserCenter" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<MyClient
-			tabLabel = { I18n.t( "user.myClient" ) }
-			id = { id }
-			data = { myClientData }
-			loading = { isLoadingMyClientData }
-			error = { fetchMyClientDataError }
-			fetchData = { fetchTabData }
-		/>
-		<MyInfo
-			tabLabel = { I18n.t( "user.myInfo" ) }
-			id = { id }
-			vouchers = { vouchers }
-			userLanguage = { userLanguage }
-			actionSheetData = { languageActionSheetData }
-			isShowActionSheet = { isShowLanguageActionSheet }
-			showLanguageActionSheet = { showLanguageActionSheet }
-			hideActionSheet = { hideLanguageActionSheet }
-		/>
-		<EditPassword
-			tabLabel = { I18n.t( "user.editPassword" ) }
-			oldPassWord = { oldPassWord }
-			newPassWord = { newPassWord }
-			confirmPassWord = { confirmPassWord }
-			isLoadingEditPassWord = { isLoadingEditPassWord }
-			fetchEditPassWordError = { fetchEditPassWordError }
-			inputError = { inputError }
-			setInputText = { setInputText }
-			submit = { fetchTabData }
-		/>
-		<Query
-			tabLabel = { I18n.t( "user.query" ) }
-			queryNavIndex = { queryNavIndex }
-			queryTypeIndex = { queryTypeIndex }
-			setQueryNavIndex = { setQueryNavIndex }
-			isShowActionSheet = { isShowQueryTypeIndexActionSheet }
-			actionSheetData = { queryTypeIndexActionSheetData }
-			showQueryTypeIndexActionSheet = { showQueryTypeIndexActionSheet }
-			hideActionSheet = { hideQueryTypeIndexActionSheet }
-			fetchData = { fetchTabData }
-			data = { userQueryData }
-			loading = { isLoadingUserQueryData }
-			error = { fetchUserQueryDataError }
-		/>
+		<MyClient tabLabel = { I18n.t( "user.myClient" ) } { ...callbackForMyClient } { ...myClientProps } />
+		<MyInfo tabLabel = { I18n.t( "user.myInfo" ) } { ...myInfoProps } { ...callbackForMyInfo } />
+		<EditPassword tabLabel = { I18n.t( "user.editPassword" ) } { ...editPasswordProps } { ...callbackForEditPassword } />
+		<Query tabLabel = { I18n.t( "user.query" ) } { ...queryProps } { ...callbackForQuery } />
 	</Tab>;
 } );
 
-const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, fetchTabData } )
+const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, subAccountsProps, bindSubAccountProps, hotkeyProps, summarizeProps, callbackForSubAccounts, callbackForBindSubAccount, callbackForHotkey, callbackForSummarize } )
 {
 	console.log( "re-render SystemCenter" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
@@ -149,14 +97,14 @@ const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, fetchTabDa
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<Tab2Content tabLabel = { I18n.t( "user.subAccounts" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.bindSubaccount" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.hotkey" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.summarize" ) } />
+		<SubAccounts tabLabel = { I18n.t( "user.subAccounts" ) } { ...subAccountsProps } { ...callbackForSubAccounts } />
+		<BindSubAccount tabLabel = { I18n.t( "user.bindSubaccount" ) } { ...bindSubAccountProps } { ...callbackForBindSubAccount } />
+		<ShowText tabLabel = { I18n.t( "user.hotkey" ) } { ...hotkeyProps } { ...callbackForHotkey } />
+		<ShowText tabLabel = { I18n.t( "user.summarize" ) } { ...summarizeProps } { ...callbackForSummarize } />
 	</Tab>;
 } );
 
-const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, fetchTabData } )
+const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, electronicContractProps, callbackForElectronicContract } )
 {
 	console.log( "re-render NewbieGuide" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
@@ -165,9 +113,9 @@ const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, fetchTabDat
 	}, [] );
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
 		<Tab2Content tabLabel = { I18n.t( "user.downloadCenter" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.introduction" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.contract" ) } />
-		<Tab2Content tabLabel = { I18n.t( "user.repo" ) } />
+		<Introduction tabLabel = { I18n.t( "user.introduction" ) } />
+		<ElectronicContract tabLabel = { I18n.t( "user.contract" ) } { ...electronicContractProps } { ...callbackForElectronicContract } />
+		<Repo tabLabel = { I18n.t( "user.repo" ) } />
 	</Tab>;
 } );
 
@@ -201,62 +149,49 @@ const User =  React.memo( function( props )
 					<Text style = { styles.errorText }>{ props.fetchUserDetailDataError }</Text>
 				</View>
 			: Object.keys( props.userDetailData ).length
-				? <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab1 } page = { props.tabIndex1 } onChangeTab = { props.setTabIndex1 }>
+				? <Tab initialPage = { 2 } locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab1 } page = { props.tabIndex1 } onChangeTab = { props.setTabIndex1 }>
 					<UserCenter
 						tabLabel = { I18n.t( "user.userCenter" ) }
-
-						id = { props.userDetailData[ "id" ] }
-						vouchers = { props.userDetailData[ "代金券" ] }
-
-						fetchTabData = { props.fetchTabData }
-						myClientData = { props.myClientData }
-						isLoadingMyClientData = { props.isLoadingMyClientData }
-						fetchMyClientDataError = { props.fetchMyClientDataError }
-
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 
-						languageActionSheetData = { props.languageActionSheetData }
-						isShowLanguageActionSheet = { props.isShowLanguageActionSheet }
-						showLanguageActionSheet = { props.showLanguageActionSheet }
-						hideLanguageActionSheet = { props.hideLanguageActionSheet }
-						userLanguage = { props.userLanguage }
+						myClientProps = { props.myClientProps }
+						myInfoProps = { props.myInfoProps }
+						editPasswordProps = { props.editPasswordProps }
+						queryProps = { props.queryProps }
 
-						oldPassWord = { props.oldPassWord }
-						newPassWord = { props.newPassWord }
-						confirmPassWord = { props.confirmPassWord }
-						isLoadingEditPassWord = { props.isLoadingEditPassWord }
-						fetchEditPassWordError = { props.fetchEditPassWordError }
-						inputError = { props.inputError }
-						setInputText = { props.setInputText }
-
-						queryNavIndex = { props.queryNavIndex }
-						queryTypeIndex = { props.queryTypeIndex }
-						setQueryNavIndex = { props.setQueryNavIndex }
-						isShowQueryTypeIndexActionSheet = { props.isShowQueryTypeIndexActionSheet }
-						queryTypeIndexActionSheetData = { props.queryTypeIndexActionSheetData }
-						showQueryTypeIndexActionSheet = { props.showQueryTypeIndexActionSheet }
-						hideQueryTypeIndexActionSheet = { props.hideQueryTypeIndexActionSheet }
-						userQueryData = { props.userQueryData }
-						isLoadingUserQueryData = { props.isLoadingUserQueryData }
-						fetchUserQueryDataError = { props.fetchUserQueryDataError }
+						callbackForMyClient = { props.callbackForMyClient }
+						callbackForMyInfo = { props.callbackForMyInfo }
+						callbackForEditPassword = { props.callbackForEditPassword }
+						callbackForQuery = { props.callbackForQuery }
 					/>
 					<SystemCenter
 						tabLabel = { I18n.t( "user.systemCenter" ) }
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
-						fetchTabData = { props.fetchTabData }
+
+						subAccountsProps = { props.subAccountsProps }
+						bindSubAccountProps = { props.bindSubAccountProps }
+						hotkeyProps = { props.hotkeyProps }
+						summarizeProps = { props.summarizeProps }
+
+						callbackForSubAccounts = { props.callbackForSubAccounts }
+						callbackForBindSubAccount = { props.callbackForBindSubAccount }
+						callbackForHotkey = { props.callbackForHotkey }
+						callbackForSummarize = { props.callbackForSummarize }
+
 					/>
 					<NewbieGuide
 						tabLabel = { I18n.t( "user.newbieGuide" ) }
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
-						fetchTabData = { props.fetchTabData }
+						electronicContractProps = { props.electronicContractProps }
+						callbackForElectronicContract = { props.callbackForElectronicContract }
 					/>
 				</Tab>
 			: null
 		}
-	</View>
+	</View>;
 } );
 
 export default connect(
@@ -265,47 +200,60 @@ export default connect(
 		const userData = state.user;
 		const loginData = state.login;
 		const languageData = state.language;
+
 		return {
-			tabIndex1: userData.tabIndex1,
-			tabIndex2: userData.tabIndex2,
-
-			userDetailData: userData.userDetailData,
-			fetchUserDetailDataError: userData.fetchUserDetailDataError,
-
-			myClientData: userData.myClientData,
-			isLoadingMyClientData: userData.isLoadingMyClientData,
-			fetchMyClientDataError: userData.fetchMyClientDataError,
-
-			languageActionSheetData: loginData.actionSheetData,
-			isShowLanguageActionSheet: loginData.isShowActionSheet,
-			userLanguage: languageData.userLanguage,
-
-			oldPassWord: userData.oldPassWord,
-			newPassWord: userData.newPassWord,
-			confirmPassWord: userData.confirmPassWord,
-			isLoadingEditPassWord: userData.isLoadingEditPassWord,
-			fetchEditPassWordError: userData.fetchEditPassWordError,
-			inputError: userData.inputError,
-
-			queryNavIndex: userData.queryNavIndex,
-			queryTypeIndex: userData.queryTypeIndex,
-			isShowQueryTypeIndexActionSheet: userData.isShowActionSheet,
-			queryTypeIndexActionSheetData: userData.actionSheetData,
-			userQueryData: userData.userQueryData,
-			isLoadingUserQueryData: userData.isLoadingUserQueryData,
-			fetchUserQueryDataError: userData.fetchUserQueryDataError
+			myClientProps: {
+				id: userData.userDetailData[ "id" ],
+				data: userData.myClientData, loading: userData.isLoadingMyClientData, error: userData.fetchMyClientDataError
+			},
+			myInfoProps: {
+				id: userData.userDetailData[ "id" ], vouchers: userData.userDetailData[ "代金券" ],
+				userLanguage: languageData.userLanguage,
+				actionSheetData: loginData.actionSheetData, isShowActionSheet: loginData.isShowActionSheet, isLogin: loginData.isLogin
+			},
+			editPasswordProps: {
+				oldPassWord: userData.oldPassWord, newPassWord: userData.newPassWord, confirmPassWord: userData.confirmPassWord,
+				loading: userData.isLoadingEditPassWord, fetchError: userData.fetchEditPassWordError, inputError: userData.inputError
+			},
+			queryProps: {
+				data: userData.userQueryData, loading: userData.isLoadingUserQueryData, error: userData.fetchUserQueryDataError,
+				queryNavIndex: userData.queryNavIndex, queryTypeIndex: userData.queryTypeIndex,
+				isShowActionSheet: userData.isShowActionSheet, actionSheetData: userData.actionSheetData,
+			},
+			subAccountsProps: {
+				data: userData.subAccountsData, loading: userData.isLoadingSubAccountsData, error: userData.fetchSubAccountsError
+			},
+			bindSubAccountProps: {
+				subAccountText: userData.subAccountText, subAccountPassWordText: userData.subAccountPassWordText,
+				loading: userData.isLoadingBindSubAccount, fetchError: userData.fetchBindSubAccountError, inputError: userData.inputError
+			},
+			hotkeyProps: {
+				data: userData.hotkeyData, loading: userData.isLoadingHotkeyData, error: userData.fetchHotkeyDataError
+			},
+			summarizeProps: {
+				data: userData.summarizeData, loading: userData.isLoadingSummarizeData, error: userData.fetchSummarizeDataError
+			},
+			electronicContractProps: {
+				data: userData.electronicContractData, loading: userData.isLoadingElectronicContractData, error: userData.fetchElectronicContractDataError
+			},
+			tabIndex1: userData.tabIndex1, tabIndex2: userData.tabIndex2, userDetailData: userData.userDetailData, fetchUserDetailDataError: userData.fetchUserDetailDataError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		// return bindActionCreators( { logout, setLanguage }, dispatch );
-		return bindActionCreators( {
-			setTabIndex1, setTabIndex2,
-			fetchUserDetailData,
-			fetchTabData,
-			showLanguageActionSheet, hideLanguageActionSheet,
-			setInputText,
-			setQueryNavIndex, showQueryTypeIndexActionSheet, hideQueryTypeIndexActionSheet
-		}, dispatch );
+		return {
+			callbackForMyClient: bindActionCreators( { fetchData: fetchMyClientData }, dispatch ),
+			callbackForMyInfo: bindActionCreators( { showLanguageActionSheet: showLanguageActionSheet, hideActionSheet: hideLanguageActionSheet, logout: logout }, dispatch ),
+			callbackForEditPassword: bindActionCreators( { setInputText: setInputText, submit: fetchEditPassword }, dispatch ),
+			callbackForQuery: bindActionCreators( { fetchData: fetchUserQueryData, setQueryNavIndex: setQueryNavIndex, showQueryTypeIndexActionSheet: showQueryTypeIndexActionSheet, hideActionSheet: hideQueryTypeIndexActionSheet }, dispatch ),
+			callbackForSubAccounts: bindActionCreators( { fetchData: fetchSubAccountsData, unbind: fetchSubAccountsUnbind }, dispatch ),
+			callbackForBindSubAccount: bindActionCreators( { setInputText: setInputText, submit: fetchBindSubAccount }, dispatch ),
+			callbackForHotkey: bindActionCreators( { fetchData: fetchSetHotkeyData }, dispatch ),
+			callbackForSummarize: bindActionCreators( { fetchData: fetchSetSummarizeData }, dispatch ),
+			callbackForElectronicContract: bindActionCreators( { fetchData: fetchElectronicContractData }, dispatch ),
+
+			...bindActionCreators( { setTabIndex1, setTabIndex2, fetchUserDetailData }, dispatch )
+		};
 	}
 )( User );
+

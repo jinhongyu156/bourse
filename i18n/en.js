@@ -225,8 +225,8 @@ export default {
 		myInfo: "My Info",
 		editPassword: "Edit Password",
 		query: "Query",
-		subAccounts: "Sub Accounts",
-		bindSubaccount: "Bind Subaccount",
+		subAccounts: "Sub",
+		bindSubaccount: "Bind",
 		hotkey: "Hotkey",
 		summarize: "Summarize",
 		downloadCenter: "Download",
@@ -235,9 +235,10 @@ export default {
 		repo: "Repo",
 		userCenter: "User",
 		systemCenter: "System",
-		newbieGuide: "Newbie Guide",
+		newbieGuide: "Guide",
 		vouchers: "Vouchers",
 		language: "Language",
+		logout: "Logout",
 
 		trading: "Trading",
 		tailNumber: "Tail",
@@ -283,6 +284,30 @@ export default {
 		orderId: "OrderId",
 		note: "Note",
 
-		fetchUserQueryDataError: "Failed to query user data"
+		fetchUserQueryDataError: "Failed to query user data",
+		name: "Name",
+		account: "Account",
+		operation: "Operation",
+		unbind: "Unbind",
+
+		fetchSubAccountsError: "Query for subaccount data failed",
+		fetchUnbindError: "Unbinding failure",
+		fetchUnbindSuccess: "Unbind successfully",
+
+		subAccountText: "Subaccount",
+		subAccountPassWordText: "Password",
+		subAccountTextPlaceholder: "Please enter the subaccount number",
+		subAccountPassWordTextPlaceholder: "Please enter the subaccount password",
+		bindSubaccountSubmit: "Bind",
+		fetchBindSubaccountSuccess: "Binding success",
+		fetchBindSubaccountError: "Binding failure",
+		inputBindSubaccountError: "Please complete the information",
+
+		fetchHotkeyDataError: "Hotkey fetch data failed",
+		fetchSummarizeDataError: "Fund collection data acquisition failed",
+		fetchElectronicContractDataError: "Failed to obtain investment contract data",
+		introductionP1: "Hong Kong digital assets co., LTD. In Hong Kong in September 2018, tsuen wan, spit jiada universal center was founded, the company equipped with professional digital assets technology development team, the top spot and contract trading team, digital currency authority and the risk control team, mature financial analyst unit is installed with a software development team, etc.",
+		introductionP2: "The main business of the company is digital asset trading operation, international bulk commodity contract trading, physical mining machinery technical services and sales, etc. At the same time, Hong Kong digital asset limited is the only company with a state-backed background in the top digital assets.",
+		downloadSuccess: "Download Success"
 	}
 };

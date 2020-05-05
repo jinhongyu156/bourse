@@ -93,7 +93,7 @@ export function showActionSheet( actionSheetData )
 // 关闭 ActionSheet
 export function hideActionSheet()
 {
-	return { type: ACTION_SET_LOGIN_ISSHOWACTIONSHEET, payload: false }
+	return { type: ACTION_SET_LOGIN_ISSHOWACTIONSHEET, payload: { isShowActionSheet: false, actionSheetData: {} } };
 };
 
 // 打开语言选择 ActionSheet

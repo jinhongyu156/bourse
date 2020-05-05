@@ -4,8 +4,6 @@ import { View, Text, ToastAndroid, ScrollView, Keyboard, StyleSheet, Dimensions 
 
 import I18n from "i18n-js";
 
-import { useFocusEffect } from '@react-navigation/native';
-
 import Input from "./../containers/input.js";
 import SubmitBtn from "./../containers/submit.js";
 
@@ -33,13 +31,12 @@ const styles = StyleSheet.create( {
 	errorText: { color: "#F00" }
 } );
 
-export default React.memo( function EditPassword( { oldPassWord, newPassWord, confirmPassWord, loading, fetchError, inputError, setInputText, submit } )
+export default React.memo( function BindSubAccount( { subAccountText, subAccountPassWordText, loading, fetchError, inputError, setInputText, submit } )
 {
 	const bindSubmit = React.useCallback( function()
 	{
-		return submit( () => ToastAndroid.show( I18n.t( "user.fetchEditPassWordSuccess" ), ToastAndroid.SHORT ) );
+		return submit( () => ToastAndroid.show( I18n.t( "user.fetchBindSubaccountSuccess" ), ToastAndroid.SHORT ) );
 	}, [] );
-
 	return <ScrollView
 		style = { styles.container }
 		contentContainerStyle = { styles.contentContainerStyle }
@@ -51,40 +48,27 @@ export default React.memo( function EditPassword( { oldPassWord, newPassWord, co
 			{ fetchError ? <Text style = { styles.errorText }>{ fetchError }</Text> : null }
 		</View>
 		<Input
-			index = { "oldPassWord" }
-			value = { oldPassWord }
-			placeholder = { I18n.t( "user.oldPasswordPlaceholder" ) }
-			disabled = { false }
-			hasError = { inputError[ "oldPassWord" ] }
+			index = { "subAccountText" }
+			value = { subAccountText }
+			placeholder = { I18n.t( "user.subAccountTextPlaceholder" ) }
+			hasError = { inputError[ "subAccountText" ] }
 			inputBoxStyle = { styles.inputBoxStyle }
 			inputStyle = { styles.inputStyle }
 			setInputText = { setInputText }
-			renderInputLeft = { () => <Text>{ I18n.t( "user.oldPassword" ) }: </Text> }
+			renderInputLeft = { () => <Text>{ I18n.t( "user.subAccountText" ) }: </Text> }
 		/>
 		<Input
-			index = { "newPassWord" }
-			value = { newPassWord }
-			placeholder = { I18n.t( "user.newPasswordPlaceholder" ) }
-			disabled = { false }
-			hasError = { inputError[ "newPassWord" ] }
+			index = { "subAccountPassWordText" }
+			value = { subAccountPassWordText }
+			placeholder = { I18n.t( "user.subAccountPassWordTextPlaceholder" ) }
+			hasError = { inputError[ "subAccountPassWordText" ] }
 			inputBoxStyle = { styles.inputBoxStyle }
 			inputStyle = { styles.inputStyle }
 			setInputText = { setInputText }
-			renderInputLeft = { () => <Text>{ I18n.t( "user.newPassword" ) }: </Text> }
-		/>
-		<Input
-			index = { "confirmPassWord" }
-			value = { confirmPassWord }
-			placeholder = { I18n.t( "user.confirmPassWordPlaceholder" ) }
-			disabled = { false }
-			hasError = { inputError[ "confirmPassWord" ] }
-			inputBoxStyle = { styles.inputBoxStyle }
-			inputStyle = { styles.inputStyle }
-			setInputText = { setInputText }
-			renderInputLeft = { () => <Text>{ I18n.t( "user.confirmPassWord" ) }: </Text> }
+			renderInputLeft = { () => <Text>{ I18n.t( "user.subAccountPassWordText" ) }: </Text> }
 		/>
 		<SubmitBtn
-			title = { I18n.t( "user.editPasswordSubmit" ) }
+			title = { I18n.t( "user.bindSubaccountSubmit" ) }
 			submitBtnStyle = { styles.submitBtn }
 			loading = { loading }
 			onSubmit = { bindSubmit }

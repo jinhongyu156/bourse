@@ -1,11 +1,10 @@
 import { fetchPost, isObject, isArray, objectValueGetNum } from "./../../javascripts/util.js";
-import { passwordReg } from "./../../javascripts/regExp.js";
+import { passwordReg, phoneNumberReg, emailTextReg } from "./../../javascripts/regExp.js";
 
 import I18n from "i18n-js";
 /* action type */
 export const ACTION_SET_USER_TABINDEX1 = "ACTION_SET_USER_TABINDEX1";
 export const ACTION_SET_USER_TABINDEX2 = "ACTION_SET_USER_TABINDEX2";
-
 export const ACTION_SET_USER_USERDETAILDATA = "ACTION_SET_USER_USERDETAILDATA";
 
 export const ACTION_SET_USER_MYCLIENTDATA = "ACTION_SET_USER_MYCLIENTDATA";
@@ -19,6 +18,14 @@ export const ACTION_SET_USER_QUERYNAVINDEX = "ACTION_SET_USER_QUERYNAVINDEX";
 export const ACTION_SET_USER_QUERYTYPEINDEX = "ACTION_SET_USER_QUERYTYPEINDEX";
 export const ACTION_SET_USER_ISSHOWACTIONSHEET = "ACTION_SET_USER_ISSHOWACTIONSHEET";
 export const ACTION_SET_USER_USERQUERYDATA = "ACTION_SET_USER_USERQUERYDATA";
+
+export const ACTION_SET_USER_SUBACCOUNTSDATA = "ACTION_SET_USER_SUBACCOUNTSDATA";
+export const ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT = "ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT";
+export const ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR = "ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR";
+export const ACTION_SET_USER_CLEARBINDSUBACCOUNT = "ACTION_SET_USER_CLEARBINDSUBACCOUNT";
+export const ACTION_SET_USER_HOTKEYDATA = "ACTION_SET_USER_HOTKEYDATA";
+export const ACTION_SET_USER_SUMMARIZEDATA = "ACTION_SET_USER_SUMMARIZEDATA";
+export const ACTION_SET_USER_ELECTRONICCONTRACTDATA = "ACTION_SET_USER_ELECTRONICCONTRACTDATA";
 /* action create */
 
 // 设置 tabIndex1
@@ -61,45 +68,58 @@ function setFetchEditPassWordError( fetchEditPassWordError )
 	return { type: ACTION_SET_USER_FETCHEDITPASSWORDERROR, payload: fetchEditPassWordError };
 };
 
+// 设置 userQueryData
+function setUserQueryData( userQueryData, isLoadingUserQueryData, fetchUserQueryDataError )
+{
+	return { type: ACTION_SET_USER_USERQUERYDATA, payload: { userQueryData, isLoadingUserQueryData, fetchUserQueryDataError } };
+};
+
+// 设置 subAccountsData
+function setSubAccountsData( subAccountsData, isLoadingSubAccountsData, fetchSubAccountsError )
+{
+	return { type: ACTION_SET_USER_SUBACCOUNTSDATA, payload: { subAccountsData, isLoadingSubAccountsData, fetchSubAccountsError } };
+};
+
+// 设置 isLoadingBindSubAccount
+function setIsLoadingBindSubAccount( isLoadingBindSubAccount )
+{
+	return { type: ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT, payload: isLoadingBindSubAccount };
+};
+
+// 设置 fetchBindSubAccountError
+function setFetchBindSubAccountError( fetchBindSubAccountError )
+{
+	return { type: ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR, payload: fetchBindSubAccountError };
+};
+
+// 设置 hotkeyData
+function setHotkeyData( hotkeyData, isLoadingHotkeyData, fetchHotkeyDataError )
+{
+	return { type: ACTION_SET_USER_HOTKEYDATA, payload: { hotkeyData, isLoadingHotkeyData, fetchHotkeyDataError } };
+};
+
+// 设置 summarizeData
+function setSummarizeData( summarizeData, isLoadingSummarizeData, fetchSummarizeDataError )
+{
+	return { type: ACTION_SET_USER_SUMMARIZEDATA, payload: { summarizeData, isLoadingSummarizeData, fetchSummarizeDataError } };
+};
+
+// 设置 electronicContractData
+function setElectronicContractData( electronicContractData, fetchElectronicContractDataError )
+{
+	return { type: ACTION_SET_USER_ELECTRONICCONTRACTDATA, payload: { electronicContractData, fetchElectronicContractDataError } };
+};
+
 // 清空修改密码区数据
 export function clearEditPassWord()
 {
 	return { type: ACTION_SET_USER_CLEAREDITPASSWORD };
 };
 
-// 请求用户查询数据
-function fetchUserQueryData()
+// 情况绑定子账户区的数据
+export function clearBindSubAccount()
 {
-	return async function( dispatch, getState )
-	{
-		const { user } = getState();
-		const params = {
-			"提交": user.queryTypeIndex === 0 ? "查询流水" : user.queryTypeIndex === 1 ? "OTC交易" : user.queryTypeIndex === 2 ? "C2C交易" : "",
-			"流水类型": user.queryNavIndex === 0 ? "USDT" : user.queryNavIndex === 1 ? "ETUSD" : user.queryNavIndex === 2 ? "交易金" : user.queryNavIndex === 3 ? "SLBT" : user.queryNavIndex === 4 ? "代金券" : ""
-		};
-		dispatch( setUserQueryData( [], true, null ) );
-		try
-		{
-			const res = await fetchPost( "/user.php", params );
-			console.log( "res", res );
-			if( res && isArray( res ) )
-			{
-				dispatch( setUserQueryData( res, false, null ) );
-			} else
-			{
-				dispatch( setUserQueryData( [], false, null ) );
-			};
-		} catch( err )
-		{
-			dispatch( setUserQueryData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUserQueryDataError" ) }` : err.err.toString() ) );
-		};
-	};
-};
-
-// 设置 userQueryData
-function setUserQueryData( userQueryData, isLoadingUserQueryData, fetchUserQueryDataError )
-{
-	return { type: ACTION_SET_USER_USERQUERYDATA, payload: { userQueryData, isLoadingUserQueryData, fetchUserQueryDataError } };
+	return { type: ACTION_SET_USER_CLEARBINDSUBACCOUNT };
 };
 
 // 设置 queryNavIndex
@@ -184,7 +204,7 @@ export function setInputText( key, value )
 		const { user } = getState();
 		dispatch( { type: ACTION_SET_USER_INPUTTEXT, payload: { [ key ]: value } } );
 
-		if( key === "oldPassWord" || key === "newPassWord" )
+		if( key === "oldPassWord" || key === "newPassWord" || key === "subAccountPassWordText" )
 		{
 			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !passwordReg.test( value ) } ) } );
 		};
@@ -192,11 +212,15 @@ export function setInputText( key, value )
 		{
 			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !( passwordReg.test( value ) && value === user.newPassWord ) } ) } );
 		};
+		if( key === "subAccountText" )
+		{
+			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !( phoneNumberReg.test( value ) || emailTextReg.test( value ) ) } ) } );
+		};
 	};
 };
 
 // 请求 myClientData
-function fetchMyClientData( id, belongId )
+export function fetchMyClientData( id, belongId )
 {
 	return async function( dispatch )
 	{
@@ -223,12 +247,13 @@ function fetchMyClientData( id, belongId )
 };
 
 // 请求修改密码
-function fetchEditPassword( callback )
+export function fetchEditPassword( callback )
 {
 	return async function( dispatch, getState )
 	{
 		const { user } = getState();
-		if( user.oldPassWord && user.newPassWord && user.confirmPassWord && !user.isLoadingEditPassWord && Object.values( user.inputError ).every( item => item === false ) )
+
+		if( user.oldPassWord && user.newPassWord && user.confirmPassWord && !user.isLoadingEditPassWord && [ user.inputError[ "oldPassWord" ], user.inputError[ "newPassWord" ], user.inputError[ "confirmPassWord" ] ].every( item => item === false ) )
 		{
 			dispatch( setIsLoadingEditPassWord( true ) );
 			try
@@ -257,23 +282,198 @@ function fetchEditPassword( callback )
 	};
 };
 
-// 请求各 tab 数据
-export function fetchTabData( ...args )
+// 请求用户查询数据
+export function fetchUserQueryData()
 {
 	return async function( dispatch, getState )
 	{
 		const { user } = getState();
-		if( user.tabIndex1 === 0 && user.tabIndex2 === 0 )
-		{
-			dispatch( fetchMyClientData( ...args ) );
+		const params = {
+			"提交": user.queryTypeIndex === 0 ? "查询流水" : user.queryTypeIndex === 1 ? "OTC交易" : user.queryTypeIndex === 2 ? "C2C交易" : "",
+			"流水类型": user.queryNavIndex === 0 ? "USDT" : user.queryNavIndex === 1 ? "ETUSD" : user.queryNavIndex === 2 ? "交易金" : user.queryNavIndex === 3 ? "SLBT" : user.queryNavIndex === 4 ? "代金券" : ""
 		};
-		if( user.tabIndex1 === 0 && user.tabIndex2 === 2 )
+		dispatch( setUserQueryData( [], true, null ) );
+		try
 		{
-			dispatch( fetchEditPassword( ...args ) );
-		};
-		if( user.tabIndex1 === 0 && user.tabIndex2 === 3 )
+			const res = await fetchPost( "/user.php", params );
+			console.log( "res", res );
+			if( res && isArray( res ) )
+			{
+				dispatch( setUserQueryData( res, false, null ) );
+			} else
+			{
+				dispatch( setUserQueryData( [], false, null ) );
+			};
+		} catch( err )
 		{
-			dispatch( fetchUserQueryData( ...args ) );
+			dispatch( setUserQueryData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUserQueryDataError" ) }` : err.err.toString() ) );
 		};
 	};
 };
+
+// 请求子账户数据
+export function fetchSubAccountsData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setSubAccountsData( [], true, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "GetChildren" } );
+			console.log( "res", res );
+			if( res && isArray( res ) )
+			{
+				dispatch( setSubAccountsData( res, false, null ) );
+			} else
+			{
+				dispatch( setSubAccountsData( [], false, null ) );
+			};
+		} catch( err )
+		{
+			dispatch( setSubAccountsData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchSubAccountsError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// 解绑子账户
+export function fetchSubAccountsUnbind( id, callback )
+{
+	return async function( dispatch )
+	{
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "UnbindChildren", "id": id } );
+			console.log( "res", res );
+			if( res === "解绑成功" )
+			{
+				callback( I18n.t( "user.fetchUnbindSuccess" ) );
+				dispatch( fetchSubAccountsData() );
+			} else
+			{
+				callback( res.toString() );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUnbindError" ) }` : err.err.toString() );
+		};
+	};
+};
+
+// 绑定子账户
+export function fetchBindSubAccount()
+{
+	return async function( dispatch, getState )
+	{
+
+		const { user } = getState();
+
+		if( user.subAccountText && user.subAccountPassWordText && !user.isLoadingBindSubAccount && [ user.inputError[ "subAccountText" ], user.inputError[ "subAccountPassWordText" ] ].every( item => item === false ) )
+		{
+			dispatch( setIsLoadingBindSubAccount( true ) );
+			try
+			{
+				const res = await fetchPost( "/user.php", { "提交": "BindChildren", "username": user.subAccountText, "password": user.subAccountPassWordText } );
+				console.log( "res", res );
+				if( res === "绑定成功" )
+				{
+					callback();
+					dispatch( clearBindSubAccount() );
+				} else
+				{
+					dispatch( setFetchBindSubAccountError( res ) );
+				};
+				dispatch( setIsLoadingBindSubAccount( false ) );
+			} catch( err )
+			{
+				console.log( "err", err );
+				dispatch( setFetchBindSubAccountError( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchBindSubaccountError" ) }` : err.err.toString() ) );
+				dispatch( setIsLoadingBindSubAccount( false ) );
+			};
+		} else
+		{
+			dispatch( setFetchBindSubAccountError( I18n.t( "user.inputBindSubaccountError" ) ) );
+		}
+	};
+};
+
+// 请求一键领取数据
+export function fetchSetHotkeyData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setHotkeyData( [], true, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "OneClick" } );
+			console.log( "res", res );
+			if( res )
+			{
+				const arr = res.split( "<br>" ).filter( item => item );
+				dispatch( setHotkeyData( arr, false, null ) );
+			} else
+			{
+				dispatch( setHotkeyData( [], false, null ) );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			dispatch( setHotkeyData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchHotkeyDataError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// 请求资金归集数据
+export function fetchSetSummarizeData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setSummarizeData( [], true, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "CashSweep" } );
+			console.log( "res", res );
+			if( res )
+			{
+				const arr = res.split( "<br>" ).filter( item => item );
+				dispatch( setSummarizeData( arr, false, null ) );
+			} else
+			{
+				dispatch( setSummarizeData( [], false, null ) );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			dispatch( setSummarizeData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchSummarizeDataError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// 请求投资合同数据
+export function fetchElectronicContractData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setElectronicContractData( {}, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "ETU合同数据" } );
+			console.log( "res", res );
+			if( res && isObject( res ) )
+			{
+				dispatch( setElectronicContractData( res, null ) );
+			} else
+			{
+				dispatch( setElectronicContractData( {}, res.toString() ) );
+			};
+		} catch( err )
+		{
+			console.log( "err", err );
+			dispatch( setElectronicContractData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchElectronicContractDataError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// C2C 查询结构
+// 绑定子账户成功状态
+// 电子投资合同值的渲染

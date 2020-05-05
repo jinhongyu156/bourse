@@ -3,7 +3,9 @@ import {
 	ACTION_SET_USER_USERDETAILDATA,
 	ACTION_SET_USER_MYCLIENTDATA,
 	ACTION_SET_USER_INPUTTEXT, ACTION_SET_USER_INPUTERROR, ACTION_SET_USER_ISLOADINGEDITPASSWORD, ACTION_SET_USER_FETCHEDITPASSWORDERROR, ACTION_SET_USER_CLEAREDITPASSWORD,
-	ACTION_SET_USER_QUERYNAVINDEX, ACTION_SET_USER_QUERYTYPEINDEX, ACTION_SET_USER_ISSHOWACTIONSHEET, ACTION_SET_USER_USERQUERYDATA
+	ACTION_SET_USER_QUERYNAVINDEX, ACTION_SET_USER_QUERYTYPEINDEX, ACTION_SET_USER_ISSHOWACTIONSHEET, ACTION_SET_USER_USERQUERYDATA,
+	ACTION_SET_USER_SUBACCOUNTSDATA, ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT, ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR, ACTION_SET_USER_CLEARBINDSUBACCOUNT,
+	ACTION_SET_USER_HOTKEYDATA, ACTION_SET_USER_SUMMARIZEDATA, ACTION_SET_USER_ELECTRONICCONTRACTDATA
 } from "./../actions/user.js";
 
 const defaultState = {
@@ -33,6 +35,27 @@ const defaultState = {
 	userQueryData: [],									// 用户查询的数据
 	isLoadingUserQueryData: false,						// 是否正在加载用户查询的数据
 	fetchUserQueryDataError: null,						// 用户查询的数据请求失败
+
+	subAccountsData: [],								// 子账户数据
+	isLoadingSubAccountsData: false,					// 是否正在请求子账户数据
+	fetchSubAccountsError: null,						// 请求子账户数据错误
+
+	subAccountText: "",									// 绑定子账户输入的子账户账号文本
+	subAccountPassWordText: "",							// 绑定子账户输入的子账户密码文本
+	isLoadingBindSubAccount: false,						// 是否正在绑定子账户
+	fetchBindSubAccountError: null,						// 绑定子账户请求失败
+
+	hotkeyData: [],										// 一键领取数据
+	isLoadingHotkeyData: false,							// 是否正在加载一键领取数据
+	fetchHotkeyDataError: null,							// 一键领取数据请求失败
+
+	summarizeData: [],									// 资金归集数据
+	isLoadingSummarizeData: false,						// 是否正在加载资金归集数据
+	fetchSummarizeDataError: null,						// 资金归集数据请求失败
+
+	electronicContractData: {},							// 电子合同数据
+	fetchElectronicContractDataError: null				// 电子合同数据请求失败
+
 };
 
 
@@ -77,6 +100,27 @@ export default function( state = defaultState, action )
 			return Object.assign( {}, state, { isShowActionSheet: action.payload.isShowActionSheet, actionSheetData: action.payload.actionSheetData } );
 
 		case ACTION_SET_USER_USERQUERYDATA:
+			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_USER_SUBACCOUNTSDATA:
+			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT:
+			return Object.assign( {}, state, { isLoadingBindSubAccount: action.payload } );
+
+		case ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR:
+			return Object.assign( {}, state, { fetchBindSubAccountError: action.payload } );
+
+		case ACTION_SET_USER_CLEARBINDSUBACCOUNT:
+			return Object.assign( {}, state, { subAccountText: "", subAccountPassWordText: "", isLoadingBindSubAccount: false, fetchBindSubAccountError: null, inputError: {} } );
+
+		case ACTION_SET_USER_HOTKEYDATA:
+			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_USER_SUMMARIZEDATA:
+			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_USER_ELECTRONICCONTRACTDATA:
 			return Object.assign( {}, state, action.payload );
 
 		default:

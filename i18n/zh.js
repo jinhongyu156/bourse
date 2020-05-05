@@ -234,6 +234,7 @@ export default {
 		newbieGuide: "新手指南",
 		vouchers: "代金券",
 		language: "语言",
+		logout: "退出登录",
 
 		trading: "交易金",
 		tailNumber: "尾号",
@@ -279,6 +280,31 @@ export default {
 		orderId: "订单号",
 		note: "备注",
 
-		fetchUserQueryDataError: "查询用户数据失败"
+		fetchUserQueryDataError: "查询用户数据失败",
+
+		name: "姓名",
+		account: "账号",
+		operation: "操作",
+		unbind: "解绑",
+
+		fetchSubAccountsError: "查询子账户数据失败",
+		fetchUnbindError: "解除绑定失败",
+		fetchUnbindSuccess: "解除绑定成功",
+
+		subAccountText: "子账户账号",
+		subAccountPassWordText: "子账户密码",
+		subAccountTextPlaceholder: "请输入子账户账号",
+		subAccountPassWordTextPlaceholder: "请输入子账户密码",
+		bindSubaccountSubmit: "绑定",
+		fetchBindSubaccountSuccess: "绑定成功",
+		fetchBindSubaccountError: "绑定失败",
+		inputBindSubaccountError: "请将信息填写完整",
+
+		fetchHotkeyDataError: "一键领取数据获取失败",
+		fetchSummarizeDataError: "资金归集数据获取失败",
+		fetchElectronicContractDataError: "投资合同数据获取失败",
+		introductionP1: "香港数字资产有限公司于2018年9月在香港荃湾沙嘴道嘉达环球中心成立, 公司配备专业的数字资产技术开发团队、顶尖的数字货币现货与合约交易团队、权威的金融分析师与风控团队、成熟的矿机组装与软件开发团队等.",
+		introductionP2: "公司主要经营业务有数字资产交易运营、国际大宗商品合约交易、实体矿机技术服务及销售等.同时香港数字资产有限公司也是唯一家拥有国资背景的顶尖涉足数字资产的有限公司.",
+		downloadSuccess: "下载成功"
 	}
 };

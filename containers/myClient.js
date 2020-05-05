@@ -27,7 +27,8 @@ const styles = StyleSheet.create( {
 	handleBtnText: { color: "#FFFFFF" },
 
 	errorBox: { height: 100, alignItems: "center", justifyContent: "center" },
-	errorText: { fontSize: 16 },
+	errorText: { fontSize: 16, color: "#F00" },
+	noDataText: { fontSize: 16, color: "#000000" },
 
 	activeBgColor: { backgroundColor: "#696DAC" },
 	inactiveBgColor: { backgroundColor: "#888888" }
@@ -88,7 +89,7 @@ export default React.memo( function MyClient( { id, data, loading, error, fetchD
 			{
 				error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
 				: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />
-				: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ I18n.t( "user.noDataText" ) }</Text></View>
+				: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
 				: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } rowData = { item } onPress = { fetchDown } /> )
 				: null
 			}
@@ -99,5 +100,5 @@ export default React.memo( function MyClient( { id, data, loading, error, fetchD
 				<Text style = { styles.handleBtnText }>{ I18n.t( "user.goBack" ) }</Text>
 			</TouchableOpacity>
 		</View>
-	</React.Fragment>
+	</React.Fragment>;
 } );
