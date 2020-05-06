@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, RefreshControl, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -17,6 +17,8 @@ import UserInfo from "./../containers/userInfo.js";
 import Statement from "./../containers/statement.js";
 import ModalCard from "./../containers/modalCard.js";
 
+const PACKAGEJSON = require( "./../package.json" );
+
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
 
@@ -29,7 +31,7 @@ const styles = StyleSheet.create( {
 
 const Finance = function ( props )
 {
-	console.log( "Finance re-render" );
+	const [ showAlert, setShowAlert ] = React.useState( false );
 	const fetchData = React.useCallback( function()
 	{
 		console.log( "发送请求" );
@@ -37,8 +39,6 @@ const Finance = function ( props )
 		props.fetchUserDetailData();
 		props.getVersion();
 	}, [] );
-
-	console.log( "props", props );
 
 	React.useEffect( () => {
 		let lastTime = null;
@@ -60,15 +60,16 @@ const Finance = function ( props )
 		}
 	}, [] );
 
-	const upDate = React.useCallback( function()
-	{
-		Linking.openURL( "http://ca.slb.one/appdown.php" );
-	}, [] );
-
 	React.useEffect( function()
 	{
 		fetchData();
 	}, [] );
+
+	if( !showAlert && props.version && PACKAGEJSON.version !== props.version )
+	{
+		setShowAlert( true );
+		Alert.alert( I18n.t( "finance.tip1" ), I18n.t( "finance.tip2" ), [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
+	};
 
 	return <React.Fragment>
 		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>

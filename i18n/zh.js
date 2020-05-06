@@ -57,6 +57,9 @@ export default {
 	},
 	finance: {
 		quit: "再按一次退出应用",
+		tip1: "存在新版本可以更新",
+		tip2: "请更新以便获得更好的体验",
+		confirm: "确定",
 		header: {
 			tip: "注: 最低兑换 300 交易金起投",
 			trading: "交易金",
