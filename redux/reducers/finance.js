@@ -1,5 +1,5 @@
 import {
-	ACTION_SET_FINANCE_TABINDEX, ACTION_SET_FINANCE_STATEMENTDATA, ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, ACTION_SET_FINANCE_FECTHSTATEMENTERROR,
+	ACTION_SET_FINANCE_VERSION, ACTION_SET_FINANCE_TABINDEX, ACTION_SET_FINANCE_STATEMENTDATA, ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, ACTION_SET_FINANCE_FECTHSTATEMENTERROR,
 	ACTION_SET_FINANCE_USERDETAILDATA, ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA,
 	ACTION_SET_FINANCE_MODALDATA
 } from "./../actions/finance.js";
@@ -7,6 +7,7 @@ import {
 import { defaultModalData } from "./../actions/finance.js";
 
 const defaultState = {
+	version: null,										// 服务器版本号
 	tabIndex: 0,										// 当前用户 tab index, 0: 积分, 1: ETUSD, 2: USDT, 3: 交易金
 	statementData: [],									// 用户流水信息数据
 	isloadingStatementData: false,						// 是否正在请求流水信息数据
@@ -22,6 +23,9 @@ export default function( state = defaultState, action )
 {
 	switch( action.type )
 	{
+		case ACTION_SET_FINANCE_VERSION:
+			return Object.assign( {}, state, { version: action.payload } );
+
 		case ACTION_SET_FINANCE_TABINDEX:
 			return Object.assign( {}, state, { tabIndex: action.payload } );
 

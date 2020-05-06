@@ -7,6 +7,7 @@ import I18n from "i18n-js";
 export const defaultModalData = { visible: false, key: "", title: "", text: "", times: 0, inputError: null, fecthError: null, isloading: false, tip: "" };
 
 /* action type */
+export const ACTION_SET_FINANCE_VERSION = "ACTION_SET_FINANCE_VERSION";
 export const ACTION_SET_FINANCE_TABINDEX = "ACTION_SET_FINANCE_TABINDEX";
 export const ACTION_SET_FINANCE_STATEMENTDATA = "ACTION_SET_FINANCE_STATEMENTDATA";
 export const ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA = "ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA";
@@ -60,7 +61,7 @@ function getTip( key, number, rate )
 	return key === "USD兑换ETU" ? `${ number } USTD = ${ ( number / rate ).toFixed( 2 ) } ETUSD`
 		: key === "积分兑USDT" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ number } USDT`
 		: key === "积分兑ETUSD" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ ( number / rate ).toFixed( 3 ) } USDT`
-		: key === "投资ETU金融" ? `${ I18n.t( "finance.header.tip" ) } \n ${ ( number * 300 / rate ).toFixed( 0 ) } ETUSD = ${ ( number * 300 ).toFixed( 2 ) } ${ I18n.t( "finance.header.trading" ) } + ${ ( number * 5.3 ).toFixed( 2 ) }T ${ I18n.t( "finance.header.hashrate" ) }`
+		: key === "投资ETU金融" ? `${ I18n.t( "finance.header.tip" ) } \n ${ ( number * 300 / rate ).toFixed( 2 ) } ETUSD = ${ ( number * 300 ).toFixed( 2 ) } ${ I18n.t( "finance.header.trading" ) } + ${ ( number * 5.3 ).toFixed( 2 ) }T ${ I18n.t( "finance.header.hashrate" ) }`
 		: "";
 };
 
@@ -230,3 +231,13 @@ export function fetchGetBenefits( callback )
 	};
 };
 
+// 获取版本
+export function getVersion()
+{
+	return async function( dispatch )
+	{
+		const res = await fetchPost( "/version.php", {} );
+		console.log( "res", res );
+		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
+	};
+};

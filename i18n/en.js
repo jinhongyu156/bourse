@@ -59,6 +59,7 @@ export default {
 		trading: "Trading"
 	},
 	finance: {
+		quit: "Press again to exit the application",
 		header: {
 			tip: "Note: minimum exchange of 300 trading gold minimum investment",
 			trading: "trading",
@@ -194,7 +195,7 @@ export default {
 		tip2: "2: Withdrawal time: 9:00 a.m. to 12:00 a.m., arrival time: within 72 hours after the withdrawal begins",
 		tip3: "3: Fund password is account login password",
 		tip4: "4: Please enter your ethereum based wallet address 0x",
-		tip5: "5: The currency you currently choose is [ETH] please check whether it is the ETH currency wallet address. If you fill in the wrong will lead to the withdrawal of COINS, which has nothing to do with the platform. Please check carefully.",
+		tip5: "5: The currency you currently choose is [%{name}] please check whether it is the %{name} currency wallet address. If you fill in the wrong will lead to the withdrawal of COINS, which has nothing to do with the platform. Please check carefully.",
 
 		fetchUsableError: "Failed to obtain the available quantity",
 		fetchSubmitError: "Mention money failed",
@@ -219,7 +220,9 @@ export default {
 	},
 	user: {
 		header: {
-			chart: "QR code"
+			chart: "Code",
+			tip1: "Welcome to register Hong Kong digital",
+			tip2: "Sign up for a free 10USDT"
 		},
 		myClient: "My Client",
 		myInfo: "My Info",
@@ -308,6 +311,9 @@ export default {
 		fetchElectronicContractDataError: "Failed to obtain investment contract data",
 		introductionP1: "Hong Kong digital assets co., LTD. In Hong Kong in September 2018, tsuen wan, spit jiada universal center was founded, the company equipped with professional digital assets technology development team, the top spot and contract trading team, digital currency authority and the risk control team, mature financial analyst unit is installed with a software development team, etc.",
 		introductionP2: "The main business of the company is digital asset trading operation, international bulk commodity contract trading, physical mining machinery technical services and sales, etc. At the same time, Hong Kong digital asset limited is the only company with a state-backed background in the top digital assets.",
-		downloadSuccess: "Download Success"
+		downloadSuccess: "Download Success",
+		noContract: "You haven't invested",
+		wait: "Please wait a moment",
+		version: "version"
 	}
 };

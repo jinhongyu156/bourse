@@ -29,7 +29,7 @@ const defaultState = {
 	inputError: {},										// 修改密码输入错误
 
 	queryNavIndex: 0,									// 0: USDT; 1: ETUST, 2: 交易金, 3: SLBT, 4: 代金券
-	queryTypeIndex: 0,									// 0: 查询流水, 1: OTC交易, 2: C2C交易
+	queryTypeIndex: 0,									// 0: 查询流水, 1: OTC交易
 	isShowActionSheet: false,							// 是否打开 actionSheet
 	actionSheetData: {},								// actionSheet 数据
 	userQueryData: [],									// 用户查询的数据

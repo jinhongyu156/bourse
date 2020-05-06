@@ -148,7 +148,7 @@ const Title = React.memo( function( { queryTypeIndex, direction, amount, balance
 
 const Content = React.memo( function( { queryTypeIndex, time, orderId, note, openNumber, closeNumber, totalAmount, totalFee, openTime, closeTime } )
 {
-	if( queryTypeIndex === 0 || queryTypeIndex === 2 )
+	if( queryTypeIndex === 0 )
 	{
 		return <View style = { styles.flatListContent }>
 			<View style = { styles.flatListContentItem }>
@@ -236,7 +236,7 @@ export default React.memo( function Query( { data, loading, error, queryNavIndex
 		fetchData();
 	}, [] );
 
-	const queryTypeText = queryTypeIndex === 0 ? I18n.t( "user.queryStatement" ) : queryTypeIndex === 1 ? I18n.t( "user.otc" ) : queryTypeIndex === 2 ? I18n.t( "user.c2c" ) : "";
+	const queryTypeText = queryTypeIndex === 0 ? I18n.t( "user.queryStatement" ) : queryTypeIndex === 1 ? I18n.t( "user.otc" ) : "";
 
 	return <View style = { styles.container }>
 		<View style = { styles.navBox }>

@@ -83,7 +83,7 @@ const Recharge = React.memo( function( { address, number, note, inputError, copy
 	</View>;
 } );
 
-const Mention = React.memo( function( { usable, address, number, fee, password, inputError, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
+const Mention = React.memo( function( { name, usable, address, number, fee, password, inputError, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
 {
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>
@@ -93,7 +93,7 @@ const Mention = React.memo( function( { usable, address, number, fee, password, 
 		<Input value = { usable } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.usable" ) }: </Text> } />
 		<Input index = { "address" } value = { address } placeholder = { I18n.t( "mention.placeholderAddress" ) } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.address" ) }: </Text> } />
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "mention.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.number" ) }: </Text> } />
-		<Input value = { number ? String( fee ) : String( fee * 100 ).concat( "%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
+		<Input value = { number ? String( fee ) : ( name === "ETH" ? "3%" : "0.3%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "mention.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.password" ) }: </Text> } />
 		<SubmitBtn title = { I18n.t( "mention.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
 		<View style = { styles.tipBox }>
@@ -101,7 +101,7 @@ const Mention = React.memo( function( { usable, address, number, fee, password, 
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip2" ) }</Text>
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip3" ) }</Text>
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip4" ) }</Text>
-			<Text style = { styles.tipText }>{ I18n.t( "mention.tip5" ) }</Text>
+			<Text style = { styles.tipText }>{ I18n.t( "mention.tip5", { name: name } ) }</Text>
 		</View>
 	</View>;
 } );
@@ -168,6 +168,7 @@ const Access = React.memo( function( props )
 
 		return <ScrollView showsVerticalScrollIndicator = { false } keyboardDismissMode = { "on-drag" } onScrollBeginDrag = { Keyboard.dismiss }>
 			<Mention
+				name = { props.route.params.name }
 				usable = { props.usable }
 				address = { props.address }
 				number = { props.number }

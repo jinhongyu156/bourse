@@ -56,6 +56,7 @@ export default {
 		trading: "交易金",
 	},
 	finance: {
+		quit: "再按一次退出应用",
 		header: {
 			tip: "注: 最低兑换 300 交易金起投",
 			trading: "交易金",
@@ -117,8 +118,8 @@ export default {
 		cancel: "取消",
 		confirm: "确定",
 		closing: "平仓",
-		submitSuccess: "提交成功",
-		submitError: "提交失败",
+		submitSuccess: "下单成功",
+		submitError: "下单失败",
 		fetchDataError: "数据获取失败",
 
 		time: "建仓时间",
@@ -181,7 +182,7 @@ export default {
 		fee: "服务费用",
 		password: "资金密码",
 
-		placeholderAddress: "请输入基于以太坊网络的钱",
+		placeholderAddress: "请输入基于以太坊网络的钱包地址",
 		placeholderNumber: "请输入提币数量",
 		placeholderPassword: "请输入资金密码",
 
@@ -190,7 +191,7 @@ export default {
 		tip2: "2: 提币时间上午9点至上午12点, 到账时间,提币开始计算72小时之内",
 		tip3: "3: 资金密码为账户登录密码",
 		tip4: "4: 提币地址请输入基于以太坊网络的钱包地址0x开头",
-		tip5: "5: 您当前所选币种为[ETH]请核对是否是ETH币种钱包地址，如填写错误会导致提币流失，与平台无关。请仔细核对",
+		tip5: "5: 您当前所选币种为[%{name}]请核对是否是%{name}币种钱包地址，如填写错误会导致提币流失，与平台无关。请仔细核对",
 
 		fetchUsableError: "获取可用数量失败",
 		fetchSubmitError: "提币失败",
@@ -215,7 +216,9 @@ export default {
 	},
 	user: {
 		header: {
-			chart: "推广二维码"
+			chart: "推广码",
+			tip1: "欢迎注册香港数字",
+			tip2: "注册免费赠送10USDT"
 		},
 		myClient: "我的客户",
 		myInfo: "我的信息",
@@ -305,6 +308,9 @@ export default {
 		fetchElectronicContractDataError: "投资合同数据获取失败",
 		introductionP1: "香港数字资产有限公司于2018年9月在香港荃湾沙嘴道嘉达环球中心成立, 公司配备专业的数字资产技术开发团队、顶尖的数字货币现货与合约交易团队、权威的金融分析师与风控团队、成熟的矿机组装与软件开发团队等.",
 		introductionP2: "公司主要经营业务有数字资产交易运营、国际大宗商品合约交易、实体矿机技术服务及销售等.同时香港数字资产有限公司也是唯一家拥有国资背景的顶尖涉足数字资产的有限公司.",
-		downloadSuccess: "下载成功"
+		downloadSuccess: "下载成功",
+		noContract: "未进行投资",
+		wait: "请稍等",
+		version: "版"
 	}
 };

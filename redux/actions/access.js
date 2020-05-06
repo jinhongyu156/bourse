@@ -1,9 +1,10 @@
 import I18n from "i18n-js";
 
-import { fetchPost, isObject } from "./../../javascripts/util.js";
+import { fetchPost, isObject, getNum } from "./../../javascripts/util.js";
 import { numberReg, passwordReg } from "./../../javascripts/regExp.js";
 
 /* action type */
+export const ACTION_SET_ACCESS_COIN = "ACTION_SET_ACCESS_COIN";
 export const ACTION_SET_ACCESS_USABLE = "ACTION_SET_ACCESS_USABLE";
 export const ACTION_SET_ACCESS_ADDRESS = "ACTION_SET_ACCESS_ADDRESS";
 export const ACTION_SET_ACCESS_INPUTTEXT = "ACTION_SET_ACCESS_INPUTTEXT";
@@ -13,6 +14,12 @@ export const ACTION_SET_ACCESS_FETCHSUBMITERROR = "ACTION_SET_ACCESS_FETCHSUBMIT
 export const ACTION_SET_ACCESS_CLEAR = "ACTION_SET_ACCESS_CLEAR";
 
 /* action create */
+// 设置当前币种
+function setCoin( coin )
+{
+	return { type: ACTION_SET_ACCESS_COIN, payload: coin }
+};
+
 // 设置地址和获取地址错误信息
 function setAddress( address, fetchAddressError )
 {
@@ -49,11 +56,12 @@ export function setInputText( key, value )
 	return function( dispatch, getState )
 	{
 		const { access } = getState();
+
 		dispatch( { type: ACTION_SET_ACCESS_INPUTTEXT, payload: { [ key ]: value } } );
 		if( key === "number" )
 		{
 			dispatch( { type: ACTION_SET_ACCESS_INPUTERROR, payload: Object.assign( {}, access.inputError, { number: !numberReg.test( value ) } ) } );
-			dispatch( { type: ACTION_SET_ACCESS_INPUTTEXT, payload: { fee: Number( value ) * 0.03 } } );
+			dispatch( { type: ACTION_SET_ACCESS_INPUTTEXT, payload: { fee: getNum( String( Number( value ) * ( access.coin === "ETH" ? 0.03 : 0.003 ) ), 2 ) } } );
 		};
 		if( key === "password" )
 		{
@@ -71,6 +79,7 @@ export function fetchUsable( coin )
 {
 	return async function( dispatch )
 	{
+		dispatch( setCoin( coin ) );
 		try
 		{
 			const res = await fetchPost( "/otc.php", { "提交": "获取提币信息", "提币类型": coin } );

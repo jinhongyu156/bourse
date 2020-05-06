@@ -1,12 +1,12 @@
 import React from "react";
 
-import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, RefreshControl, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, RefreshControl, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
+import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
 
 import I18n from "i18n-js";
 
@@ -35,6 +35,34 @@ const Finance = function ( props )
 		console.log( "发送请求" );
 		props.fetchStatement();
 		props.fetchUserDetailData();
+		props.getVersion();
+	}, [] );
+
+	console.log( "props", props );
+
+	React.useEffect( () => {
+		let lastTime = null;
+		function onBack()
+		{
+			if ( lastTime && lastTime + 1000 > Date.now() ) {
+				BackHandler.exitApp();
+				return false;
+			} else {
+				lastTime = Date.now();
+				ToastAndroid.show( I18n.t( "finance.quit" ), ToastAndroid.SHORT)
+				return true;
+			};
+			return true;
+		};
+		BackHandler.addEventListener( "hardwareBackPress", onBack );
+		return () => {
+			BackHandler.removeEventListener( "hardwareBackPress", onBack );
+		}
+	}, [] );
+
+	const upDate = React.useCallback( function()
+	{
+		Linking.openURL( "http://ca.slb.one/appdown.php" );
 	}, [] );
 
 	React.useEffect( function()
@@ -94,6 +122,7 @@ export default connect(
 		const financeData = state.finance;
 
 		return {
+			version: financeData.version,
 			tabIndex: financeData.tabIndex,
 			statementData: financeData.statementData,
 			fecthStatementError: financeData.fecthStatementError,
@@ -107,7 +136,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
+		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
 	}
 )( Finance );
 

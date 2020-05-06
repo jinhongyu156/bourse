@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, ImageBackground, ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -32,6 +32,7 @@ import Introduction from "./../containers/introduction.js";
 import ElectronicContract from "./../containers/electronicContract.js";
 import Repo from "./../containers/repo.js";
 import SubAccounts from "./../containers/subAccounts.js";
+import Download from "./../containers/download.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
@@ -69,11 +70,6 @@ const TabBar2 = React.memo( function( { tabs, activeTab, goToPage } )
 	return <TabBar tabs = { tabs } type = { "default" } tabBarStyle = { styles.tabBar2 } activeTab = { activeTab } goToPage = { goToPage } />
 } );
 
-const Tab2Content = React.memo( function()
-{
-	return <View></View>
-} );
-
 const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProps, myInfoProps, editPasswordProps, queryProps, callbackForEditPassword, callbackForMyInfo, callbackForMyClient, callbackForQuery } )
 {
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
@@ -91,7 +87,6 @@ const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProp
 
 const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, subAccountsProps, bindSubAccountProps, hotkeyProps, summarizeProps, callbackForSubAccounts, callbackForBindSubAccount, callbackForHotkey, callbackForSummarize } )
 {
-	console.log( "re-render SystemCenter" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
@@ -104,22 +99,21 @@ const SystemCenter = React.memo( function( { tabIndex2, setTabIndex2, subAccount
 	</Tab>;
 } );
 
-const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, electronicContractProps, callbackForElectronicContract } )
+const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, electronicContractProps, repoProps, callbackForElectronicContract } )
 {
-	console.log( "re-render NewbieGuide" );
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <TabBar2 tabs = { tabs } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<Tab2Content tabLabel = { I18n.t( "user.downloadCenter" ) } />
+		<Download tabLabel = { I18n.t( "user.downloadCenter" ) } />
 		<Introduction tabLabel = { I18n.t( "user.introduction" ) } />
 		<ElectronicContract tabLabel = { I18n.t( "user.contract" ) } { ...electronicContractProps } { ...callbackForElectronicContract } />
-		<Repo tabLabel = { I18n.t( "user.repo" ) } />
+		<Repo tabLabel = { I18n.t( "user.repo" ) } { ...repoProps } />
 	</Tab>;
 } );
 
-const User =  React.memo( function( props )
+const User = React.memo( function( props )
 {
 	React.useEffect( function()
 	{
@@ -134,14 +128,17 @@ const User =  React.memo( function( props )
 		</ImageBackground>
 	}, [] );
 
-	console.log( "props", props );
+	const gotoMyQrCode = React.useCallback( function()
+	{
+		props.navigation.push( "MyQrCode", { id: props.userDetailData[ "id" ] } );
+	}, [ props.userDetailData[ "id" ] ] );
 
 	return <View style = { styles.container }>
-		<Header usdtInfo = { "" } tradingInfo = { "" } slbtInfo = { "" }>
-			<View style = { styles.headerRightViewItem }>
+		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { gotoMyQrCode }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/qr_code.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "user.header.chart" ) }</Text>
-			</View>
+			</TouchableOpacity>
 		</Header>
 		{
 			props.fetchUserDetailDataError
@@ -149,7 +146,7 @@ const User =  React.memo( function( props )
 					<Text style = { styles.errorText }>{ props.fetchUserDetailDataError }</Text>
 				</View>
 			: Object.keys( props.userDetailData ).length
-				? <Tab initialPage = { 2 } locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab1 } page = { props.tabIndex1 } onChangeTab = { props.setTabIndex1 }>
+				? <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab1 } page = { props.tabIndex1 } onChangeTab = { props.setTabIndex1 }>
 					<UserCenter
 						tabLabel = { I18n.t( "user.userCenter" ) }
 						tabIndex2 = { props.tabIndex2 }
@@ -186,6 +183,7 @@ const User =  React.memo( function( props )
 						tabIndex2 = { props.tabIndex2 }
 						setTabIndex2 = { props.setTabIndex2 }
 						electronicContractProps = { props.electronicContractProps }
+						repoProps = { props.repoProps }
 						callbackForElectronicContract = { props.callbackForElectronicContract }
 					/>
 				</Tab>
@@ -235,6 +233,9 @@ export default connect(
 			},
 			electronicContractProps: {
 				data: userData.electronicContractData, loading: userData.isLoadingElectronicContractData, error: userData.fetchElectronicContractDataError
+			},
+			repoProps: {
+				etusd: userData.userDetailData[ "投资ETUSD" ]
 			},
 			tabIndex1: userData.tabIndex1, tabIndex2: userData.tabIndex2, userDetailData: userData.userDetailData, fetchUserDetailDataError: userData.fetchUserDetailDataError
 		};

@@ -158,8 +158,8 @@ export function showQueryTypeIndexActionSheet()
 		const { user } = getState();
 
 		dispatch( showActionSheet( {
-			title: I18n.t( "user.actionSheetTitle" ), cancelButtonIndex: 3, markButtonIndex: user.queryTypeIndex,
-			options: [ I18n.t( "user.queryStatement" ), I18n.t( "user.otc" ), I18n.t( "user.c2c" ), I18n.t( "user.cancel" ) ],
+			title: I18n.t( "user.actionSheetTitle" ), cancelButtonIndex: 2, markButtonIndex: user.queryTypeIndex,
+			options: [ I18n.t( "user.queryStatement" ), I18n.t( "user.otc" ), I18n.t( "user.cancel" ) ],
 			onPress: function( index )
 			{
 				if( index !== 3 ) dispatch( setQueryTypeIndex( index ) );
@@ -289,7 +289,7 @@ export function fetchUserQueryData()
 	{
 		const { user } = getState();
 		const params = {
-			"提交": user.queryTypeIndex === 0 ? "查询流水" : user.queryTypeIndex === 1 ? "OTC交易" : user.queryTypeIndex === 2 ? "C2C交易" : "",
+			"提交": user.queryTypeIndex === 0 ? "查询流水" : user.queryTypeIndex === 1 ? "OTC交易" : "",
 			"流水类型": user.queryNavIndex === 0 ? "USDT" : user.queryNavIndex === 1 ? "ETUSD" : user.queryNavIndex === 2 ? "交易金" : user.queryNavIndex === 3 ? "SLBT" : user.queryNavIndex === 4 ? "代金券" : ""
 		};
 		dispatch( setUserQueryData( [], true, null ) );
@@ -361,7 +361,7 @@ export function fetchSubAccountsUnbind( id, callback )
 };
 
 // 绑定子账户
-export function fetchBindSubAccount()
+export function fetchBindSubAccount( callback )
 {
 	return async function( dispatch, getState )
 	{
@@ -379,6 +379,7 @@ export function fetchBindSubAccount()
 				{
 					callback();
 					dispatch( clearBindSubAccount() );
+					dispatch( fetchSubAccountsData() );
 				} else
 				{
 					dispatch( setFetchBindSubAccountError( res ) );
@@ -473,7 +474,3 @@ export function fetchElectronicContractData()
 		};
 	};
 };
-
-// C2C 查询结构
-// 绑定子账户成功状态
-// 电子投资合同值的渲染

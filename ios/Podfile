@@ -79,6 +79,9 @@ target 'bourse' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+
   target 'bourseTests' do
     inherit! :complete
     # Pods for testing

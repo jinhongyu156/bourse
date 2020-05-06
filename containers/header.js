@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, Image, ImageBackground, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Image, ImageBackground, StyleSheet, Dimensions } from "react-native";
 
 import I18n from "i18n-js";
 
