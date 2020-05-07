@@ -25,6 +25,7 @@ import Register from "./pages/register.js";
 import Disclaimer from "./pages/disclaimer.js";
 import Access from "./pages/access.js";
 import MyQrCode from "./pages/myQrCode.js";
+import Chart from "./pages/chart.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -89,13 +90,14 @@ export default function()
 		<StatusBar backgroundColor = { "#FFFFFF" } barStyle = { "dark-content" } />
 		<Provider store = { store }>
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
+				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" } initialRouteName = { "Chart" }>
 					<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
 					<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Access" component = { Access } />
 					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { { title: I18n.t( "user.header.chart" ) } } />
+					<Stack.Screen name = "Chart" component = { Chart } options = { () => ( { headerShown: false } ) } />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>
