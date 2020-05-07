@@ -6,13 +6,15 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { setHeaderDropdownIndex, setOrderParamsTabIndex, setOrderParamsDropdownIndex } from "./../redux/actions/chart.js";
+import { setHeaderDropdownIndex, setOrderParamsTabIndex, setOrderParamsDropdownIndex, fetchOrderList } from "./../redux/actions/chart.js";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import I18n from "i18n-js";
 
 import Dropdown from "./../components/dropdown.js";
+
+import SubmitBtn from "./../containers/submit.js";
 
 // 头部高度
 const HEADERHEIGHT = 50;
@@ -30,16 +32,18 @@ const HEADERDROPDOWNROWHEIGHT = 40;
 const USERINFOBOXHEIGHT = 80;
 
 // order 头部高度
-const ORDERHEADER = 30;
+const ORDERHEADERHEIGHT = 30;
 
-// order(params) dropdown box 高度
-const ORDERPARAMSDROPDOWNBOXHEIGHT = 40;
+// order(params) 行 高度
+const ORDERPARAMSROWHEIGHT = 40;
 
 // order(params) dropdown btn 宽度
 const ORDERPARAMSDROPDOWNBUTTONWIDTH = 100;
 
 // order(params) row 高度
 const ORDERPARAMSDROPDOWNROWHEIGHT = 40;
+
+const ORDERPARAMSSUBMITBOXHEIGHT = 70;
 
 const styles = StyleSheet.create( {
 	/*modalContainer: { width: MODALWIDTH, height: MODALHEIGHT, borderRadius: 8, backgroundColor: "#FFFFFF" },
@@ -84,26 +88,49 @@ const styles = StyleSheet.create( {
 	userInfoItemTitleText: { fontSize: 18, fontWeight: "bold", color: "#000000" },
 	userInfoItemValueText: { fontSize: 12, fontWeight: "normal", color: "#828282" },
 
-	orderBox: { height: 200, flexDirection: "row", backgroundColor: "#FFFFFF", marginTop: 6 },
+	orderBox: { height: ORDERPARAMSROWHEIGHT * 3 + ORDERPARAMSSUBMITBOXHEIGHT + ORDERHEADERHEIGHT, flexDirection: "row", backgroundColor: "#FFFFFF", marginTop: 6 },
 	orderItem: { flex: 1 },
 	orderItemLine: { borderColor: "#E9E9E9", borderRightWidth: 1 },
 
-	orderParamsHeader: { height: ORDERHEADER, flexDirection: "row", borderColor: "#E9E9E9", borderBottomWidth: 1 },
-	orderParamsHeaderBtn: { flex: 1, height: ORDERHEADER, justifyContent: "center", alignItems: "center" },
+	orderParamsHeader: { height: ORDERHEADERHEIGHT, flexDirection: "row", borderColor: "#E9E9E9", borderBottomWidth: 1 },
+	orderParamsHeaderBtn: { flex: 1, height: ORDERHEADERHEIGHT, justifyContent: "center", alignItems: "center" },
 	orderParamsHeaderBtnText: { fontSize: 12 },
 	orderParamsHeaderBuyBtnText: { color: "#8DE192" },
 	orderParamsHeaderSellBtnText: { color: "#F49BA0" },
 	orderParamsHeaderBtnActive: { backgroundColor: "#FFFFFF" },
 	orderParamsHeaderBtnInActive: { backgroundColor: "#F6F6F6" },
-	orderParamsDropdownBox: { height: ORDERPARAMSDROPDOWNBOXHEIGHT, paddingHorizontal: 10, justifyContent: "center" },
+	orderParamsDropdownBox: { height: ORDERPARAMSROWHEIGHT, paddingHorizontal: 10, justifyContent: "center" },
 	orderParamsDropdown: { width: ORDERPARAMSDROPDOWNBUTTONWIDTH, height: ORDERPARAMSDROPDOWNROWHEIGHT * 2, marginTop: 2, backgroundColor: "#F6F6F6" },
 	orderParamsDropdownRow: { height: ORDERPARAMSDROPDOWNROWHEIGHT, paddingHorizontal: 10, justifyContent: "center" },
 	orderParamsDropdownRowText: { fontSize: 12 },
-	orderParamsDropdownBtn: { width: ORDERPARAMSDROPDOWNBUTTONWIDTH, height: ORDERPARAMSDROPDOWNBOXHEIGHT * 0.6, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "#E9E9E9", borderWidth: 1, borderRadius: 40 },
+	orderParamsDropdownBtn: { width: ORDERPARAMSDROPDOWNBUTTONWIDTH, height: ORDERPARAMSROWHEIGHT * 0.6, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "#E9E9E9", borderWidth: 1, borderRadius: 40 },
 	orderParamsDropdownBtnText: { color: "#000000", marginRight: 8, fontSize: 12 },
+	orderParamsTipBox: { paddingHorizontal: 10, height: ORDERPARAMSROWHEIGHT, justifyContent: "center" },
+	orderParamsTipText: { fontSize: 12 },
+	orderParamsInputBox: { flexDirection: "row", paddingHorizontal: 10, height: ORDERPARAMSROWHEIGHT, justifyContent: "center", alignItems: "center" },
+	orderParamsInputLabel: { fontSize: 12, marginRight: 6 },
+	orderParamsInput: { backgroundColor: "#F6F6F6", flex: 1, height: ORDERPARAMSROWHEIGHT * 0.7, paddingHorizontal: 10, paddingVertical: 0 },
+	orderParamsSubmitBox: { height: ORDERPARAMSSUBMITBOXHEIGHT, paddingHorizontal: 10, justifyContent: "center" },
+	orderParamsSubmit: { height: ORDERPARAMSSUBMITBOXHEIGHT * 0.45, paddingHorizontal: 10, justifyContent: "center" },
+	orderParamsSubmitText: { fontSize: 14 },
+	orderParamsSubmitTipText: { fontSize: 10, marginTop: 4, color: "#949494", textAlign: "center" },
 
-	orderListHeader: { height: ORDERHEADER, paddingHorizontal: 6, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderColor: "#E9E9E9", borderBottomWidth: 1 },
-	orderListHeaderText: { fontSize: 12 }
+	orderListHeader: { height: ORDERHEADERHEIGHT, paddingHorizontal: 6, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderColor: "#E9E9E9", borderBottomWidth: 1 },
+	orderListHeaderText: { fontSize: 12 },
+	orderListBuyBox: { flex: 1, justifyContent: "flex-end", paddingHorizontal: 10 },
+	orderListBuyRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2 },
+	orderListBuyRowText: { fontSize: 12, color: "#F49BA0" },
+
+	orderListLine: { height: 1, backgroundColor: "#F6F6F6", marginHorizontal: 10 },
+
+	orderListSellBox: { flex: 1, justifyContent: "flex-start", paddingHorizontal: 10 },
+	orderListSellRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2 },
+	orderListSellRowText: { fontSize: 12, color: "#8DE192" },
+
+	orderListErrorBox: { height: 100, paddingHorizontal: 10, justifyContent: "center" },
+	orderListErrorText: { color: "#F00" },
+	orderListNoDataBox: { height: 100, justifyContent: "center", alignItems: "center" },
+	orderListNoDataText: { color: "#777777" }
 } );
 
 const Header = React.memo( function( { onSelect, goBack } )
@@ -155,7 +182,7 @@ const UserInfo = React.memo( function()
 	</View>;
 } );
 
-const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSelect } )
+const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSelect, data, loading, error } )
 {
 	const tabIndexArr = [ "买入", "卖出" ];
 
@@ -194,14 +221,86 @@ const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSele
 					onSelect = { onSelect }
 				/>
 			</View>
-			<View>
-				
+			{
+				dropdownIndex === 0
+					? <View style = { styles.orderParamsTipBox }>
+						<Text style = { styles.orderParamsTipText }>以市场成交价为准</Text>
+					</View>
+				: dropdownIndex === 1
+					? <View style = { styles.orderParamsInputBox }>
+						<Text style = { styles.orderParamsInputLabel }>价格: </Text>
+						<TextInput
+							style = { styles.orderParamsInput }
+							value = { "1" }
+							keyboardType = { "numeric" }
+							placeholder = { "placeholder" }
+							onChangeText = { () => {} } />
+					</View>
+				: null
+			}
+			<View style = { styles.orderParamsInputBox }>
+				<Text style = { styles.orderParamsInputLabel }>数量: </Text>
+				<TextInput
+					style = { styles.orderParamsInput }
+					value = { "1" }
+					keyboardType = { "numeric" }
+					placeholder = { "placeholder" }
+					onChangeText = { () => {} } />
+			</View>
+			<View style = { styles.orderParamsSubmitBox }>
+				<SubmitBtn
+					title = { tabIndexArr[ tabIndex ] }
+					submitBtnStyle = { styles.orderParamsSubmit }
+					submitBtnTextStyle = { styles.orderParamsSubmitText }
+					loading = { false }
+					onSubmit = { () => {} }
+				/>
+				<Text style = { styles.orderParamsSubmitTipText }>手续费: 买入免费, 卖出 5%   |   $0.153</Text>
 			</View>
 		</View>
 		<View style = { styles.orderItem }>
 			<View style = { styles.orderListHeader }>
 				<Text style = { styles.orderListHeaderText }>价格 USDT</Text>
 				<Text style = { styles.orderListHeaderText }>数量</Text>
+			</View>
+			<View style = { { flex: 1 } }>
+			{
+				error
+					? <View style = { styles.orderListErrorBox }>
+						<Text style = { styles.orderListErrorText }>{ error }</Text>
+					</View>
+				: ( loading === false && Object.keys( data ).length === 0 )
+					? <View style = { styles.orderListNoDataBox }>
+						<Text style = { styles.orderListNoDataText }>{ I18n.t( "chart.noDataText" ) }</Text>
+					</View>
+				: ( loading === true && Object.keys( data ).length === 0 )
+					? <ActivityIndicator size = "small" color = "#696DAC" />
+				: <React.Fragment>
+					<View style = { styles.orderListBuyBox }>
+					{
+						data.buy.map( function( item, index )
+						{
+							return <View key = { index } style = { styles.orderListBuyRow }>
+								<Text style = { styles.orderListBuyRowText }>{ item[ "单价" ] }</Text>
+								<Text style = { styles.orderListBuyRowText }>{ item[ "数量" ] }</Text>
+							</View>;
+						} )
+					}
+					</View>
+					<View style = { styles.orderListLine } />
+					<View style = { styles.orderListSellBox }>
+					{
+						data.buy.map( function( item, index )
+						{
+							return <View key = { index } style = { styles.orderListSellRow }>
+								<Text style = { styles.orderListSellRowText }>{ item[ "单价" ] }</Text>
+								<Text style = { styles.orderListSellRowText }>{ item[ "数量" ] }</Text>
+							</View>;
+						} )
+					}
+					</View>
+				</React.Fragment>
+			}
 			</View>
 		</View>
 	</View>;
@@ -211,6 +310,11 @@ const Chart = function( props )
 {
 	console.log( "props", props );
 
+	React.useEffect( function()
+	{
+		props.fetchOrderList();
+	}, [] )
+
 	return <View style = { styles.container }>
 		<Header onSelect = { props.setHeaderDropdownIndex } goBack = { props.navigation.goBack } />
 		<UserInfo />
@@ -219,6 +323,10 @@ const Chart = function( props )
 			dropdownIndex = { props.orderParamsDropdownIndex }
 			changeTab = { props.setOrderParamsTabIndex }
 			onSelect = { props.setOrderParamsDropdownIndex }
+
+			data = { props.orderListData }
+			loading = { props.loadingOrderListData }
+			error = { props.fetchOrderListDataError }
 		/>
 	</View>
 };
@@ -231,11 +339,15 @@ export default connect(
 		return {
 			headerDropdownIndex: chartData.headerDropdownIndex,
 			orderParamsDropdownIndex: chartData.orderParamsDropdownIndex,
-			orderParamsTabIndex: chartData.orderParamsTabIndex
+			orderParamsTabIndex: chartData.orderParamsTabIndex,
+
+			orderListData: chartData.orderListData,
+			loadingOrderListData: chartData.loadingOrderListData,
+			fetchOrderListDataError: chartData.fetchOrderListDataError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setHeaderDropdownIndex, setOrderParamsTabIndex, setOrderParamsDropdownIndex }, dispatch );
+		return bindActionCreators( { setHeaderDropdownIndex, setOrderParamsTabIndex, setOrderParamsDropdownIndex, fetchOrderList }, dispatch );
 	}
 )( Chart );

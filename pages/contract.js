@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, ImageBackground, ScrollView, ActivityIndicator, Dimensions, Keyboard, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, ScrollView, Dimensions, Keyboard, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 

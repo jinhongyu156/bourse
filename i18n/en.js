@@ -318,5 +318,9 @@ export default {
 		noContract: "You haven't invested",
 		wait: "Please wait a moment",
 		version: "version"
+	},
+	chart: {
+		noDataText: "No data was queried",
+		fetchOrderListDataError: "Failed to get list data"
 	}
 };

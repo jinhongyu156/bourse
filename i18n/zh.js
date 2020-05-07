@@ -315,5 +315,9 @@ export default {
 		noContract: "未进行投资",
 		wait: "请稍等",
 		version: "版"
+	},
+	chart: {
+		noDataText: "未查询到数据",
+		fetchOrderListDataError: "获取列表数据失败"
 	}
 };
