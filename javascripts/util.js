@@ -103,7 +103,7 @@ export function fetchPost( url, data, config = {} )
 		} ).then( function( res )
 		{
 			// console.log( "请求参数", data );
-			console.log( "请求结果", res, unicodeToChinese( res ) );
+			// console.log( "请求结果", res, unicodeToChinese( res ) );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

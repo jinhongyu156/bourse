@@ -214,12 +214,17 @@ const Ctc = React.memo( function( props )
 		props.navigation.push( "Access", { type: type, name: title } );
 	}, [] );
 
+	const goToChart = React.useCallback( function()
+	{
+		props.navigation.push( "Chart" );
+	}, [] );
+
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
-			<View style = { styles.headerRightViewItem }>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToChart }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
-			</View>
+			</TouchableOpacity>
 		</Header>
 		<Notice />
 		<SectionList

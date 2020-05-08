@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, ImageBackground, ScrollView, Dimensions, Keyboard, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, TouchableOpacity, ScrollView, Dimensions, Keyboard, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -60,6 +60,11 @@ const Contract = React.memo( function ( props )
 		props.fetchContractData();
 	}, [] );
 
+	const goToChart = React.useCallback( function()
+	{
+		props.navigation.push( "Chart" );
+	}, [] );
+
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.tabBarBox }>
@@ -70,10 +75,10 @@ const Contract = React.memo( function ( props )
 
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
-			<View style = { styles.headerRightViewItem }>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToChart }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
-			</View>
+			</TouchableOpacity>
 		</Header>
 		{
 			props.fetchDataError

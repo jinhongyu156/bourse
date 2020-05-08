@@ -90,7 +90,7 @@ export default function()
 		<StatusBar backgroundColor = { "#FFFFFF" } barStyle = { "dark-content" } />
 		<Provider store = { store }>
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" } initialRouteName = { "Chart" }>
+				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
 					<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />

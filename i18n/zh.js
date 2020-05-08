@@ -318,6 +318,45 @@ export default {
 	},
 	chart: {
 		noDataText: "未查询到数据",
-		fetchOrderListDataError: "获取列表数据失败"
+		fetchOrderListDataError: "获取列表数据失败",
+		fetchUserDetailDataError: "获取用户数据失败",
+		fetchUserOrderListDataError: "获取用户委托单失败",
+		fetchKLineDataError: "获取 K 线数据失败",
+		fetchCancelUserOrderSuccess: "撤单成功",
+		fetchCancelUserOrderError: "撤单失败",
+		fetchOrderSubmitSuccess: "下单成功",
+		fetchOrderSubmitInputError: "请将信息填写完整",
+		fetchOrderSubmitError: "下单失败",
+
+		buy: "买入",
+		sell: "卖出",
+		marketBuy: "市价买入",
+		priceBuy: "限价买入",
+		marketSell: "市价卖出",
+		priceSell: "限价卖出",
+
+		orderParamsTip: "以市场成交价为准",
+		price: "价格",
+		pricePlaceholder: "请输入价格",
+		number: "数量",
+		numberPlaceholder: "请输入数量",
+		poundage: "手续费",
+		buyFree: "买入免费",
+
+		entrustNumber: "委托数量",
+		entrustPrice: "委托单价",
+		entrustDirection: "委托方向",
+		operation: "操作",
+		dealNumber: "成交数量",
+		dealPrice: "成交单价",
+		dealDirection: "成交方向",
+		state: "状态",
+
+		cancel: "撤单",
+		complete: "完成",
+
+		currentEntrust: "当前委托",
+		historyEntrust: "历史委托"
 	}
 };
+

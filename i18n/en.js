@@ -321,6 +321,46 @@ export default {
 	},
 	chart: {
 		noDataText: "No data was queried",
-		fetchOrderListDataError: "Failed to get list data"
+		fetchOrderListDataError: "Failed to get list data",
+		fetchUserDetailDataError: "Failed to retrieve user data",
+		fetchUserOrderListDataError: "Failed to obtain user's order",
+		fetchKLineDataError: "Failed to get k-line data",
+		fetchCancelUserOrderSuccess: "Its success",
+		fetchCancelUserOrderError: "Its failure",
+		fetchOrderSubmitSuccess: "Place an order successfully",
+		fetchOrderSubmitInputError: "Please complete the information",
+		fetchOrderSubmitError: "Place the order failed",
+
+		buy: "Buy",
+		sell: "Sell",
+		marketBuy: "MarketBuy",
+		priceBuy: "PriceBuy",
+		marketSell: "MarketSell",
+		priceSell: "PriceSell",
+
+		orderParamsTip: "Subject to the market price",
+		price: "Price",
+		pricePlaceholder: "Please enter price",
+		number: "Number",
+		numberPlaceholder: "Please enter quantity",
+		poundage: "Poundage",
+		buyFree: "Buy For Free",
+
+		entrustNumber: "EntrustNumber",
+		entrustPrice: "EntrustPrice",
+		entrustDirection: "EntrustDir",
+		operation: "Operation",
+		dealNumber: "DealNumber",
+		dealPrice: "DealPrice",
+		dealDirection: "DealDir",
+		state: "State",
+
+		cancel: "Cancel",
+		complete: "Complete",
+
+		currentEntrust: "Current",
+		historyEntrust: "History"
 	}
 };
+
+
