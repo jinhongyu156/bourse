@@ -9,8 +9,8 @@ const PRODUCTHEIGHT = 80;
 const PRODUCTICONSIZE = 26;
 
 const styles = StyleSheet.create( {
-	container: { height: PRODUCTHEIGHT, flexDirection: "row", alignItems: "center", justifyContent: "space-around", backgroundColor: "#FFFFFF", marginVertical: 6 },
-	item: { flexDirection: "row", alignItems: "center" },
+	container: { height: PRODUCTHEIGHT, flexDirection: "row", backgroundColor: "#FFFFFF", marginVertical: 6 },
+	item: { flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", margin: 4 },
 	icon: { width: PRODUCTICONSIZE, height: PRODUCTICONSIZE },
 	infoBox: { marginLeft: 10 },
 	infoValue: { fontSize: 12 },
@@ -20,7 +20,10 @@ const styles = StyleSheet.create( {
 
 	upColor: { color: "#F4979D" },
 	downColor: { color: "#96E89D" },
-	normalColor: { color: "#000000" }
+	normalColor: { color: "#000000" },
+
+	inActiveBgColor: { backgroundColor: "#F8F8F8" },
+	activeBgColor: { backgroundColor: "#E1E2F4" }
 } );
 
 const Item = function ( { name, price, isAvtive, onPress } )
@@ -43,8 +46,9 @@ const Item = function ( { name, price, isAvtive, onPress } )
 
 	const color = state > 0 ? styles.upColor : state < 0 ? styles.downColor : state.normalColor;
 	const font = isAvtive ? styles.activeTitle : styles.inActiveTitle;
+	const bgColor = isAvtive ? styles.activeBgColor : styles.inActiveBgColor;
 
-	return <TouchableOpacity style = { styles.item } onPress = { () => onPress( name ) }>
+	return <TouchableOpacity style = { [ styles.item, bgColor ] } onPress = { () => onPress( name ) }>
 		{
 			name === "BTC"
 				? <Image style = { styles.icon } source = { require( "./../images/btc.png" ) } />

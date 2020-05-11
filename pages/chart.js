@@ -445,8 +445,6 @@ const Line = React.memo( function( { index, data, loading, error } )
 
 const Chart = function( props )
 {
-	console.log( "props", props );
-
 	React.useEffect( function()
 	{
 		props.fetchUserDetailData();

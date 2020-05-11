@@ -161,7 +161,6 @@ export function fetchData()
 		{
 			dispatch( setFetchLoading( true ) );
 			const res = await fetchPost( "/new_heyue.php", { "提交": "返回用户货币数量" } );
-			console.log( "res", res );
 
 			if( isObject( res ) )
 			{
@@ -199,7 +198,6 @@ export function fetchData()
 
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setFetchState( "", [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ctc.fetchDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -213,7 +211,7 @@ export function fetchSell( params, callback )
 		try
 		{
 			const res = await fetchPost( "/kuang.php", { "提交": "销售数字货币", "销售货币类型": params.coin, "销售数量": params.number } );
-			console.log( "res", res );
+
 			if( res === "销售成功" )
 			{
 				callback( I18n.t( "ctc.sellSuccess" ) );
@@ -224,7 +222,6 @@ export function fetchSell( params, callback )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "ctc.sellError" ) }` : err.err.toString() );
 		};
 	};
@@ -238,7 +235,6 @@ export function fetchBuy( params, callback )
 		try
 		{
 			const res = await fetchPost( "/otc.php", { "提交": "兑换产品", "产品名称": params.coin, "购买数量": params.number } );
-			console.log( "res", res );
 			if( res === "ok" )
 			{
 				callback( I18n.t( "ctc.buySuccess" ) );
@@ -249,7 +245,6 @@ export function fetchBuy( params, callback )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "ctc.buyError" ) }` : err.err.toString() );
 		};
 	};

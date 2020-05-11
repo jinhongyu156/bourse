@@ -56,7 +56,7 @@ export function setInputText( key, value )
 	return function( dispatch, getState )
 	{
 		const { chart } = getState();
-		console.log( "key, value", key, value );
+
 		dispatch( { type: ACTIONS_SET_CHART_INPUTTEXT, payload: { [ key ]: value } } );
 
 		if( key === "number" )
@@ -113,7 +113,7 @@ export function fetchOrderList()
 		try
 		{
 			const res = await fetchPost( "/Coin.php", params );
-			console.log( "res", res );
+
 			if( isObject( res ) )
 			{
 				res[ "buy" ].reverse();
@@ -125,7 +125,7 @@ export function fetchOrderList()
 
 		} catch( err )
 		{
-			console.log( "err", err );
+
 			dispatch( setOrderListData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "chart.fetchOrderListDataError" ) }` : err.err.toString() ) );
 		};
 
@@ -141,7 +141,7 @@ export function fetchUserDetailData()
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
-			console.log( "res", res );
+
 			if( isObject( res ) )
 			{
 				const userData = objectValueGetNum( res, [ "ETUSD", "SLBT", "USDT", "交易金", "代金券", "投资ETUSD" ] );
@@ -152,7 +152,7 @@ export function fetchUserDetailData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
+
 			dispatch( setUserDetailData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "chart.fetchUserDetailDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -229,7 +229,7 @@ export function fetchOrderSubmit( callback )
 			try
 			{
 				const res = await fetchPost( "/Coin.php", params );
-				console.log( res );
+
 				if( res === "ok" )
 				{
 					callback( I18n.t( "chart.fetchOrderSubmitSuccess" ) );

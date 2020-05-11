@@ -78,8 +78,8 @@ const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProp
 	}, [] );
 
 	return <Tab locked = { true } animation = { false } renderTabBar = { renderTabBar } containerStyle = { styles.tab2 } page = { tabIndex2 } onChangeTab = { setTabIndex2 }>
-		<MyClient tabLabel = { I18n.t( "user.myClient" ) } { ...callbackForMyClient } { ...myClientProps } />
 		<MyInfo tabLabel = { I18n.t( "user.myInfo" ) } { ...myInfoProps } { ...callbackForMyInfo } />
+		<MyClient tabLabel = { I18n.t( "user.myClient" ) } { ...callbackForMyClient } { ...myClientProps } />
 		<EditPassword tabLabel = { I18n.t( "user.editPassword" ) } { ...editPasswordProps } { ...callbackForEditPassword } />
 		<Query tabLabel = { I18n.t( "user.query" ) } { ...queryProps } { ...callbackForQuery } />
 	</Tab>;
@@ -135,6 +135,10 @@ const User = React.memo( function( props )
 
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { gotoMyQrCode }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/qr_code.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "user.header.theme" ) }</Text>
+			</TouchableOpacity>
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { gotoMyQrCode }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/qr_code.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "user.header.chart" ) }</Text>

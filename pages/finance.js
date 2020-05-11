@@ -34,7 +34,6 @@ const Finance = function ( props )
 	const [ showAlert, setShowAlert ] = React.useState( false );
 	const fetchData = React.useCallback( function()
 	{
-		console.log( "发送请求" );
 		props.fetchStatement();
 		props.fetchUserDetailData();
 		props.getVersion();

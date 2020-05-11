@@ -179,7 +179,6 @@ export function fetchUserDetailData()
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
-			console.log( "res", res );
 			if( isObject( res ) )
 			{
 				const userData = objectValueGetNum( res, [ "ETUSD", "SLBT", "USDT", "交易金", "代金券", "投资ETUSD" ] );
@@ -190,7 +189,6 @@ export function fetchUserDetailData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setUserDetailData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUserDetailDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -229,7 +227,6 @@ export function fetchMyClientData( id, belongId )
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
-			console.log( "res", res );
 			if( res && isArray( res ) )
 			{
 				const arr = res.map( item => objectValueGetNum( item, [ "SLBT", "USDT", "交易金" ] ) );
@@ -240,7 +237,6 @@ export function fetchMyClientData( id, belongId )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setMyClientData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchMyClientDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -259,7 +255,6 @@ export function fetchEditPassword( callback )
 			try
 			{
 				const res = await fetchPost( "/user.php", { "提交": "原密码重置", "原密码": user.oldPassWord, "密码": user.newPassWord, "确认密码": user.confirmPassWord } );
-				console.log( "res", res );
 				if( res === "重置成功" )
 				{
 					callback();
@@ -271,7 +266,6 @@ export function fetchEditPassword( callback )
 				dispatch( setIsLoadingEditPassWord( false ) );
 			} catch( err )
 			{
-				console.log( "err", err );
 				dispatch( setFetchEditPassWordError( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchEditPassWordError" ) }` : err.err.toString() ) );
 				dispatch( setIsLoadingEditPassWord( false ) );
 			};
@@ -296,7 +290,6 @@ export function fetchUserQueryData()
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
-			console.log( "res", res );
 			if( res && isArray( res ) )
 			{
 				dispatch( setUserQueryData( res, false, null ) );
@@ -320,7 +313,6 @@ export function fetchSubAccountsData()
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "GetChildren" } );
-			console.log( "res", res );
 			if( res && isArray( res ) )
 			{
 				dispatch( setSubAccountsData( res, false, null ) );
@@ -343,7 +335,6 @@ export function fetchSubAccountsUnbind( id, callback )
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "UnbindChildren", "id": id } );
-			console.log( "res", res );
 			if( res === "解绑成功" )
 			{
 				callback( I18n.t( "user.fetchUnbindSuccess" ) );
@@ -354,7 +345,6 @@ export function fetchSubAccountsUnbind( id, callback )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchUnbindError" ) }` : err.err.toString() );
 		};
 	};
@@ -374,7 +364,6 @@ export function fetchBindSubAccount( callback )
 			try
 			{
 				const res = await fetchPost( "/user.php", { "提交": "BindChildren", "username": user.subAccountText, "password": user.subAccountPassWordText } );
-				console.log( "res", res );
 				if( res === "绑定成功" )
 				{
 					callback();
@@ -387,7 +376,6 @@ export function fetchBindSubAccount( callback )
 				dispatch( setIsLoadingBindSubAccount( false ) );
 			} catch( err )
 			{
-				console.log( "err", err );
 				dispatch( setFetchBindSubAccountError( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchBindSubaccountError" ) }` : err.err.toString() ) );
 				dispatch( setIsLoadingBindSubAccount( false ) );
 			};
@@ -407,7 +395,6 @@ export function fetchSetHotkeyData()
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "OneClick" } );
-			console.log( "res", res );
 			if( res )
 			{
 				const arr = res.split( "<br>" ).filter( item => item );
@@ -418,7 +405,6 @@ export function fetchSetHotkeyData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setHotkeyData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchHotkeyDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -433,7 +419,6 @@ export function fetchSetSummarizeData()
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "CashSweep" } );
-			console.log( "res", res );
 			if( res )
 			{
 				const arr = res.split( "<br>" ).filter( item => item );
@@ -444,7 +429,6 @@ export function fetchSetSummarizeData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setSummarizeData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchSummarizeDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -459,7 +443,6 @@ export function fetchElectronicContractData()
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "ETU合同数据" } );
-			console.log( "res", res );
 			if( res && isObject( res ) )
 			{
 				dispatch( setElectronicContractData( res, null ) );
@@ -469,7 +452,6 @@ export function fetchElectronicContractData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setElectronicContractData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchElectronicContractDataError" ) }` : err.err.toString() ) );
 		};
 	};

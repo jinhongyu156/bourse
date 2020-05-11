@@ -49,10 +49,6 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.language" ) }</Text>
 				<Text style = { styles.rowValueText }>{ userLanguage }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.row }>
-				<Text style = { styles.rowKeyText }>主题</Text>
-				<Text style = { styles.rowValueText }>正在开发</Text>
-			</TouchableOpacity>
 		</View>
 		<View style = { styles.logoutBtnBox }>
 			<SubmitBtn title = { I18n.t( "user.logout" ) } submitBtnStyle = { styles.logoutBtn } onSubmit = { logout } />

@@ -83,8 +83,12 @@ const styles = StyleSheet.create( {
 	sectionHeaderBox: { height: ROWHEIGHT, justifyContent: "center", paddingHorizontal: 12, backgroundColor: "#FFFFFF" },
 	sectionHeaderText: { fontSize: 16 },
 
+	upColor: { color: "#F4979D" },
+	downColor: { color: "#96E89D" },
+	normalColor: { color: "#000000" },
+
 	errorBox: { height: 100, alignItems: "center", justifyContent: "center" },
-	errorText: { color: "#F00" }
+	errorText: { color: "#F00" },
 } );
 
 const ListHeader = React.memo( function()
@@ -99,14 +103,33 @@ const ListHeader = React.memo( function()
 
 const SectionRowTitle = React.memo( function( { title, number, unit, total, unitRate, totalRate } )
 {
+	const unitPrev = React.useRef( unit );
+	const [ state, setState ] = React.useState( 0 )
+
+	if( unitPrev.current !== unit )
+	{
+		if( unit > unitPrev.current )
+		{
+			setState( 1 );
+		};
+		if( unit < unitPrev.current )
+		{
+			setState( -1 );
+		};
+		unitPrev.current = unit;
+	};
+
+	const color = state > 0 ? styles.upColor : state < 0 ? styles.downColor : state.normalColor;
+
+
 	return <View style = { styles.sectionRowBox }>
 		<View style = { [ styles.sectionRowItem, styles.sectionRowItemHorizontal, styles.sectionRowItemFirst ] }>
 			<Image style = { styles.sectionRowItemImage } source = { IMAGESMAP[ title ] } />
 			<Text style = { styles.sectionRowItemTitleText }>{ title }</Text>
 		</View>
 		<View style = { styles.sectionRowItem }>
-			<Text style = { styles.sectionRowItemUnitText }>${ unit }</Text>
-			<Text style = { styles.sectionRowItemTotalText }>￥{ unitRate }</Text>
+			<Text style = { [ styles.sectionRowItemUnitText, color ] }>${ unit }</Text>
+			<Text style = { [ styles.sectionRowItemTotalText, color ] }>￥{ unitRate }</Text>
 		</View>
 		<View style = { styles.sectionRowItem }>
 			<Text style = { styles.sectionRowItemNumberText }>{ number }</Text>

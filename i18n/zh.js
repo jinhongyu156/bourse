@@ -131,8 +131,8 @@ export default {
 		currentValue: "当前价值",
 		amount: "已缴金额",
 		serviceFee: "服务费",
-		buy: "购买",
-		sell: "出售"
+		buy: "做多",
+		sell: "做空"
 	},
 	ctc: {
 		name: "名称",
@@ -220,6 +220,7 @@ export default {
 	user: {
 		header: {
 			chart: "推广码",
+			theme: "主题",
 			tip1: "欢迎注册香港数字",
 			tip2: "注册免费赠送10USDT"
 		},

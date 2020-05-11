@@ -83,7 +83,7 @@ export function fetchUsable( coin )
 		try
 		{
 			const res = await fetchPost( "/otc.php", { "提交": "获取提币信息", "提币类型": coin } );
-			console.log( "res", res );
+
 			if( isObject( res ) && res[ coin ] )
 			{
 				dispatch( setUsable( res[ coin ], null ) );
@@ -93,7 +93,7 @@ export function fetchUsable( coin )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
+
 			dispatch( setUsable( "", err.type === "network" ? `${ err.status }: ${ I18n.t( "mention.fetchUsableError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -107,7 +107,7 @@ export function fetchAddress()
 		try
 		{
 			const res = await fetchPost( "/otc.php", { "提交": "获取公司钱包地址" } );
-			console.log( "res", res );
+
 			if( isObject( res ) && res[ "钱包地址" ] )
 			{
 				dispatch( setAddress( res[ "钱包地址" ], null ) );
@@ -117,7 +117,7 @@ export function fetchAddress()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
+
 			dispatch( setAddress( "", err.type === "network" ? `${ err.status }: ${ I18n.t( "recharge.fetchAddressError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -136,7 +136,7 @@ export function fetchRechargeSubmit( coin, callback )
 			try
 			{
 				const res = await fetchPost( "/otc.php", params );
-				console.log( "res", res );
+
 				if( res === "ok" )
 				{
 					callback();
@@ -148,7 +148,7 @@ export function fetchRechargeSubmit( coin, callback )
 				};
 			} catch( err )
 			{
-				console.log( "err", err );
+
 				dispatch( setFetchSubmitError( err.type === "network" ? `${ err.status }: ${ I18n.t( "recharge.fetchSubmitError" ) }` : err.err.toString() ) );
 				dispatch( setIsLoading( false ) );
 			};
@@ -175,7 +175,7 @@ export function fetchMentionSubmit( coin, callback )
 				try
 				{
 					const res = await fetchPost( "/otc.php", params );
-					console.log( "res", res );
+
 					if( res === "成功" )
 					{
 						callback();
@@ -187,7 +187,7 @@ export function fetchMentionSubmit( coin, callback )
 					};
 				} catch( err )
 				{
-					console.log( "err", err );
+
 					dispatch( setFetchSubmitError( err.type === "network" ? `${ err.status }: ${ I18n.t( "mention.fetchSubmitError" ) }` : err.err.toString() ) );
 					dispatch( setIsLoading( false ) );
 				};
@@ -215,7 +215,7 @@ export function fetchTurnSubmit( coin, callback )
 			try
 			{
 				const res = await fetchPost( "/otc.php", params );
-				console.log( "res", res );
+
 				if( res === "成功" )
 				{
 					callback();
@@ -227,7 +227,6 @@ export function fetchTurnSubmit( coin, callback )
 				};
 			} catch( err )
 			{
-				console.log( "err", err );
 				dispatch( setFetchSubmitError( err.type === "network" ? `${ err.status }: ${ I18n.t( "turn.fetchSubmitError" ) }` : err.err.toString() ) );
 				dispatch( setIsLoading( false ) );
 			};

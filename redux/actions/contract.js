@@ -74,12 +74,8 @@ function getNewUserOrderData( userOrderData, contractData )
 		newUserOrderData[ i ] = objectValueGetNum( newUserOrderData[ i ], [ "总金额", "购买数量", "总手续费", "波动盈亏", "建仓点数", "止损价", "止盈价" ], 3 );
 		newUserOrderData[ i ][ "id" ] = newUserOrderData[ i ][ "订单号" ];
 		newUserOrderData[ i ][ "time" ] = dateFormat( newUserOrderData[ i ][ "建仓时间" ] * 1000 );
-		newUserOrderData[ i ][ "profit" ] = getNum( String(
-			( Number( newUserOrderData[ i ][ "购买数量" ] ) ? -1 : 1 ) *
-			( Number( newUserOrderData[ i ][ "newprice" ] ) - Number( newUserOrderData[ i ][ "建仓点数" ] ) ) *
-			Number( newUserOrderData[ i ][ "波动盈亏" ] ) *
-			Number( newUserOrderData[ i ][ "购买数量" ] )
-		), 3 );
+		newUserOrderData[ i ][ "currentValue" ] = Number( newUserOrderData[ i ][ "newprice" ] ) * Number( newUserOrderData[ i ][ "购买数量" ] ) * Number( newUserOrderData[ i ][ "波动盈亏" ] );
+		newUserOrderData[ i ][ "profit" ] = getNum( String( ( Number( newUserOrderData[ i ][ "产品方向" ] ) ? -1 : 1 ) * ( Number( newUserOrderData[ i ][ "newprice" ] ) - Number( newUserOrderData[ i ][ "建仓点数" ] ) ) * Number( newUserOrderData[ i ][ "波动盈亏" ] ) * Number( newUserOrderData[ i ][ "购买数量" ] ) ), 3 );
 	};
 	return newUserOrderData;
 };
@@ -224,7 +220,6 @@ export function fetchContractData()
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", params );
-			console.log( "res", res );
 			if( isObject( res ) )
 			{
 				const contractData = ( res[ "biaojialist" ] && res[ "biaojialist" ][ "baojias" ] && isArray( res[ "biaojialist" ][ "baojias" ] ) && res[ "biaojialist" ][ "baojias" ].length ) ? res[ "biaojialist" ][ "baojias" ] : [];
@@ -244,7 +239,6 @@ export function fetchContractData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err.toString() );
 			dispatch( setFetchDataError( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -259,7 +253,6 @@ export function fetchSubmit( params, callback )
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", { "提交": "下单购买", "产品代码": params.code, "购买数量": params.count, "产品方向": params.direction, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" } );
-			console.log( "res", res );
 			if( res === "ok" )
 			{
 				dispatch( fetchContractData() );
@@ -270,7 +263,6 @@ export function fetchSubmit( params, callback )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
 		};
 	};
@@ -285,7 +277,6 @@ export function fetchClosing( params, callback )
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", { "提交": "平仓", "订单号": params.id, "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" } );
-			console.log( "res", res );
 			if( res === "ok" )
 			{
 				dispatch( fetchContractData() );
@@ -296,8 +287,8 @@ export function fetchClosing( params, callback )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
 		};
 	};
 };
+

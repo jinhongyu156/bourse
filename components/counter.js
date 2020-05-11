@@ -9,7 +9,7 @@ const styles = StyleSheet.create( {
 	counterContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
 	counterItem: { height: COUNTERINPUTHEIGHT, justifyContent: "center", alignItems: "center" },
 	counterViewItem: { flex: 2 },
-	counterViewText: { width: "100%", height: COUNTERINPUTHEIGHT, fontSize: 10, paddingVertical: 0, backgroundColor: "#FFFFFF" },
+	counterViewText: { width: "100%", height: COUNTERINPUTHEIGHT, textAlign: "center", fontSize: 10, paddingVertical: 0, backgroundColor: "#FFFFFF" },
 	counterHandleItem: { flex: 1, backgroundColor: "#D8D8D8" },
 	counterHandleText: { fontSize: 14 }
 } );

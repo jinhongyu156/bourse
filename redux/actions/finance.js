@@ -116,7 +116,6 @@ export function hideExchangeModal( submit, callback = function() {} )
 				{
 					dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: Object.assign( {}, finance.modalData, { isloading: true } ) } );
 					const res = await fetchPost( "/ETC.php", { "提交": finance.modalData.key, "兑换数量": finance.modalData.text } );
-					console.log( "res", res );
 					if( res === "兑换成功" )
 					{
 						dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: defaultModalData } );
@@ -127,7 +126,6 @@ export function hideExchangeModal( submit, callback = function() {} )
 					};
 				} catch( err )
 				{
-					console.log( "err", err );
 					const payload = Object.assign( {}, finance.modalData, { fecthError: err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.exchange.exchangeFailure" ) }` : err.err.toString(), isloading: false } )
 					dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: payload } );
 				};
@@ -173,7 +171,6 @@ export function fetchStatement()
 
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setStatementData( [], err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.statement.fetchStatementError" ) }` : err.err.toString() ) );
 			dispatch( setIsloadingStatementData( false ) );
 		};
@@ -191,7 +188,6 @@ export function fetchUserDetailData()
 		{
 			dispatch( setIsloadingUserDetailData( true ) );
 			const res = await fetchPost( "/ETC.php", params );
-			console.log( "res", res, params );
 			if( isObject( res ) && res[ "用户信息" ] && res[ "USDCNH" ] )
 			{
 				const userData = objectValueGetNum( res[ "用户信息" ], [ "USDT", "ETUSD", "SLBT", "交易金", "今日收益", "团队业绩", "总计收益", "昨日收益", "机器算力", "积分余额" ] )
@@ -205,7 +201,6 @@ export function fetchUserDetailData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setUserDetailData( {} ) );
 			dispatch( setIsloadingUserDetailData( false ) );
 		};
@@ -221,11 +216,9 @@ export function fetchGetBenefits( callback )
 		try
 		{
 			const res = await fetchPost( "/ETC.php", params );
-			console.log( "res", res );
 			callback( res.toString() );
 		} catch( err )
 		{
-			console.log( "err", err );
 			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.header.fetchGetBenefitsError" ) }` : err.err.toString() );
 		};
 	};
@@ -237,7 +230,6 @@ export function getVersion()
 	return async function( dispatch )
 	{
 		const res = await fetchPost( "/version.php", {} );
-		console.log( "res", res );
 		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
 	};
 };

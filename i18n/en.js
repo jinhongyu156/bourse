@@ -224,6 +224,7 @@ export default {
 	user: {
 		header: {
 			chart: "Code",
+			theme: "Theme",
 			tip1: "Welcome to register Hong Kong digital",
 			tip2: "Sign up for a free 10USDT"
 		},

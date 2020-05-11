@@ -42,7 +42,6 @@ modalContainer: { width: MODALWIDTH, height: MODALHEIGHT, borderRadius: 8, backg
 
 export default React.memo( function( props )
 {
-	console.log( "props", props );
 	return <View style = { styles.container } contentContainerStyle = { styles.contentContainer } showsVerticalScrollIndicator = { false }>
 		<Text style = { styles.text }>ID: { props.route.params.id }</Text>
 		<Text style = { styles.text }>{ I18n.t( "user.header.tip1" ) }</Text>

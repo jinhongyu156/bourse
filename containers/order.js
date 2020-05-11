@@ -118,7 +118,7 @@ const AccordionContent = React.memo( function( { data, submit } )
 		</View>
 		<View style = { styles.accordionContentItem }>
 			<Text style = { styles.accordionContentItemKeyText }>{ I18n.t( "contract.currentValue" ) }:</Text>
-			<Text style = { styles.accordionContentItemValueText }>{ data[ "newprice" ] }</Text>
+			<Text style = { styles.accordionContentItemValueText }>{ data[ "currentValue" ] }</Text>
 		</View>
 		<View style = { styles.accordionContentItem }>
 			<Text style = { styles.accordionContentItemKeyText }>{ I18n.t( "contract.amount" ) }:</Text>
