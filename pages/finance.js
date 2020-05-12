@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet, StatusBar, Dimensions } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -10,17 +10,41 @@ import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExcha
 
 import I18n from "i18n-js";
 
+import FloatAction from "./../components/floatAction.js";
+
 import Header from "./../containers/header.js";
 import Notice from "./../containers/notice.js";
 import Exchange from "./../containers/exchange.js";
 import UserInfo from "./../containers/userInfo.js";
 import Statement from "./../containers/statement.js";
 import ModalCard from "./../containers/modalCard.js";
+import ModalMenu from "./../containers/modalMenu.js";
 
 const PACKAGEJSON = require( "./../package.json" );
 
+// 屏幕高度
+const SCREENHEIGHT = Dimensions.get( "window" ).height;
+
+// 屏幕宽度
+const SCREENWIDTH = Dimensions.get( "window" ).width;
+
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 36;
+
+// FloatAction 宽高
+const FLOATACTIONHEIGHT = 50;
+
+// TabNavigator 高度
+const TABNAVIGATORHEIGHT = 50;
+
+// 默认 FloatAction left
+const DEFAULTFLOATACTIONLEFT = SCREENWIDTH - FLOATACTIONHEIGHT - 20;
+
+// 默认 FloatAction top
+const DEFAULTFLOATACTIONHEIGHT = SCREENHEIGHT - TABNAVIGATORHEIGHT - StatusBar.currentHeight - FLOATACTIONHEIGHT - 20;
+
+// FloatAction 最大 y 坐标
+const FLOATACTIONMAXY = SCREENHEIGHT - TABNAVIGATORHEIGHT - StatusBar.currentHeight;
 
 const styles = StyleSheet.create( {
 	container: { flex: 1, backgroundColor: "#F6F6F6" },
@@ -32,6 +56,10 @@ const styles = StyleSheet.create( {
 const Finance = function ( props )
 {
 	const [ showAlert, setShowAlert ] = React.useState( false );
+
+	const [ showModalMenu, setShowModalMenu ] = React.useState( false );
+	const [ modalMenuData, setModalMenuData ] = React.useState( { left: DEFAULTFLOATACTIONLEFT, top: DEFAULTFLOATACTIONHEIGHT } );
+
 	const fetchData = React.useCallback( function()
 	{
 		props.fetchStatement();
@@ -57,6 +85,21 @@ const Finance = function ( props )
 		return () => {
 			BackHandler.removeEventListener( "hardwareBackPress", onBack );
 		}
+	}, [] );
+
+	const showMenu = React.useCallback( function( e )
+	{
+		setShowModalMenu( true );
+	}, [] );
+
+	const hideMenu = React.useCallback( function( e )
+	{
+		setShowModalMenu( false );
+	}, [] );
+
+	const onDragRelease = React.useCallback( function( _1, _2, bounds )
+	{
+		setModalMenuData( { left: bounds.left, top: bounds.top } )
 	}, [] );
 
 	React.useEffect( function()
@@ -100,19 +143,35 @@ const Finance = function ( props )
 				/>
 			</ScrollView>
 		</View>
-		{
-			props.modalData.visible
-				? <ModalCard
-					{ ...props.modalData }
-					etusdInfo = { props.userDetailData[ "ETUSD" ] }
-					usdtInfo = { props.userDetailData[ "USDT" ] }
-					pointInfo = { props.userDetailData[ "积分余额" ] }
-					callback = { fetchData }
-					setModalText = { props.setModalText }
-					hideModal = { props.hideExchangeModal }
-				/>
-				: null
-		}
+		<ModalCard
+			{ ...props.modalData }
+			etusdInfo = { props.userDetailData[ "ETUSD" ] }
+			usdtInfo = { props.userDetailData[ "USDT" ] }
+			pointInfo = { props.userDetailData[ "积分余额" ] }
+			callback = { fetchData }
+			setModalText = { props.setModalText }
+			hideModal = { props.hideExchangeModal }
+		/>
+		<FloatAction
+			maxY = { FLOATACTIONMAXY }
+			x = { DEFAULTFLOATACTIONLEFT }
+			y = { DEFAULTFLOATACTIONHEIGHT }
+			renderSize = { FLOATACTIONHEIGHT }
+			imageSource = { require( "./../images/float_action.png" ) }
+			onDragRelease = { onDragRelease }
+			onLongPress = { showMenu }
+		/>
+		<ModalMenu
+			{ ...modalMenuData }
+			size = { FLOATACTIONHEIGHT }
+			minX = { 0 }
+			maxX = { SCREENWIDTH }
+			minY = { 0 }
+			maxY = { FLOATACTIONMAXY }
+			imageSource = { require( "./../images/float_action.png" ) }
+			visible = { showModalMenu }
+			hideModal = { hideMenu }
+		/>
 	</React.Fragment>
 };
 
