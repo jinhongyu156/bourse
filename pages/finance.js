@@ -159,14 +159,12 @@ const Finance = function ( props )
 			renderSize = { FLOATACTIONHEIGHT }
 			imageSource = { require( "./../images/float_action.png" ) }
 			onDragRelease = { onDragRelease }
-			onLongPress = { showMenu }
+			onPress = { showMenu }
 		/>
 		<ModalMenu
 			{ ...modalMenuData }
 			size = { FLOATACTIONHEIGHT }
-			minX = { 0 }
 			maxX = { SCREENWIDTH }
-			minY = { 0 }
 			maxY = { FLOATACTIONMAXY }
 			imageSource = { require( "./../images/float_action.png" ) }
 			visible = { showModalMenu }
