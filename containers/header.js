@@ -39,13 +39,22 @@ export default React.memo( function Header( { children, usdtInfo, tradingInfo, e
 			<View style = { styles.headerLeftViewInfo }>
 				<Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text>
 				{
-					tradingInfo
+					( etusdInfo && tradingInfo )
+						? <React.Fragment>
+							<Text style = { styles.headerLeftViewInfoText }>{ I18n.t( "header.trading" ) }: { tradingInfo }</Text>
+							<Text style = { styles.headerLeftViewInfoText }>ETUSD: { etusdInfo }</Text>
+						</React.Fragment>
+					: tradingInfo
 						? <Text style = { styles.headerLeftViewInfoText }>{ I18n.t( "header.trading" ) }: { tradingInfo }</Text>
 					: etusdInfo
 						? <Text style = { styles.headerLeftViewInfoText }>ETUSD: { etusdInfo }</Text>
 					: null
 				}
-				<Text style = { styles.headerLeftViewInfoText }>SLBT: { slbtInfo }</Text>
+				{
+					slbtInfo
+						? <Text style = { styles.headerLeftViewInfoText }>SLBT: { slbtInfo }</Text>
+						: null
+				}
 			</View>
 		</View>
 		<View style = { styles.headerRightView }>

@@ -16,7 +16,7 @@ const styles = StyleSheet.create( {
 	item: { height: ROWHEIGHT * 0.68, justifyContent: "space-between" },
 	verticalCenterItem: { justifyContent: "center" },
 	horizontalCenterItem: { alignItems: "center" },
-	btn: { paddingVertical: 12, paddingHorizontal: 20, borderRadius: 20 },
+	btn: { width: 54, height: 54, borderRadius: 54, alignItems: "center", justifyContent: "center" },
 	plusBtn: { backgroundColor: "#696DAC" },
 	minusBtn: { backgroundColor: "#CDCFDE" },
 	plusBtnText: { fontWeight: "bold", color: "#FFFFFF" },
@@ -25,7 +25,7 @@ const styles = StyleSheet.create( {
 	col11Text: { fontSize: 12, color: "#9D9D9D" },
 	col20Text: { fontSize: 14, color: "#82818C" },
 	col21Text: { fontSize: 12, color: "#9D9D9D" },
-	col30Text: { fontSize: 12, color: "#585862" }
+	col30Text: { fontSize: 12, color: "#000000", fontWeight: "bold" }
 } );
 
 

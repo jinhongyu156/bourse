@@ -361,6 +361,14 @@ export default {
 
 		currentEntrust: "Current",
 		historyEntrust: "History"
+	},
+	floatAction: {
+		etuDynamic: "Etu Dynamic",
+		etuNotice: "ETU Notice",
+		companyDynamic: "Co Dynamic",
+		transactionInformation: "Serive News",
+		fetchDataError: "Failed to get data",
+		noDataText: "No data was queried",
 	}
 };
 

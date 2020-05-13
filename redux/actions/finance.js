@@ -1,4 +1,3 @@
-import { ToastAndroid } from "react-native";
 import { amountReg } from "./../../javascripts/regExp.js";
 import { fetchPost, isObject, getNum, objectValueGetNum } from "./../../javascripts/util.js";
 

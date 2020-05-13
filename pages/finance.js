@@ -113,8 +113,10 @@ const Finance = function ( props )
 		Alert.alert( I18n.t( "finance.tip1" ), I18n.t( "finance.tip2" ), [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
 	};
 
+	console.log( "props.userDetailData", props.userDetailData );
+
 	return <React.Fragment>
-		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }>
 			<React.Fragment>
 				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.showExchangeModal( "投资ETU金融" ) }>
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/invest_etu.png" ) } />
@@ -166,7 +168,6 @@ const Finance = function ( props )
 			size = { FLOATACTIONHEIGHT }
 			maxX = { SCREENWIDTH }
 			maxY = { FLOATACTIONMAXY }
-			imageSource = { require( "./../images/float_action.png" ) }
 			visible = { showModalMenu }
 			hideModal = { hideMenu }
 		/>

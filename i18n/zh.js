@@ -358,6 +358,17 @@ export default {
 
 		currentEntrust: "当前委托",
 		historyEntrust: "历史委托"
+	},
+	floatAction: {
+		etuDynamic: "ETU动态",
+		etuNotice: "ETU公告",
+		companyDynamic: "中外矿业动态",
+		transactionInformation: "交易资讯",
+		fetchDataError: "获取数据失败",
+		noDataText: "未查询到数据",
 	}
 };
+
+
+
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
 
 import I18n from "i18n-js";
 
@@ -27,7 +27,7 @@ export default React.memo( function ShowText( { data, loading, error, fetchData 
 		fetchData();
 	}, [] );
 
-	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false }>
+	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }>
 	{
 		error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
 		: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />

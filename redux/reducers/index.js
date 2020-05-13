@@ -10,6 +10,7 @@ import contractReducer from "./contract.js";
 import ctcReducer from "./ctc.js";
 import userReducer from "./user.js";
 import chartReducer from "./chart.js";
+import articleReducer from "./article.js";
 
 
 import languageReducer from "./language.js";
@@ -27,6 +28,7 @@ export default combineReducers( {
 	ctc: ctcReducer,
 	user: userReducer,
 	chart: chartReducer,
+	article: articleReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

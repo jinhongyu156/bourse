@@ -26,6 +26,7 @@ import Disclaimer from "./pages/disclaimer.js";
 import Access from "./pages/access.js";
 import MyQrCode from "./pages/myQrCode.js";
 import Chart from "./pages/chart.js";
+import Article from "./pages/article.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -96,8 +97,9 @@ export default function()
 					<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
 					<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Access" component = { Access } />
-					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { { title: I18n.t( "user.header.chart" ) } } />
+					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Chart" component = { Chart } options = { () => ( { headerShown: false } ) } />
+					<Stack.Screen name = "Article" component = { Article } />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>
