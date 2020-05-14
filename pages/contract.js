@@ -36,6 +36,7 @@ const styles = StyleSheet.create( {
 
 	tabBarBox: { width: TABBARWIDTH, height: TABBARHEIGHT },
 	tabBar: { position: "absolute", top: 0, left: 0, right: 0, height: TABBARHEIGHT, borderRadius: 40, backgroundColor: "#FFFFFF" },
+
 	tabBarPlaceHolder: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#F6F6F6", height: TABBARHEIGHT * 0.5 },
 	tab: { flex: 1, backgroundColor: "#F6F6F6" },
 
@@ -69,7 +70,7 @@ const Contract = React.memo( function ( props )
 	{
 		return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.tabBarBox }>
 			<View style = { styles.tabBarPlaceHolder } />
-			<TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />
+			<TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeStyle = { "#000000" } activeTab = { activeTab } goToPage = { goToPage } />
 		</ImageBackground>
 	}, [] );
 

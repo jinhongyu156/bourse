@@ -48,7 +48,6 @@ const styles = StyleSheet.create( { image: { width: ICONSIZE, height: ICONSIZE }
 function TabNavigator( props )
 {
 	return <React.Fragment>
-		<StatusBar backgroundColor = { "#696DAC" } />
 		<Tab.Navigator
 			initialRouteName = { "Finance" }
 			tabBarOptions = { { activeTintColor: "#696DAC", inactiveTintColor: "#dEE1E4", keyboardHidesTabBar: true, style: { height: 50 } } }
@@ -88,7 +87,7 @@ export default function()
 	status || store.dispatch( asyncStorageToRedux( () => setStatus( true ) ) );
 
 	return status && <React.Fragment>
-		<StatusBar backgroundColor = { "#FFFFFF" } barStyle = { "dark-content" } />
+		<StatusBar barStyle = "dark-content" backgroundColor = "rgba( 0, 0, 0, 0 )" translucent = { true } />
 		<Provider store = { store }>
 			<NavigationContainer>
 				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>

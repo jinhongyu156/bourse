@@ -28,7 +28,7 @@ const SCROLLVIEWHEIGHT = SCREENHEIGHT - HEADERHEIGHT - NOTICEHEIGHT - TABITEMROW
 
 const styles = StyleSheet.create( {
 	container: { marginTop: 6 },
-	tabBar: { height: TABBARHEIGHT, backgroundColor: "#FFFFFF" },
+	tabBar: { justifyContent: "space-around", height: TABBARHEIGHT, backgroundColor: "#FFFFFF" },
 	tabItemContainer: { backgroundColor: "#F6F6F6" },
 	tabItemScrollView: { flex: 1 },
 	tabItemHeader: { flexDirection: "row", alignItems: "center", backgroundColor: "#F6F6F6", height: TABITEMHEADERHEIGHT, paddingHorizontal: 10 },
@@ -116,7 +116,7 @@ export default React.memo( function Statement( { tabIndex, setTabIndex, isloadin
 {
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
-		return <TabBar tabs = { tabs } type = { "underline" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />;
+		return <TabBar tabs = { tabs } type = { "default" } tabBarStyle = { styles.tabBar } activeTab = { activeTab } goToPage = { goToPage } />;
 	}, [] );
 
 	return <Tab

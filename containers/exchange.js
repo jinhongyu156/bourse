@@ -8,7 +8,7 @@ import I18n from "i18n-js";
 const EXCHANGEHEIGHT = 110;
 
 // 兑换操作项目 icon 宽高
-const EXCHANGEICONSIZE = 58;
+const EXCHANGEICONSIZE = 62;
 
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", marginTop: 6, height: EXCHANGEHEIGHT, backgroundColor: "#FFFFFF" },
@@ -20,8 +20,6 @@ const styles = StyleSheet.create( {
 
 export default React.memo( function Exchange( { showModal } )
 {
-	console.log( "Exchange", "re-render" );
-
 	return <View style = { styles.container }>
 		<TouchableOpacity style = { styles.exchangeItem } onPress = { () => showModal( "USD兑换ETU" ) }>
 			<Image style = { styles.exchangeIcon } source = { require( "./../images/usdt_to_etu.png" ) } />

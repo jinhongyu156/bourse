@@ -16,10 +16,14 @@ export default {
 		fetchLoginError: "登录失败",
 		inputError: "请将信息填写完整",
 
-		actionSheetBtn: "语言设置",
-		actionSheetTitle: "请选择语言",
-		actionSheetMessage: "重置语言后将重启应用",
-		actionSheetOptions: [ "中文", "英文", "取消" ]
+		actionSheetLanguageBtn: "语言设置",
+		actionSheetLanguageTitle: "请选择语言",
+		actionSheetLanguageMessage: "重置语言后将重启应用",
+		actionSheetLanguageOptions: [ "中文", "英文", "取消" ],
+
+		actionSheetThemeBtn: "主题设置",
+		actionSheetThemeTitle: "请选择主题",
+		actionSheetThemeOptions: [ "简约版", "科技版", "取消" ]
 	},
 	register: {
 		placeholder: {
@@ -123,6 +127,8 @@ export default {
 		closing: "平仓",
 		submitSuccess: "下单成功",
 		submitError: "下单失败",
+		fetchClosingSuccess: "平仓成功",
+		fetchClosingError: "平仓失败",
 		fetchDataError: "数据获取失败",
 
 		time: "建仓时间",
@@ -365,7 +371,7 @@ export default {
 		companyDynamic: "中外矿业动态",
 		transactionInformation: "交易资讯",
 		fetchDataError: "获取数据失败",
-		noDataText: "未查询到数据",
+		noDataText: "暂无记录",
 	}
 };
 

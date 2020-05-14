@@ -120,7 +120,6 @@ export default React.memo( function(
 
 	const goToPage = function( pageNumber )												// 跳转页面函数
 	{
-		console.log( "kkkkkkkkkkkkkk" )
 		tabViewRef.current.scrollTo( { x: pageNumber * width, y: 0, animated: animation } );
 		// currentPage !== pageNumber && setState( pageNumber );
 		setState( pageNumber );

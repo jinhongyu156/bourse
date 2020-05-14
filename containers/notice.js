@@ -14,17 +14,17 @@ import MarqueeVertical from "./../components/marquee.js";
 export const NOTICEHEIGHT = 40;
 
 // 通知栏 icon 宽高
-const NOTICEICONHEIGHT = NOTICEHEIGHT * .5;
+const NOTICEICONHEIGHT = NOTICEHEIGHT * .38;
 
 // 通知栏 icon marginHorizontal
-const NOTICEICONMARGINHORIZONTAL = 10;
+const NOTICEICONMARGINLEFT = 10;
 
 // 通知栏宽度
-const NOTICEWIDTH = Dimensions.get( "window" ).width - NOTICEICONHEIGHT - NOTICEICONMARGINHORIZONTAL * 2;
+const NOTICEWIDTH = Dimensions.get( "window" ).width - NOTICEICONHEIGHT - NOTICEICONMARGINLEFT * 2;
 
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center", height: NOTICEHEIGHT, backgroundColor: "#FFFFFF" },
-	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginHorizontal: NOTICEICONMARGINHORIZONTAL },
+	noticeIcon: { width: NOTICEICONHEIGHT, height: NOTICEICONHEIGHT, marginLeft: NOTICEICONMARGINLEFT },
 	noticeView: { paddingHorizontal: 10 },
 	noticeText: { fontSize: 14, color: "#656565" }
 } );

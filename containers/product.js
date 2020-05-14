@@ -9,7 +9,7 @@ const PRODUCTHEIGHT = 80;
 const PRODUCTICONSIZE = 26;
 
 const styles = StyleSheet.create( {
-	container: { height: PRODUCTHEIGHT, flexDirection: "row", backgroundColor: "#FFFFFF", marginVertical: 6, paddingHorizontal: 8 },
+	container: { height: PRODUCTHEIGHT, flexDirection: "row", backgroundColor: "#FFFFFF", marginTop: 6, paddingHorizontal: 8 },
 	item: { flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", marginHorizontal: 6, marginVertical: 10, borderRadius: 10 },
 	icon: { width: PRODUCTICONSIZE, height: PRODUCTICONSIZE },
 	infoBox: { marginLeft: 10 },

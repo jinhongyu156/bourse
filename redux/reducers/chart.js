@@ -5,7 +5,7 @@ import {
 
 const defaultState = {
 	headerDropdownIndex: 0,									// 头部 dropdown 当前选中 0: "ETUSD/USDT"; 1: "SLBT/USDT"
-	orderParamsDropdownIndex: 0,							// order(params) dropdown 当前选中 0: 市价买入; 1: 限价卖出
+	orderParamsDropdownIndex: 0,							// order(params) dropdown 当前选中 0: 市价买入; 1: 限价买入
 	orderParamsTabIndex: 0,									// order(params) 0: 买入; 1: 卖出
 	userOrderListTabIndex: 0,								// 用户委托 index, 0: 当前委托; 1: 历史委托
 	orderListData: [],										// orderList 数据

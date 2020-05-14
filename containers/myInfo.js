@@ -14,7 +14,7 @@ import ActionSheet from "./../components/actionSheet.js";
 const SUBMITBTNWIDTH = Dimensions.get( "window" ).width * 0.9;
 
 // 提交按钮高度
-const SUBMITBTNHEIGHT = 48
+const SUBMITBTNHEIGHT = 46
 
 
 const styles = StyleSheet.create( {
@@ -24,8 +24,8 @@ const styles = StyleSheet.create( {
 	rowKeyText: { color: "#000000", fontSize: 14 },
 	rowValueText: { color: "#333333", fontSize: 12, paddingTop: 5 },
 
-	logoutBtnBox: { backgroundColor: "#F6F6F6", alignItems: "center" },
-	logoutBtn: { width: SUBMITBTNWIDTH, height: SUBMITBTNHEIGHT, marginVertical: 10 },
+	logoutBtnBox: { height: 100, backgroundColor: "#F6F6F6", alignItems: "center" },
+	logoutBtn: { width: SUBMITBTNWIDTH * 0.8, height: SUBMITBTNHEIGHT * 0.8, marginVertical: 10 },
 } );
 
 
@@ -33,7 +33,6 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 {
 	const navigation = useNavigation();
 	isLogin || navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
-	console.log( "isLogin, logout", isLogin, logout );
 
 	return <React.Fragment>
 		<View style = { styles.container }>

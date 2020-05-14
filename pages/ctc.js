@@ -60,6 +60,7 @@ const styles = StyleSheet.create( {
 	ListHeaderItemEnd: { alignItems: "flex-end" },
 
 	sectionRowItem: { flex: 1, alignItems: "center" },
+	sectionRowItemHeaderText: { fontSize: 16, fontWeight: "bold" },
 	sectionRowItemImage: { width: ROWIMAGESIZE, height: ROWIMAGESIZE, marginRight: 6 },
 	sectionRowItemHorizontal: { flexDirection: "row" },
 	sectionRowItemFirst: { justifyContent: "flex-start" },
@@ -94,10 +95,18 @@ const styles = StyleSheet.create( {
 const ListHeader = React.memo( function()
 {
 	return <View style = { styles.sectionRowBox }>
-		<View style = { [ styles.sectionRowItem, styles.ListHeaderItemFirst ] }><Text>{ I18n.t( "ctc.name" ) }</Text></View>
-		<View style = { styles.sectionRowItem }><Text>{ I18n.t( "ctc.unit" ) }</Text></View>
-		<View style = { styles.sectionRowItem }><Text>{ I18n.t( "ctc.number" ) }</Text></View>
-		<View style = { [styles.sectionRowItem, styles.ListHeaderItemEnd ] }><Text>{ I18n.t( "ctc.total" ) }</Text></View>
+		<View style = { [ styles.sectionRowItem, styles.ListHeaderItemFirst ] }>
+			<Text style = { styles.sectionRowItemHeaderText }>{ I18n.t( "ctc.name" ) }</Text>
+		</View>
+		<View style = { styles.sectionRowItem }>
+			<Text style = { styles.sectionRowItemHeaderText }>{ I18n.t( "ctc.unit" ) }</Text>
+		</View>
+		<View style = { styles.sectionRowItem }>
+			<Text style = { styles.sectionRowItemHeaderText }>{ I18n.t( "ctc.number" ) }</Text>
+		</View>
+		<View style = { [styles.sectionRowItem, styles.ListHeaderItemEnd ] }>
+			<Text style = { styles.sectionRowItemHeaderText }>{ I18n.t( "ctc.total" ) }</Text>
+		</View>
 	</View>;
 } );
 
@@ -121,14 +130,13 @@ const SectionRowTitle = React.memo( function( { title, number, unit, total, unit
 
 	const color = state > 0 ? styles.upColor : state < 0 ? styles.downColor : state.normalColor;
 
-
 	return <View style = { styles.sectionRowBox }>
 		<View style = { [ styles.sectionRowItem, styles.sectionRowItemHorizontal, styles.sectionRowItemFirst ] }>
 			<Image style = { styles.sectionRowItemImage } source = { IMAGESMAP[ title ] } />
 			<Text style = { styles.sectionRowItemTitleText }>{ title }</Text>
 		</View>
 		<View style = { styles.sectionRowItem }>
-			<Text style = { [ styles.sectionRowItemUnitText, color ] }>${ unit }</Text>
+			<Text style = { styles.sectionRowItemUnitText }>${ unit }</Text>
 			<Text style = { [ styles.sectionRowItemTotalText, color ] }>￥{ unitRate }</Text>
 		</View>
 		<View style = { styles.sectionRowItem }>

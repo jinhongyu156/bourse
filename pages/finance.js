@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet, StatusBar, Dimensions } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet, Dimensions } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -41,10 +41,10 @@ const TABNAVIGATORHEIGHT = 50;
 const DEFAULTFLOATACTIONLEFT = SCREENWIDTH - FLOATACTIONHEIGHT - 20;
 
 // 默认 FloatAction top
-const DEFAULTFLOATACTIONHEIGHT = SCREENHEIGHT - TABNAVIGATORHEIGHT - StatusBar.currentHeight - FLOATACTIONHEIGHT - 20;
+const DEFAULTFLOATACTIONHEIGHT = SCREENHEIGHT - TABNAVIGATORHEIGHT - FLOATACTIONHEIGHT - 20;
 
 // FloatAction 最大 y 坐标
-const FLOATACTIONMAXY = SCREENHEIGHT - TABNAVIGATORHEIGHT - StatusBar.currentHeight;
+const FLOATACTIONMAXY = SCREENHEIGHT - TABNAVIGATORHEIGHT;
 
 const styles = StyleSheet.create( {
 	container: { flex: 1, backgroundColor: "#F6F6F6" },
@@ -112,8 +112,6 @@ const Finance = function ( props )
 		setShowAlert( true );
 		Alert.alert( I18n.t( "finance.tip1" ), I18n.t( "finance.tip2" ), [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
 	};
-
-	console.log( "props.userDetailData", props.userDetailData );
 
 	return <React.Fragment>
 		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }>

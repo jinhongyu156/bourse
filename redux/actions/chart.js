@@ -197,6 +197,7 @@ export function fetchCancelUserOrder( id, callback )
 			{
 				callback( I18n.t( "chart.fetchCancelUserOrderSuccess" ) );
 				dispatch( fetchUserOrderListData() );
+				dispatch( fetchUserDetailData() );
 			} else
 			{
 				callback( I18n.t( "chart.fetchCancelUserOrderError" ) );
@@ -221,10 +222,14 @@ export function fetchOrderSubmit( callback )
 			"单价": String( chart.price ),
 			"提交": chart.orderParamsTabIndex === 0 ? "Coin_sell" : chart.orderParamsTabIndex === 1 ? "Coin_buy" : "",
 			"产品名称": chart.headerDropdownIndex === 0 ? "ETUSD/USDT" : chart.headerDropdownIndex === 1 ? "SLBT/USDT" : "",
-			"限价市价": chart.orderParamsDropdownIndex === 0 ? "市价买入" : chart.orderParamsDropdownIndex === 1 ? "限价卖出" : ""
+			"限价市价": chart.orderParamsTabIndex === 0
+				? chart.orderParamsDropdownIndex === 0 ? "市价买入" : chart.orderParamsDropdownIndex === 1 ? "限价买入" : ""
+			: chart.orderParamsTabIndex === 1
+				? chart.orderParamsDropdownIndex === 0 ? "市价卖出" : chart.orderParamsDropdownIndex === 1 ? "限价卖出" : ""
+			: ""
 		};
 
-		if( chart.number && chart.price && Object.values( chart.inputError ).every( item => item === false ) )
+		if( ( chart.orderParamsDropdownIndex === 0 ? chart.number : ( chart.number && chart.price ) ) && Object.values( chart.inputError ).every( item => item === false ) )
 		{
 			try
 			{
@@ -234,6 +239,7 @@ export function fetchOrderSubmit( callback )
 				{
 					callback( I18n.t( "chart.fetchOrderSubmitSuccess" ) );
 					dispatch( fetchUserOrderListData() );
+					dispatch( fetchUserDetailData() );
 					dispatch( clearInputText() );
 				} else
 				{

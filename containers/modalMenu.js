@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, Modal, ImageBackground, TouchableOpacity, StyleSheet } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,7 +8,7 @@ import I18n from "i18n-js";
 
 const styles = StyleSheet.create( {
 	modalWrapper: { flex: 1 },
-	modalOverlay: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, backgroundColor: "rgba( 0, 0, 0, 0.4 )" },
+	modalOverlay: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0 },
 	modalContainer: { width: 100, height: 100, borderRadius: 8, backgroundColor: "#FFFFFF" },
 	menuItem: { position: "absolute" },
 	text: { textAlign: "center", color: "#FFFFFF" }
@@ -85,7 +85,7 @@ export default React.memo( function( { left, top, size, maxX, maxY, visible, hid
 	const menuList = getMenuList( center, quadrant, hideModal, 5 );
 
 	return <Modal visible = { visible } animationType = "none" transparent onRequestClose = { hideModal }>
-		<View style = { styles.modalWrapper }>
+		<ImageBackground source = { require( "./../images/frosted.jpg" ) } style = { styles.modalWrapper }>
 			<Text style = { styles.modalOverlay } onPress = { hideModal } />
 			{
 				menuList.map( function( item, index )
@@ -98,6 +98,6 @@ export default React.memo( function( { left, top, size, maxX, maxY, visible, hid
 					</TouchableOpacity>;
 				} )
 			}
-		</View>
+		</ImageBackground>
 	</Modal>;
 } );

@@ -18,6 +18,7 @@ export const ACTION_SET_LOGIN_CLEAR = "ACTION_SET_LOGIN_CLEAR";
 
 /* action create */
 import { setLanguage } from "./language.js";
+import { setTheme } from "./theme.js";
 
 // 切换登录方式
 export function setLoginType( loginType )
@@ -105,10 +106,10 @@ export function showLanguageActionSheet()
 
 		dispatch( showActionSheet( Object.assign( {},
 			{
-				title: I18n.t( "login.actionSheetTitle" ),
-				message: I18n.t( "login.actionSheetMessage" ),
+				title: I18n.t( "login.actionSheetLanguageTitle" ),
+				message: I18n.t( "login.actionSheetLanguageMessage" ),
 				cancelButtonIndex: 2,
-				options: I18n.t( "login.actionSheetOptions" ),
+				options: I18n.t( "login.actionSheetLanguageOptions" ),
 				onPress: function( index )
 				{
 					dispatch( setLanguage( index == 1 ? "en" : "zh" ) )
@@ -116,6 +117,31 @@ export function showLanguageActionSheet()
 				}
 			},
 			language.userLanguage == "zh" ? { markButtonIndex: 0 } : language.userLanguage == "en" ? { markButtonIndex: 1 } : {}
+		) ) );
+	};
+};
+
+// 打开主题选择 ActionSheet
+export function showThemeActionSheet()
+{
+	return function( dispatch, getState )
+	{
+		const { theme } = getState();
+
+		console.log( "theme", theme );
+
+		dispatch( showActionSheet( Object.assign( {},
+			{
+				title: I18n.t( "login.actionSheetThemeTitle" ),
+				cancelButtonIndex: 2,
+				options: I18n.t( "login.actionSheetThemeOptions" ),
+				onPress: function( index )
+				{
+					dispatch( index === 0 ? setTheme( 0 ) : index === 1 ? setTheme( 1 ) : 0 );
+					dispatch( hideActionSheet() );
+				}
+			},
+			theme.theme === 0 ? { markButtonIndex: 0 } : theme.theme === 1 ? { markButtonIndex: 1 } : {}
 		) ) );
 	};
 };

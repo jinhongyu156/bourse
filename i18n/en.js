@@ -19,10 +19,14 @@ export default {
 		fetchLoginError: "login failed",
 		inputError: "please complete the information",
 
-		actionSheetBtn: "Language Settings",
-		actionSheetTitle: "Please select language",
-		actionSheetMessage: "The application is restarted after the language is reset",
-		actionSheetOptions: [ "Chinese", "English", "Cancel" ]
+		actionSheetLanguageBtn: "Language Settings",
+		actionSheetLanguageTitle: "Please select language",
+		actionSheetLanguageMessage: "The application is restarted after the language is reset",
+		actionSheetLanguageOptions: [ "Chinese", "English", "Cancel" ],
+
+		actionSheetThemeBtn: "Theme Settings",
+		actionSheetThemeTitle: "Please select theme",
+		actionSheetThemeOptions: [ "Contracted", "Science and Technology", "Cancel" ]
 	},
 	register: {
 		placeholder: {
@@ -127,6 +131,8 @@ export default {
 		closing: "closing",
 		submitSuccess: "Submit Successfully",
 		submitError: "Submit Failure",
+		fetchClosingSuccess: "Unwind success",
+		fetchClosingError: "Unwind failure",
 		fetchDataError: "Data acquisition failure",
 
 		time: "Warehousing time",

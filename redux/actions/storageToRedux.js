@@ -5,6 +5,7 @@ export const ACTION_SET_STORAGETOREDUX_ISSYNC = "ACTION_SET_STORAGETOREDUX_ISSYN
 
 import { setLanguage } from "./language.js";
 import { setIsLogin } from "./login.js";
+import { setTheme } from "./theme.js";
 
 export function asyncStorageToRedux( callback )
 {
@@ -19,10 +20,17 @@ export function asyncStorageToRedux( callback )
 				await AsyncStorage.setItem( "userLanguage", systemLocale );
 				dispatch( setLanguage( systemLocale, true ) );
 			};
+
 			if( !keys.includes( "isLogin" ) )
 			{
 				await AsyncStorage.setItem( "isLogin", "false" );
 				dispatch( setIsLogin( false ) );
+			};
+
+			if( !keys.includes( "theme" ) )
+			{
+				await AsyncStorage.setItem( "theme", "0" );
+				dispatch( setTheme( 0, true ) );
 			};
 
 			for ( let i = keys.length - 1; i >= 0; i-- )
@@ -50,6 +58,18 @@ export function asyncStorageToRedux( callback )
 					{
 						await AsyncStorage.setItem( "isLogin", "false" );
 						dispatch( setIsLogin( false ) );
+					};
+				};
+				if( keys[ i ] === "theme" )
+				{
+					const theme = await AsyncStorage.getItem( keys[ i ] );
+					if( theme )
+					{
+						dispatch( setTheme( theme, true ) );
+					} else
+					{
+						await AsyncStorage.setItem( "theme", 0 );
+						dispatch( setTheme( 0, true ) );
 					};
 				};
 			};

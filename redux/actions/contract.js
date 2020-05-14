@@ -263,7 +263,7 @@ export function fetchSubmit( params, callback )
 			};
 		} catch( err )
 		{
-			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.submitError" ) }` : err.err.toString() );
 		};
 	};
 };
@@ -280,15 +280,14 @@ export function fetchClosing( params, callback )
 			if( res === "ok" )
 			{
 				dispatch( fetchContractData() );
-				callback( I18n.t( "contract.submitSuccess" ) )
+				callback( I18n.t( "contract.fetchClosingSuccess" ) )
 			} else
 			{
 				callback( res );
 			};
 		} catch( err )
 		{
-			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() );
+			callback( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchClosingError" ) }` : err.err.toString() );
 		};
 	};
 };
-

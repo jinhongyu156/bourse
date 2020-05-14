@@ -24,7 +24,6 @@ const styles = StyleSheet.create( {
 
 export default React.memo( function( { etusd } )
 {
-	console.log( "etusd", etusd );
 	const onPress = React.useCallback( function()
 	{
 		RNFS.downloadFile( {

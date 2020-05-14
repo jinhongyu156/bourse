@@ -5,7 +5,7 @@ import { View, Text, Image, ImageBackground, StyleSheet, Dimensions } from "reac
 import I18n from "i18n-js";
 
 // 头部高度
-export const HEADERHEIGHT = 100;
+export const HEADERHEIGHT = 118;
 
 // 头部宽度
 const HEADERWIDTH = Dimensions.get( "window" ).width;

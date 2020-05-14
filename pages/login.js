@@ -18,7 +18,7 @@ import TabBar from "./../containers/tabBar.js";
 import Tab from "./../components/tab.js";
 import ActionSheet from "./../components/actionSheet.js";
 
-import { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
+import { setLoginType, setInputText, showLanguageActionSheet, showThemeActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear } from "./../redux/actions/login.js";
 
 // 屏幕高度
 const SCREENHEIGHT = Dimensions.get( "window" ).height;
@@ -96,11 +96,13 @@ const Logo = React.memo( function()
 } );
 
 // 登录方式
-const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, emailText, password, code, inputError, imageBlob, fetchImageCode, fetchImageError } )
+const InputBox = React.memo( function( { theme, loginType, setInputText, phoneNumber, emailText, password, code, inputError, imageBlob, fetchImageCode, fetchImageError } )
 {
 	const phoneNumberOrEmailTextHasError = ( loginType === 0 && inputError[ "phoneNumber" ] ) || ( loginType === 1 && inputError[ "emailText" ] );
 	const passwordHasError = inputError[ "password" ];
 	const isPhoneNumber = loginType == 0;
+
+	console.log( "InputBox", theme, typeof theme );
 
 	const renderCodeImage = React.useCallback( function()
 	{
@@ -118,12 +120,16 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 
 	const userIcon = React.useCallback( function()
 	{
-		return <Image style = { styles.textInputIcon } source = { require( "./../images/input_account_icon.png" ) } />;
+		return theme
+			? <Image style = { styles.textInputIcon } source = { require( "./../images/input_account_icon_1.png" ) } />
+			: <Image style = { styles.textInputIcon } source = { require( "./../images/input_account_icon.png" ) } />;
 	}, [] );
 
 	const passwordIcon = React.useCallback( function()
 	{
-		return <Image style = { styles.textInputIcon } source = { require( "./../images/input_password_icon.png" ) } />
+		return theme
+			? <Image style = { styles.textInputIcon } source = { require( "./../images/input_password_icon_1.png" ) } />
+			: <Image style = { styles.textInputIcon } source = { require( "./../images/input_password_icon.png" ) } />;
 	}, [] );
 
 	return <React.Fragment>
@@ -162,7 +168,7 @@ const InputBox = React.memo( function( { loginType, setInputText, phoneNumber, e
 
 const Login = function( props )
 {
-
+	console.log( "Login", props.theme );
 	// componentWillUnmount
 	useFocusEffect(
 		React.useCallback( function()
@@ -205,6 +211,7 @@ const Login = function( props )
 		>
 			<InputBox
 				tabLabel = { I18n.t( "login.loginType.phoneNumber" ) }
+				theme = { props.theme }
 				loginType = { props.loginType }
 				setInputText = { props.setInputText }
 
@@ -220,6 +227,7 @@ const Login = function( props )
 			/>
 			<InputBox
 				tabLabel = { I18n.t( "login.loginType.email" ) }
+				theme = { props.theme }
 				loginType = { props.loginType }
 				setInputText = { props.setInputText }
 
@@ -252,10 +260,10 @@ const Login = function( props )
 		</View>
 		<View style = { styles.optionsBox }>
 			<TouchableOpacity onPress = { props.showLanguageActionSheet }>
-				<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetBtn" ) }</Text>
+				<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetLanguageBtn" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity>
-				<Text style = { styles.optionsText }>主题选择(功能尚未完成)</Text>
+			<TouchableOpacity onPress = { props.showThemeActionSheet }>
+				<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetThemeBtn" ) }</Text>
 			</TouchableOpacity>
 		</View>
 		<ActionSheet
@@ -272,7 +280,10 @@ export default connect(
 	{
 		const loginData = state.login;
 
+		const themeData = state.theme;
+
 		return {
+			theme: themeData.theme,
 			phoneNumber: loginData.phoneNumber,
 			emailText: loginData.emailText,
 			password: loginData.password,
@@ -291,6 +302,6 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setLoginType, setInputText, showLanguageActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear }, dispatch );
+		return bindActionCreators( { setLoginType, setInputText, showLanguageActionSheet, showThemeActionSheet, hideActionSheet, fetchImageCode, fetchLogin, clear }, dispatch );
 	}
 )( Login );

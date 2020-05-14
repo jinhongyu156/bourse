@@ -99,10 +99,10 @@ function wsData()
 						{
 							const unit = Number( newData[ i ][ "data" ][ j ][ "unit" ] );
 							const number = Number( newData[ i ][ "data" ][ j ][ "number" ] );
-							const fixed = newData[ i ][ "data" ][ j ][ "key" ] === "SLBT" ? 6 : 2;
+							const fixed = newData[ i ][ "data" ][ j ][ "key" ] === "SLBT" ? 6 : 3;
 
 							newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( unit * ctc.rate ), fixed );
-							newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 2 );
+							newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 3 );
 
 							if( i === 1 )
 							{
@@ -125,13 +125,13 @@ function wsData()
 							{
 								const unit = Number( resArr[ 1 ] );
 								const number = Number( newData[ i ][ "data" ][ j ][ "number" ] );
-								const fixed = resArr[ 0 ] === "SLBT" ? 6 : 2;
+								const fixed = resArr[ 0 ] === "SLBT" ? 6 : 3;
 
 								newData[ i ][ "data" ][ j ][ "unit" ] = getNum( String( unit ), fixed );
 								newData[ i ][ "data" ][ j ][ "unitRate" ] = getNum( String( unit * ctc.rate ), fixed );
 
-								newData[ i ][ "data" ][ j ][ "total" ] = getNum( String( unit * number ), 2 );
-								newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 2 );
+								newData[ i ][ "data" ][ j ][ "total" ] = getNum( String( unit * number ), 3 );
+								newData[ i ][ "data" ][ j ][ "totalRate" ] = getNum( String( unit * number * ctc.rate ), 3 );
 
 								if( i === 1 )
 								{

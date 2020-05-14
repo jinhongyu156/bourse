@@ -12,7 +12,7 @@ export function getNum( str, num )
 {
 	if( str.indexOf( "." ) === -1 )
 	{
-		return str.concat( ".00" );
+		return str.concat( "." ).concat( "0".repeat( num ) );
 	} else if( str.length - 1 - str.indexOf( "." ) < num )
 	{
 		return str.concat( "0".repeat( num - ( str.length - 1 - str.indexOf( "." ) ) ) );
@@ -92,7 +92,6 @@ export function fetchPost( url, data, config = {} )
 	{
 		fetch( domain.concat( url ), mergeConfig ).then( function( response )
 		{
-			// console.log( "成功返回", response );
 			if( response.status === 200 )
 			{
 				return response.text();
@@ -102,8 +101,6 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			// console.log( "请求参数", data );
-			// console.log( "请求结果", res, unicodeToChinese( res ) );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );
@@ -165,8 +162,6 @@ export function fetchGet( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			console.log( "请求参数", data );
-			console.log( "请求结果", res );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

@@ -108,5 +108,3 @@ export function clearSendCodeError()
 {
 	return { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null };
 };
-
-// 164619

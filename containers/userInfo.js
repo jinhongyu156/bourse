@@ -11,7 +11,7 @@ const USERINFOHEIGHT = 270;
 const USERINFOROWHEIGHT = USERINFOHEIGHT / 3;
 
 // 用户信息展示项目 icon 宽高
-const USERINFOITEMICONSIZE = 30;
+const USERINFOITEMICONSIZE = 24;
 
 const styles = StyleSheet.create( {
 	container: { marginTop: 6, height: USERINFOHEIGHT, backgroundColor: "#FFFFFF" },

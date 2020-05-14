@@ -11,6 +11,7 @@ import ctcReducer from "./ctc.js";
 import userReducer from "./user.js";
 import chartReducer from "./chart.js";
 import articleReducer from "./article.js";
+import themeReducer from "./theme.js";
 
 
 import languageReducer from "./language.js";
@@ -29,6 +30,7 @@ export default combineReducers( {
 	user: userReducer,
 	chart: chartReducer,
 	article: articleReducer,
+	theme: themeReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

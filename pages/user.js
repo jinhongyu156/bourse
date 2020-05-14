@@ -58,7 +58,7 @@ const styles = StyleSheet.create( {
 	tabBarPlaceHolder1: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#F5F5F5", height: TABBARHEIGHT1 * 0.5 },
 
 	tab2: { flex: 1, marginTop: 10, backgroundColor: "#FFFFFF" },
-	tabBar2: { width: SCREENWIDTH, height: TABBARHEIGHT2, backgroundColor: "#F6F6F6", justifyContent: "space-around", },
+	tabBar2: { width: SCREENWIDTH, height: TABBARHEIGHT2, backgroundColor: "#F6F6F6", justifyContent: "space-around" },
 
 	errorBox: { height: 100, justifyContent: "center", alignItems: "center" },
 	errorText: { fontSize: 16 }
@@ -136,7 +136,7 @@ const User = React.memo( function( props )
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
 			<TouchableOpacity style = { styles.headerRightViewItem }>
-				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/qr_code.png" ) } />
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/theme.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "user.header.theme" ) }</Text>
 			</TouchableOpacity>
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { gotoMyQrCode }>

@@ -7,10 +7,10 @@ import Counter from "./../components/counter.js";
 import I18n from "i18n-js";
 
 // 行的高度
-const ROWHEIGHT = 76;
+const ROWHEIGHT = 80;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, marginTop: 6 },
+	container: { flex: 1 },
 
 	row: { height: ROWHEIGHT, flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", marginBottom: 2 },
 	item: { height: ROWHEIGHT * 0.68, justifyContent: "space-between" },
@@ -21,6 +21,7 @@ const styles = StyleSheet.create( {
 	minusBtn: { backgroundColor: "#CDCFDE" },
 	plusBtnText: { fontWeight: "bold", color: "#FFFFFF" },
 	minusBtnText: { fontWeight: "bold", color: "#22244D" },
+	counterBox: { width: "90%" },
 	col10Text: { fontSize: 16, marginTop: -2, color: "#000000" },
 	col11Text: { fontSize: 12, color: "#9D9D9D" },
 	col20Text: { fontSize: 14, color: "#82818C" },
@@ -57,7 +58,9 @@ const Row = function( { count, setCount, code, total, msg, submit } )
 		</View>
 		<View style = { [ styles.item, styles.horizontalCenterItem, { flex: 12 } ] }>
 			<Text style = { styles.col30Text }>{ total }</Text>
-			<Counter count = { count } setCount = { bindSetCount } />
+			<View style = { styles.counterBox }>
+				<Counter count = { count } setCount = { bindSetCount } />
+			</View>
 		</View>
 		<View style = { [ styles.item, styles.verticalCenterItem, styles.horizontalCenterItem, { flex: 12 } ] }>
 			<TouchableOpacity style = { [ styles.btn, styles.minusBtn ] } onPress = { () => bindSubmit( "down" ) }>

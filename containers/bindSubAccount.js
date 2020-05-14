@@ -20,12 +20,12 @@ const SUBMITBTNHEIGHT = 48
 const ERRORBOXHEIGHT = 24;
 
 const styles = StyleSheet.create( {
-	container: { flex: 1, marginTop: 10, backgroundColor: "#F6F6F6" },
+	container: { flex: 1, marginTop: 10, backgroundColor: "#FFFFFF" },
 	contentContainerStyle: { alignItems: "center" },
 	inputBoxStyle: { width: INPUTBOXWIDTH, height: INPUTBOXHEIGHT, justifyContent: "center" },
 	inputStyle: { height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 
-	submitBtn: { width: INPUTBOXWIDTH, height: SUBMITBTNHEIGHT, marginTop: 30 },
+	submitBtn: { width: INPUTBOXWIDTH * 0.7, height: SUBMITBTNHEIGHT, marginTop: 50 },
 
 	errorBox: { width: INPUTBOXWIDTH, height: ERRORBOXHEIGHT, justifyContent: "center" },
 	errorText: { color: "#F00" }
