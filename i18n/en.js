@@ -115,7 +115,9 @@ export default {
 	},
 	contract: {
 		header: {
-			chart: "Charts"
+			chart: "Charts",
+			recharge: "Recharge",
+			withdrawal: "Withdrawal"
 		},
 		trading: "Trading",
 		buyUp: "Up",
@@ -211,6 +213,54 @@ export default {
 		fetchSubmitSuccess: "Mention money success",
 		submitError1: "Please fill in the information correctly",
 		submitError2: "The number of inputs must not be greater than the number available"
+	},
+	ustdRecharge: {
+		title: "Recharge( USDT )",
+		fetchOrderDataError: "Query to see if there is an order error",
+		usdtPrice: "Price",
+		rechargeNumber: "Recharge Number",
+		rechargeNumberPlaceholder: "Please enter the amount of recharge",
+
+		rechargeType: "Recharge Type",
+		rechargeTypeActionSheetTitle: "Please select the recharge method",
+		rechargeTypeActionSheetMessage: "After selection, you will recharge in this way",
+		rechargeTypeActionSheetOptions: [ "Bank card", "Cancel" ],
+		bank: "Bank card",
+		submitText: "Submit",
+		countdownText: "Please complete payment within %{seconds} s",
+		noticePaid: "Notice Paid",
+		fetchNoticePaidError: "The request for notification of payment failed",
+		inputNoticePaidError: "The request for notification of payment failed",
+		fetchRechargeSubmitError: "Failed to obtain order data",
+		inputRechargeSubmitError: "Please fill in the information correctly",
+
+		orderId: "OrderId",
+		state: "State",
+		bankName: "Bank",
+		accountTitle: "Title",
+		account: "Account",
+		amount: "Amount",
+		currency: "Currency",
+		drawee: "Drawee",
+		draweePlaceholder: "Please fill in the payer",
+		copy: "Copy",
+		rechargeAgain: "Again",
+		copySuccess: "Copy Success",
+
+		state0tip: "Waiting payment",
+		state1tip: "Waiting release",
+		state2tip: "Waiting approval",
+		state3tip: "Recharge complete",
+		state4tip: "cancelled",
+
+		tip1: "A single transaction cannot exceed 49,000 RMB",
+		tip2: "The minimum top-up value is 20 USTD",
+		tip3: "You can only enter the number of integer recharge",
+
+		tip4: "Please do not fill in any remarks when transferring money! Otherwise, the account may be frozen and the platform is not responsible for the loss",
+		tip5: "Please fill in the correct transfer amount when transferring money. If the amount is not correct, the recharge will fail",
+		tip6: "Please pay correctly after filling in the payer send out"
+
 	},
 	turn: {
 		title: "Turn",

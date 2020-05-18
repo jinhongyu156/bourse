@@ -111,7 +111,9 @@ export default {
 	},
 	contract: {
 		header: {
-			chart: "走势"
+			chart: "走势",
+			recharge: "充值",
+			withdrawal: "提现"
 		},
 		trading: "交易金",
 		buyUp: "买涨",
@@ -207,6 +209,53 @@ export default {
 		fetchSubmitSuccess: "提币成功",
 		submitError1: "请正确的填写信息",
 		submitError2: "输入数量不能大于可用数量"
+	},
+	ustdRecharge: {
+		title: "充值( USDT )",
+		fetchOrderDataError: "查询订单错误",
+		usdtPrice: "当前报价",
+		rechargeNumber: "充值数量",
+		rechargeNumberPlaceholder: "请输入充值数量",
+
+		rechargeType: "充值方式",
+		rechargeTypeActionSheetTitle: "请选择充值方式",
+		rechargeTypeActionSheetMessage: "选择后将以该方式进行充值",
+		rechargeTypeActionSheetOptions: [ "银行卡", "取消" ],
+		bank: "银行卡",
+		other: "其他",
+		submitText: "提交",
+		countdownText: "请在 %{seconds} 秒内完成付款",
+		noticePaid: "通知已付款",
+		fetchNoticePaidError: "通知已付款请求失败",
+		inputNoticePaidError: "T请正确的填写信息",
+		fetchRechargeSubmitError: "获取订单数据失败",
+		inputRechargeSubmitError: "请正确的填写信息",
+
+		orderId: "交易号",
+		state: "状态",
+		bankName: "银行名称",
+		accountTitle: "账户名称",
+		account: "银行账号",
+		amount: "付款金额",
+		currency: "币种",
+		drawee: "付款人",
+		draweePlaceholder: "请填写付款人",
+		copy: "复制",
+		rechargeAgain: "继续充值",
+		copySuccess: "复制成功",
+		state0tip: "待支付",
+		state1tip: "已支付, 等待放币",
+		state2tip: "已放币, 等待审核",
+		state3tip: "充值完成",
+		state4tip: "充值已被取消",
+
+		tip1: "单笔最高不能超过 4.9 万人民币",
+		tip2: "最低充值 20 USTD",
+		tip3: "只能输入整数的充值数量",
+
+		tip4: "转账时请勿填写任何备注信息! 否则可能导致账户被冻结, 造成的损失平台概不负责",
+		tip5: "请在转账时, 填写正确的转账金额, 若金额不正确, 会导致充值失败",
+		tip6: "请正确付款后, 填写付款人送出"
 	},
 	turn: {
 		title: "转币",

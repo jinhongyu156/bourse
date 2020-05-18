@@ -1,0 +1,257 @@
+import AsyncStorage from "@react-native-community/async-storage"; 
+import I18n from "i18n-js";
+import { fetchPost, isObject } from "./../../javascripts/util.js";
+import { intReg } from "./../../javascripts/regExp.js";
+/* action type */
+export const ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE = "ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE";
+export const ACTION_SET_USDTRECHARGE_ORDERDATA = "ACTION_SET_USDTRECHARGE_ORDERDATA";
+
+export const ACTION_SET_USDTRECHARGE_INPUTTEXT = "ACTION_SET_USDTRECHARGE_INPUTTEXT";
+export const ACTION_SET_USDTRECHARGE_INPUTERROR = "ACTION_SET_USDTRECHARGE_INPUTERROR";
+export const ACTION_SET_USDTRECHARGE_ISSHOWACTIONSHEET  = "ACTION_SET_USDTRECHARGE_ISSHOWACTIONSHEET";
+
+export const ACTION_SET_USDTRECHARGE_FETCHRECHARGESUBMIT = "ACTION_SET_USDTRECHARGE_FETCHRECHARGESUBMIT";
+export const ACTION_SET_USDTRECHARGE_FETCHNOTICEPAID = "ACTION_SET_USDTRECHARGE_FETCHNOTICEPAID";
+/* action create */
+
+let timer = null;
+
+// 将付款信息合并到原数据中
+function assign( orderData )
+{
+	const infoData = orderData[ "付款信息" ].split( "|" );
+	orderData[ "accountTitle" ] = infoData[ 0 ];
+	orderData[ "account" ] = infoData[ 1 ];
+	orderData[ "bankName" ] = infoData[ 2 ];
+	orderData[ "timeout" ] = orderData[ "超时时间" ] + "000";
+	orderData[ "countdown" ] = parseInt( ( Number( orderData[ "超时时间" ] + "000" ) - Date.now() ) / 1000 ); 
+	return orderData;
+};
+
+// 设置 orderData, fetchOrderDataLoading, fetchOrderDataError
+function setOrderData( orderData, fetchOrderDataLoading, fetchOrderDataError )
+{
+	return { type: ACTION_SET_USDTRECHARGE_ORDERDATA, payload: { orderData, fetchOrderDataLoading, fetchOrderDataError } };
+};
+
+// 设置 fetchRechargeSubmitLoading, fetchRechargeSubmitError
+function setFetchRechargeSubmit( fetchRechargeSubmitLoading, fetchRechargeSubmitError )
+{
+	return { type: ACTION_SET_USDTRECHARGE_FETCHRECHARGESUBMIT, payload: { fetchRechargeSubmitLoading, fetchRechargeSubmitError } };
+};
+
+// 设置 fetchNoticePaidLoading, fetchNoticePaidError
+function setFetchNoticePaid( fetchNoticePaidLoading, fetchNoticePaidError )
+{
+	return { type: ACTION_SET_USDTRECHARGE_FETCHNOTICEPAID, payload: { fetchNoticePaidLoading, fetchNoticePaidError } };
+};
+
+// 设置是否显示上一个订单的状态
+export function setIsShowPrevState( isShowPrevState, isInit = false )
+{
+	return async function( dispatch )
+	{
+		if( isInit )
+		{
+			try
+			{
+				const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
+				if( res === "null" )
+				{
+					dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: false } );
+				} else
+				{
+					dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: true } );
+				};
+			} catch( err )
+			{
+				dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: false } );
+			};
+		} else
+		{
+			console.log( "hhhhhhhhh", isShowPrevState )
+			await AsyncStorage.setItem( "isShowPrevState", String( isShowPrevState ) );
+			dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: isShowPrevState } );
+		};
+	};
+};
+
+//  打开 ActionSheet
+export function showActionSheet( actionSheetData )
+{
+	return { type: ACTION_SET_USDTRECHARGE_ISSHOWACTIONSHEET, payload: { isShowActionSheet: true, actionSheetData: actionSheetData } };
+};
+
+// 关闭 ActionSheet
+export function hideActionSheet()
+{
+	return { type: ACTION_SET_USDTRECHARGE_ISSHOWACTIONSHEET, payload: { isShowActionSheet: false, actionSheetData: {} } };
+};
+
+// 充值方式 rechargeType ActionSheet
+export function showRechargeTypeActionSheet()
+{
+	return function( dispatch )
+	{
+		dispatch( showActionSheet( {
+			title: I18n.t( "ustdRecharge.rechargeTypeActionSheetTitle" ),
+			message: I18n.t( "ustdRecharge.rechargeTypeActionSheetMessage" ),
+			options: I18n.t( "ustdRecharge.rechargeTypeActionSheetOptions" ),
+			cancelButtonIndex: 1,
+			markButtonIndex: 0,
+			onPress: function( index )
+			{
+				dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTTEXT, payload: { "rechargeType": index } } );
+				dispatch( hideActionSheet() );
+			}
+		} ) );
+	};
+};
+
+// 设置 input 文本
+export function setInputText( key, value )
+{
+	return function( dispatch, getState )
+	{
+		const { ustdRecharge } = getState();
+		const { ctc } = getState();
+		const usdtInfo = ( ctc.data[ 0 ] && ctc.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate ) ? Number( ctc.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate ) : 0;
+
+		dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTTEXT, payload: { [ key ]: value } } );
+
+		if( key === "rechargeNumber" )
+		{
+			dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTERROR, payload: Object.assign( {}, ustdRecharge.inputError, { [ key ]: !( intReg.test( value ) && Number( value ) >= 20 && usdtInfo * Number( value ) < 49000 ) } ) } );
+		};
+	};
+};
+
+// 付款倒计时 更改 orderData.countdown 字段
+function startCountdown()
+{
+	return async function( dispatch, getState )
+	{
+		const { ustdRecharge } = getState();
+		const overTimeStamp = Number( ustdRecharge.orderData.timeout );
+		const run = function()
+		{
+			const nowTimeStamp = Date.now();
+			if ( nowTimeStamp >= overTimeStamp )
+			{
+				dispatch( setOrderData( Object.assign( {}, ustdRecharge.orderData, { countdown: 0 } ), false, null ) )
+				clearInterval( timer );
+			} else
+			{
+				dispatch( setOrderData( Object.assign( {}, ustdRecharge.orderData, { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ) } ), false, null ) );
+			};
+		};
+		run();
+		timer = setInterval( run, 1000 );
+	};
+};
+
+// 请求转币
+export function fetchOrderData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setOrderData( {}, true, null ) )
+		try
+		{
+			const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
+			console.log( "res111111111", res );
+			if( res === "null" )
+			{
+				dispatch( setOrderData( {}, false, null ) );
+			} else
+			{
+				dispatch( setOrderData( assign( res ), false, null ) );
+				dispatch( startCountdown() );
+			};
+		} catch( err )
+		{
+			dispatch( setOrderData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchOrderDataError" ) }` : err.err.toString() ) )
+		};
+	};
+};
+
+// 请求充值
+export function fetchRechargeSubmit()
+{
+	return async function( dispatch, getState )
+	{
+		const { ustdRecharge } = getState();
+
+		if ( ustdRecharge.rechargeNumber && Object.values( ustdRecharge.inputError ).every( item => item === false ) )
+		{
+			dispatch( setFetchRechargeSubmit( true, null ) );
+			try
+			{
+				const res = await fetchPost( "/Recharge.php", { "充值数量": ustdRecharge.rechargeNumber, "提交": "Recharge" } );
+				console.log( "res22222222222", res );
+				if( isObject( res ) )
+				{
+					if( res.code === 1 )
+					{
+						dispatch( fetchOrderData() );
+						dispatch( setFetchRechargeSubmit( false, null ) );
+						dispatch( setIsShowPrevState( true ) );
+					} else
+					{
+						dispatch( setFetchRechargeSubmit( false, res.message ) );
+					};
+				} else
+				{
+					dispatch( setFetchRechargeSubmit( false, res.toString() ) );
+				};
+			} catch( err )
+			{
+				dispatch( setFetchRechargeSubmit( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchRechargeSubmitError" ) }` : err.err.toString() ) );
+			};
+		} else
+		{
+			dispatch( setFetchRechargeSubmit( false, I18n.t( "ustdRecharge.inputRechargeSubmitError" ) ) );
+		};
+	};
+};
+
+// 已支付请求
+export function fetchNoticePaid()
+{
+	return async function( dispatch, getState )
+	{
+		const { ustdRecharge } = getState();
+		const params = { "订单号": ustdRecharge.orderData[ "订单号" ], "姓名": ustdRecharge.drawee, "提交": "Payment" };
+
+		if( ustdRecharge.drawee )
+		{
+			dispatch( setFetchNoticePaid( true, null ) );
+			try
+			{
+				const res = await fetchPost( "/Recharge.php", params );
+
+				if( isObject( res ) )
+				{
+					if( res.code === 1 )
+					{
+						dispatch( fetchOrderData() );
+						dispatch( setFetchNoticePaid( false, null ) );
+						clearInterval( timer );
+					} else
+					{
+						dispatch( setFetchNoticePaid( false, res.message ) );
+					};
+				} else
+				{
+					dispatch( setFetchNoticePaid( false, res.toString() ) );
+				};
+			} catch( err )
+			{
+				dispatch( setFetchNoticePaid( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchNoticePaidError" ) }` : err.err.toString() ) );
+			};
+		} else
+		{
+			dispatch( setFetchNoticePaid( false, I18n.t( "ustdRecharge.inputNoticePaidError" ) ) );
+		};
+	};
+};

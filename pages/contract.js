@@ -20,7 +20,7 @@ import Order from "./../containers/order.js";
 import { setTabIndex, setProductId, setCount, fetchContractData, fetchSubmit, fetchClosing } from "./../redux/actions/contract.js";
 
 // 头部操作 icon 宽高
-const HEADERHANDLESIZE = 36;
+const HEADERHANDLESIZE = 32;
 
 // 选项卡导航高度
 const TABBARHEIGHT = 66;

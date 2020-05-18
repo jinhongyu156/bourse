@@ -65,7 +65,7 @@ export function isJSON( str )
 		} else
 		{
 			bool = false;
-		}
+		};
 	} catch( e ) {
 		return false;
 	};
@@ -76,7 +76,6 @@ export function isJSON( str )
 function unicodeToChinese( str )
 {
 	return decodeURI( str );
-	return unescape( eval( "'" + str + "'" ).replace( /\u/g, "%u" ) );
 };
 
 // post fetch
@@ -101,6 +100,7 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
+			console.log( "测试", res );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

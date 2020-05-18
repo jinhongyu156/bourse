@@ -6,6 +6,7 @@ export const ACTION_SET_STORAGETOREDUX_ISSYNC = "ACTION_SET_STORAGETOREDUX_ISSYN
 import { setLanguage } from "./language.js";
 import { setIsLogin } from "./login.js";
 import { setTheme } from "./theme.js";
+import { setIsShowPrevState } from "./ustdRecharge.js";
 
 export function asyncStorageToRedux( callback )
 {
@@ -31,6 +32,12 @@ export function asyncStorageToRedux( callback )
 			{
 				await AsyncStorage.setItem( "theme", "0" );
 				dispatch( setTheme( 0, true ) );
+			};
+
+			if( !keys.includes( "isShowPrevState" ) )
+			{
+				await AsyncStorage.setItem( "isShowPrevState", "false" );
+				dispatch( setIsShowPrevState( false, true ) );
 			};
 
 			for ( let i = keys.length - 1; i >= 0; i-- )
@@ -72,12 +79,22 @@ export function asyncStorageToRedux( callback )
 						dispatch( setTheme( 0, true ) );
 					};
 				};
+				if( keys[ i ] === "isShowPrevState" )
+				{
+					const isShowPrevState = await AsyncStorage.getItem( keys[ i ] );
+					if( isShowPrevState === "true" )
+					{
+						dispatch( setIsShowPrevState( true, true ) );
+					} else
+					{
+						dispatch( setIsShowPrevState( false, true ) );
+					};
+				};
 			};
 			callback();
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: true } );
 
 		} catch( e ) {
-
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: false } );
 
 		};

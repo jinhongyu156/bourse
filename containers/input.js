@@ -34,7 +34,7 @@ const styles = StyleSheet.create( {
 
 export default React.memo( function( { index, value, placeholder, hasError, disabled, inputBoxStyle, inputStyle, renderInputRight, renderInputLeft, setInputText, multiline } )
 {
-	const keyboardType = ( index === "phoneNumber" || index === "referee" || index === "number" || index === "account" ) ? "numeric"
+	const keyboardType = ( index === "phoneNumber" || index === "referee" || index === "number" || index === "account" || index === "rechargeNumber" ) ? "numeric"
 		: ( index === "password" || index === "newPassword" || index === "newPassWord" || index === "confirmPassWord" ) ? "default"
 		: index === "emailText" ? "email-address"
 		: "default";

@@ -27,6 +27,7 @@ import Access from "./pages/access.js";
 import MyQrCode from "./pages/myQrCode.js";
 import Chart from "./pages/chart.js";
 import Article from "./pages/article.js";
+import UstdRecharge from "./pages/ustdRecharge.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -97,8 +98,9 @@ export default function()
 					<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Access" component = { Access } />
 					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
-					<Stack.Screen name = "Chart" component = { Chart } options = { () => ( { headerShown: false } ) } />
+					<Stack.Screen name = "Chart" component = { Chart } />
 					<Stack.Screen name = "Article" component = { Article } />
+					<Stack.Screen name = "UstdRecharge" component = { UstdRecharge } options = { () => ( { title: I18n.t( "ustdRecharge.title" ) } ) } />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>

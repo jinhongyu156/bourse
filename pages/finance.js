@@ -29,7 +29,7 @@ const SCREENHEIGHT = Dimensions.get( "window" ).height;
 const SCREENWIDTH = Dimensions.get( "window" ).width;
 
 // 头部操作 icon 宽高
-const HEADERHANDLESIZE = 36;
+const HEADERHANDLESIZE = 32;
 
 // FloatAction 宽高
 const FLOATACTIONHEIGHT = 50;

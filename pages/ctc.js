@@ -17,7 +17,7 @@ import Header from "./../containers/header.js";
 import Notice from "./../containers/notice.js";
 
 // 头部操作 icon 宽高
-const HEADERHANDLESIZE = 36;
+const HEADERHANDLESIZE = 32;
 
 // 列表行高度
 const ROWHEIGHT = 60;
@@ -245,16 +245,20 @@ const Ctc = React.memo( function( props )
 		props.navigation.push( "Access", { type: type, name: title } );
 	}, [] );
 
-	const goToChart = React.useCallback( function()
+	const goToUstdRecharge = React.useCallback( function()
 	{
-		props.navigation.push( "Chart" );
-	}, [] );
+		props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length && props.navigation.push( "UstdRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+	}, [ props.data ] );
 
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
-			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToChart }>
-				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
-				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
+		<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUstdRecharge }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => {} }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/withdrawal.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.withdrawal" ) }</Text>
 			</TouchableOpacity>
 		</Header>
 		<Notice />

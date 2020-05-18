@@ -27,7 +27,7 @@ import SubmitBtn from "./../containers/submit.js";
 const SCREENHEIGHT = Dimensions.get( "window" ).height;
 
 // 头部高度
-const HEADERHEIGHT = 50;
+const HEADERHEIGHT = 78;
 
 // 头部返回按钮宽度
 const GOBACKBOXWIDTH = 80;
@@ -70,12 +70,12 @@ const CHARTBOXHEIGHT = 280;
 
 const styles = StyleSheet.create( {
 	container: { flex: 1, backgroundColor: "#F6F6F6" },
-	header: { height: HEADERHEIGHT, flexDirection: "row", alignItems: "center", paddingHorizontal: 10, backgroundColor: "#FFFFFF" },
+	header: { height: HEADERHEIGHT, flexDirection: "row", alignItems: "flex-end", paddingHorizontal: 10, paddingVertical: 10, backgroundColor: "#FFFFFF" },
 	headerGobackBox: { width: GOBACKBOXWIDTH },
 	headerDropdownContainer: { flex: 1, alignItems: "center" },
 
 	headerDropdownBox: { marginRight: GOBACKBOXWIDTH },
-	headerDropdownButton: { width: HEADERDROPDOWNBUTTONWIDTH, height: HEADERHEIGHT * 0.6, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "#E9E9E9", borderWidth: 1, borderRadius: 40 },
+	headerDropdownButton: { width: HEADERDROPDOWNBUTTONWIDTH, height: 30, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "#E9E9E9", borderWidth: 1, borderRadius: 40 },
 	headerDropdownButtonText: { marginRight: 8 },
 	headerDropdown: { width: HEADERDROPDOWNBUTTONWIDTH, height: HEADERDROPDOWNROWHEIGHT * 2, marginTop: 2, backgroundColor: "#F6F6F6" },
 	headerDropdownRow: { height: HEADERDROPDOWNROWHEIGHT, paddingHorizontal: 10, justifyContent: "center" },
@@ -171,6 +171,7 @@ const Header = React.memo( function( { onSelect, goBack } )
 			<View style = { styles.headerDropdownBox }>
 				<Dropdown
 					options = { options }
+					hasStatusBar = { true }
 					dropdownStyle = { styles.headerDropdown }
 					rowStyle = { styles.headerDropdownRow }
 					rowTextStyle = { styles.headerDropdownRowText }
@@ -235,7 +236,7 @@ const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSele
 			}
 			</View>
 			<View style = { styles.orderParamsDropdownBox }>
-				<Dropdown options = { options } dropdownStyle = { styles.orderParamsDropdown } rowTextStyle = { styles.orderParamsDropdownRowText } rowStyle = { styles.orderParamsDropdownRow } renderButton = { dropdownButton } onSelect = { onSelect } />
+				<Dropdown options = { options } hasStatusBar = { true } dropdownStyle = { styles.orderParamsDropdown } rowTextStyle = { styles.orderParamsDropdownRowText } rowStyle = { styles.orderParamsDropdownRow } renderButton = { dropdownButton } onSelect = { onSelect } />
 			</View>
 			{
 				dropdownIndex === 0 ? <View style = { styles.orderParamsTipBox }><Text>{ I18n.t( "chart.orderParamsTip" ) }</Text></View>
@@ -453,11 +454,13 @@ const Chart = function( props )
 		props.fetchKline();
 	}, [] );
 
+	React.useEffect( function()
+	{
+		props.navigation.setOptions( { header: () => <Header onSelect = { props.setHeaderDropdownIndex } goBack = { props.navigation.goBack } /> } )
+	}, [] );
+
 	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false }>
-		<Header
-			onSelect = { props.setHeaderDropdownIndex }
-			goBack = { props.navigation.goBack }
-		/>
+		
 		<UserInfo
 			ustdInfo = { props.userDetailData[ "USDT" ] }
 			etusdInfo = { props.userDetailData[ "ETUSD" ] }

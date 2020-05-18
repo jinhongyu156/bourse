@@ -12,6 +12,7 @@ import userReducer from "./user.js";
 import chartReducer from "./chart.js";
 import articleReducer from "./article.js";
 import themeReducer from "./theme.js";
+import ustdRechargeReducer from "./ustdRecharge.js";
 
 
 import languageReducer from "./language.js";
@@ -31,6 +32,7 @@ export default combineReducers( {
 	chart: chartReducer,
 	article: articleReducer,
 	theme: themeReducer,
+	ustdRecharge: ustdRechargeReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

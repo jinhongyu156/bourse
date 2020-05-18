@@ -18,6 +18,7 @@ export function fetchData( index )
 		try
 		{
 			const res = await fetchPost( "/user.php", { "提交": "news", "status": index } );
+			console.log( "res", res );
 			if( res && isArray( res ) )
 			{
 				dispatch( setData( res, false, null ) )
@@ -27,6 +28,7 @@ export function fetchData( index )
 			};
 		} catch( err )
 		{
+			console.log( "err", err );
 			dispatch( setData( [], false, err.type === "network" ? `${ err.status }: ${ I18n.t( "floatAction.fetchDataError" ) }` : err.err.toString() ) );
 		};
 	};

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { StyleSheet, Dimensions, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Modal } from "react-native";
+import { StyleSheet, Dimensions, View, Text, ScrollView, StatusBar, TouchableWithoutFeedback, TouchableOpacity, Modal } from "react-native";
 
 const SCREENWIDTH = Dimensions.get( "window" ).width;
 const SCREENHEIGHT = Dimensions.get( "window" ).height;
@@ -52,6 +52,7 @@ export default React.memo( function( {
 	disabled = false,																			// 是否禁用按钮点击
 	options = [],																				// 下拉组件中的项
 	animated = true,																			// 下拉组件打开是否存在动画
+	hasStatusBar = false,																		// 是否包含 StatusBar 高度
 	dropdownStyle = {},																			// 下拉组件的样式, 需存在 width, height
 	rowStyle = {},																				// 下拉组件项的样式
 	rowTextStyle = {},																			// 下拉组件项字体样式
@@ -76,7 +77,7 @@ export default React.memo( function( {
 			const positionStyle = Object.assign(												// positionStyle: 包含 top, bottom, left, right
 				{ height: dropdownHeight, width: dropdownWidth },
 				showInLeft ? { left: px } : { right: rightSpace - width },
-				showInBottom ? { top: py + height } : { bottom: py }
+				showInBottom ? { top: py + height - ( hasStatusBar ? StatusBar.currentHeight : 0 ) } : { bottom: py }
 			);
 
 			callback( positionStyle );

@@ -35,7 +35,7 @@ import SubAccounts from "./../containers/subAccounts.js";
 import Download from "./../containers/download.js";
 
 // 头部操作 icon 宽高
-const HEADERHANDLESIZE = 36;
+const HEADERHANDLESIZE = 32;
 
 // 外部选项卡导航高度
 const TABBARHEIGHT1 = 66;
