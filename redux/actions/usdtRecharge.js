@@ -56,20 +56,23 @@ export function setIsShowPrevState( isShowPrevState, isInit = false )
 			try
 			{
 				const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
+				console.log( "isInit", res )
 				if( res === "null" )
 				{
+					await AsyncStorage.setItem( "isShowPrevState", String( false ) );
 					dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: false } );
 				} else
 				{
+					await AsyncStorage.setItem( "isShowPrevState", String( true ) );
 					dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: true } );
 				};
 			} catch( err )
 			{
+				await AsyncStorage.setItem( "isShowPrevState", String( false ) );
 				dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: false } );
 			};
 		} else
 		{
-			console.log( "hhhhhhhhh", isShowPrevState )
 			await AsyncStorage.setItem( "isShowPrevState", String( isShowPrevState ) );
 			dispatch( { type: ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, payload: isShowPrevState } );
 		};
@@ -94,9 +97,9 @@ export function showRechargeTypeActionSheet()
 	return function( dispatch )
 	{
 		dispatch( showActionSheet( {
-			title: I18n.t( "ustdRecharge.rechargeTypeActionSheetTitle" ),
-			message: I18n.t( "ustdRecharge.rechargeTypeActionSheetMessage" ),
-			options: I18n.t( "ustdRecharge.rechargeTypeActionSheetOptions" ),
+			title: I18n.t( "usdtRecharge.rechargeTypeActionSheetTitle" ),
+			message: I18n.t( "usdtRecharge.rechargeTypeActionSheetMessage" ),
+			options: I18n.t( "usdtRecharge.rechargeTypeActionSheetOptions" ),
 			cancelButtonIndex: 1,
 			markButtonIndex: 0,
 			onPress: function( index )
@@ -113,7 +116,7 @@ export function setInputText( key, value )
 {
 	return function( dispatch, getState )
 	{
-		const { ustdRecharge } = getState();
+		const { usdtRecharge } = getState();
 		const { ctc } = getState();
 		const usdtInfo = ( ctc.data[ 0 ] && ctc.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate ) ? Number( ctc.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate ) : 0;
 
@@ -121,7 +124,7 @@ export function setInputText( key, value )
 
 		if( key === "rechargeNumber" )
 		{
-			dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTERROR, payload: Object.assign( {}, ustdRecharge.inputError, { [ key ]: !( intReg.test( value ) && Number( value ) >= 20 && usdtInfo * Number( value ) < 49000 ) } ) } );
+			dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTERROR, payload: Object.assign( {}, usdtRecharge.inputError, { [ key ]: !( intReg.test( value ) && Number( value ) >= 20 && usdtInfo * Number( value ) < 49000 ) } ) } );
 		};
 	};
 };
@@ -131,18 +134,18 @@ function startCountdown()
 {
 	return async function( dispatch, getState )
 	{
-		const { ustdRecharge } = getState();
-		const overTimeStamp = Number( ustdRecharge.orderData.timeout );
+		const { usdtRecharge } = getState();
+		const overTimeStamp = Number( usdtRecharge.orderData.timeout );
 		const run = function()
 		{
 			const nowTimeStamp = Date.now();
 			if ( nowTimeStamp >= overTimeStamp )
 			{
-				dispatch( setOrderData( Object.assign( {}, ustdRecharge.orderData, { countdown: 0 } ), false, null ) )
+				dispatch( setOrderData( Object.assign( {}, usdtRecharge.orderData, { countdown: 0 } ), false, null ) )
 				clearInterval( timer );
 			} else
 			{
-				dispatch( setOrderData( Object.assign( {}, ustdRecharge.orderData, { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ) } ), false, null ) );
+				dispatch( setOrderData( Object.assign( {}, usdtRecharge.orderData, { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ) } ), false, null ) );
 			};
 		};
 		run();
@@ -170,7 +173,7 @@ export function fetchOrderData()
 			};
 		} catch( err )
 		{
-			dispatch( setOrderData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchOrderDataError" ) }` : err.err.toString() ) )
+			dispatch( setOrderData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "usdtRecharge.fetchOrderDataError" ) }` : err.err.toString() ) )
 		};
 	};
 };
@@ -180,14 +183,14 @@ export function fetchRechargeSubmit()
 {
 	return async function( dispatch, getState )
 	{
-		const { ustdRecharge } = getState();
+		const { usdtRecharge } = getState();
 
-		if ( ustdRecharge.rechargeNumber && Object.values( ustdRecharge.inputError ).every( item => item === false ) )
+		if ( usdtRecharge.rechargeNumber && Object.values( usdtRecharge.inputError ).every( item => item === false ) )
 		{
 			dispatch( setFetchRechargeSubmit( true, null ) );
 			try
 			{
-				const res = await fetchPost( "/Recharge.php", { "充值数量": ustdRecharge.rechargeNumber, "提交": "Recharge" } );
+				const res = await fetchPost( "/Recharge.php", { "充值数量": usdtRecharge.rechargeNumber, "提交": "Recharge" } );
 				console.log( "res22222222222", res );
 				if( isObject( res ) )
 				{
@@ -206,11 +209,11 @@ export function fetchRechargeSubmit()
 				};
 			} catch( err )
 			{
-				dispatch( setFetchRechargeSubmit( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchRechargeSubmitError" ) }` : err.err.toString() ) );
+				dispatch( setFetchRechargeSubmit( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "usdtRecharge.fetchRechargeSubmitError" ) }` : err.err.toString() ) );
 			};
 		} else
 		{
-			dispatch( setFetchRechargeSubmit( false, I18n.t( "ustdRecharge.inputRechargeSubmitError" ) ) );
+			dispatch( setFetchRechargeSubmit( false, I18n.t( "usdtRecharge.inputRechargeSubmitError" ) ) );
 		};
 	};
 };
@@ -220,10 +223,10 @@ export function fetchNoticePaid()
 {
 	return async function( dispatch, getState )
 	{
-		const { ustdRecharge } = getState();
-		const params = { "订单号": ustdRecharge.orderData[ "订单号" ], "姓名": ustdRecharge.drawee, "提交": "Payment" };
+		const { usdtRecharge } = getState();
+		const params = { "订单号": usdtRecharge.orderData[ "订单号" ], "姓名": usdtRecharge.drawee, "提交": "Payment" };
 
-		if( ustdRecharge.drawee )
+		if( usdtRecharge.drawee )
 		{
 			dispatch( setFetchNoticePaid( true, null ) );
 			try
@@ -247,11 +250,11 @@ export function fetchNoticePaid()
 				};
 			} catch( err )
 			{
-				dispatch( setFetchNoticePaid( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "ustdRecharge.fetchNoticePaidError" ) }` : err.err.toString() ) );
+				dispatch( setFetchNoticePaid( false, err.type === "network" ? `${ err.status }: ${ I18n.t( "usdtRecharge.fetchNoticePaidError" ) }` : err.err.toString() ) );
 			};
 		} else
 		{
-			dispatch( setFetchNoticePaid( false, I18n.t( "ustdRecharge.inputNoticePaidError" ) ) );
+			dispatch( setFetchNoticePaid( false, I18n.t( "usdtRecharge.inputNoticePaidError" ) ) );
 		};
 	};
 };

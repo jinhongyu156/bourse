@@ -245,14 +245,14 @@ const Ctc = React.memo( function( props )
 		props.navigation.push( "Access", { type: type, name: title } );
 	}, [] );
 
-	const goToUstdRecharge = React.useCallback( function()
+	const goToUsdtRecharge = React.useCallback( function()
 	{
-		props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length && props.navigation.push( "UstdRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+		props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length && props.navigation.push( "UsdtRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
 	}, [ props.data ] );
 
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
-		<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUstdRecharge }>
+		<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUsdtRecharge }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>
 			</TouchableOpacity>

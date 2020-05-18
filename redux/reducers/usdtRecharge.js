@@ -2,10 +2,10 @@ import {
 	ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE, ACTION_SET_USDTRECHARGE_ORDERDATA,
 	ACTION_SET_USDTRECHARGE_INPUTTEXT, ACTION_SET_USDTRECHARGE_INPUTERROR, ACTION_SET_USDTRECHARGE_ISSHOWACTIONSHEET,
 	ACTION_SET_USDTRECHARGE_FETCHRECHARGESUBMIT, ACTION_SET_USDTRECHARGE_FETCHNOTICEPAID
-} from "./../actions/ustdRecharge.js";
+} from "./../actions/usdtRecharge.js";
 
 const defaultState = {
-	isShowPrevState: false,								// 是否显示上一个订单的状态
+	isShowPrevState: null,								// 是否显示上一个订单的状态
 
 	orderData: {},										// 请求成功的订单数据; 订单的状态 -1: 不存在订单; 0: 待支付; 1: 已支付; 2: 已放币; 3: 完成; 4: 订单已取消
 	fetchOrderDataLoading: false,						// 是否正在请求上个订单
@@ -31,6 +31,7 @@ export default function( state = defaultState, action )
 	switch( action.type )
 	{
 		case ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE:
+			console.log( "收到", action );
 			return Object.assign( {}, state, { isShowPrevState: action.payload } );
 
 		case ACTION_SET_USDTRECHARGE_ORDERDATA:

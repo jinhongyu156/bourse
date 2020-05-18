@@ -57,7 +57,7 @@ function setIsloadingUserDetailData( isloadingUserDetailData )
 // 兑换比例计算
 function getTip( key, number, rate )
 {
-	return key === "USD兑换ETU" ? `${ number } USTD = ${ ( number / rate ).toFixed( 2 ) } ETUSD`
+	return key === "USD兑换ETU" ? `${ number } USDT = ${ ( number / rate ).toFixed( 2 ) } ETUSD`
 		: key === "积分兑USDT" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ number } USDT`
 		: key === "积分兑ETUSD" ? `${ number } ${ I18n.t( "finance.exchange.point" ) } = ${ ( number / rate ).toFixed( 3 ) } USDT`
 		: key === "投资ETU金融" ? `${ I18n.t( "finance.header.tip" ) } \n ${ ( number * 300 / rate ).toFixed( 2 ) } ETUSD = ${ ( number * 300 ).toFixed( 2 ) } ${ I18n.t( "finance.header.trading" ) } + ${ ( number * 5.3 ).toFixed( 2 ) }T ${ I18n.t( "finance.header.hashrate" ) }`

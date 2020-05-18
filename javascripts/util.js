@@ -100,7 +100,6 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			console.log( "测试", res );
 			if( isJSON( res ) )
 			{
 				resolve( JSON.parse( unicodeToChinese( res ) ) );

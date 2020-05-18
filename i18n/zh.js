@@ -210,7 +210,7 @@ export default {
 		submitError1: "请正确的填写信息",
 		submitError2: "输入数量不能大于可用数量"
 	},
-	ustdRecharge: {
+	usdtRecharge: {
 		title: "充值( USDT )",
 		fetchOrderDataError: "查询订单错误",
 		usdtPrice: "当前报价",
@@ -250,7 +250,7 @@ export default {
 		state4tip: "充值已被取消",
 
 		tip1: "单笔最高不能超过 4.9 万人民币",
-		tip2: "最低充值 20 USTD",
+		tip2: "最低充值 20 USDT",
 		tip3: "只能输入整数的充值数量",
 
 		tip4: "转账时请勿填写任何备注信息! 否则可能导致账户被冻结, 造成的损失平台概不负责",

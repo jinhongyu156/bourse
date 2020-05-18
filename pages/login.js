@@ -168,7 +168,7 @@ const InputBox = React.memo( function( { theme, loginType, setInputText, phoneNu
 
 const Login = function( props )
 {
-	console.log( "Login", props.theme );
+	console.log( "Login", props );
 	// componentWillUnmount
 	useFocusEffect(
 		React.useCallback( function()

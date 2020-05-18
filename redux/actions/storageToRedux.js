@@ -6,12 +6,14 @@ export const ACTION_SET_STORAGETOREDUX_ISSYNC = "ACTION_SET_STORAGETOREDUX_ISSYN
 import { setLanguage } from "./language.js";
 import { setIsLogin } from "./login.js";
 import { setTheme } from "./theme.js";
-import { setIsShowPrevState } from "./ustdRecharge.js";
+import { setIsShowPrevState } from "./usdtRecharge.js";
 
 export function asyncStorageToRedux( callback )
 {
 	return async function( dispatch )
 	{
+		// await AsyncStorage.clear();
+		// return;
 		try
 		{
 			const keys = await AsyncStorage.getAllKeys();
@@ -36,8 +38,7 @@ export function asyncStorageToRedux( callback )
 
 			if( !keys.includes( "isShowPrevState" ) )
 			{
-				await AsyncStorage.setItem( "isShowPrevState", "false" );
-				dispatch( setIsShowPrevState( false, true ) );
+				dispatch( setIsShowPrevState( null, true ) );
 			};
 
 			for ( let i = keys.length - 1; i >= 0; i-- )
@@ -55,6 +56,7 @@ export function asyncStorageToRedux( callback )
 						dispatch( setLanguage( systemLocale, true ) );
 					};
 				};
+
 				if ( keys[ i ] === "isLogin" )
 				{
 					const isLogin = await AsyncStorage.getItem( keys[ i ] );
@@ -67,6 +69,7 @@ export function asyncStorageToRedux( callback )
 						dispatch( setIsLogin( false ) );
 					};
 				};
+
 				if( keys[ i ] === "theme" )
 				{
 					const theme = await AsyncStorage.getItem( keys[ i ] );
@@ -79,22 +82,25 @@ export function asyncStorageToRedux( callback )
 						dispatch( setTheme( 0, true ) );
 					};
 				};
+
 				if( keys[ i ] === "isShowPrevState" )
 				{
 					const isShowPrevState = await AsyncStorage.getItem( keys[ i ] );
-					if( isShowPrevState === "true" )
+					if( isShowPrevState )
 					{
-						dispatch( setIsShowPrevState( true, true ) );
+						dispatch( setIsShowPrevState( isShowPrevState === "true" ? true : false, false ) );
 					} else
 					{
-						dispatch( setIsShowPrevState( false, true ) );
+						dispatch( setIsShowPrevState( null, true ) );
 					};
 				};
+				
 			};
 			callback();
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: true } );
 
 		} catch( e ) {
+			console.log( "e", e );
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: false } );
 
 		};

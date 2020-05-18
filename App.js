@@ -27,7 +27,7 @@ import Access from "./pages/access.js";
 import MyQrCode from "./pages/myQrCode.js";
 import Chart from "./pages/chart.js";
 import Article from "./pages/article.js";
-import UstdRecharge from "./pages/ustdRecharge.js";
+import UsdtRecharge from "./pages/usdtRecharge.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -87,6 +87,8 @@ export default function()
 
 	status || store.dispatch( asyncStorageToRedux( () => setStatus( true ) ) );
 
+	console.log( "status", status );
+
 	return status && <React.Fragment>
 		<StatusBar barStyle = "dark-content" backgroundColor = "rgba( 0, 0, 0, 0 )" translucent = { true } />
 		<Provider store = { store }>
@@ -100,7 +102,7 @@ export default function()
 					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
 					<Stack.Screen name = "Chart" component = { Chart } />
 					<Stack.Screen name = "Article" component = { Article } />
-					<Stack.Screen name = "UstdRecharge" component = { UstdRecharge } options = { () => ( { title: I18n.t( "ustdRecharge.title" ) } ) } />
+					<Stack.Screen name = "UsdtRecharge" component = { UsdtRecharge } options = { () => ( { title: I18n.t( "usdtRecharge.title" ) } ) } />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>

@@ -183,11 +183,11 @@ const Header = React.memo( function( { onSelect, goBack } )
 	</View>;
 } );
 
-const UserInfo = React.memo( function( { ustdInfo, etusdInfo, slbtInfo } )
+const UserInfo = React.memo( function( { usdtInfo, etusdInfo, slbtInfo } )
 {
 	return <View style = { styles.userInfoBox }>
 		<View style = { [ styles.userInfoItem, styles.userInfoItemLine ] }>
-			<Text style = { styles.userInfoItemTitleText }>{ ustdInfo }</Text>
+			<Text style = { styles.userInfoItemTitleText }>{ usdtInfo }</Text>
 			<Text style = { styles.userInfoItemValueText }>USDT</Text>
 		</View>
 		<View style = { [ styles.userInfoItem, styles.userInfoItemLine ] }>
@@ -462,7 +462,7 @@ const Chart = function( props )
 	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false }>
 		
 		<UserInfo
-			ustdInfo = { props.userDetailData[ "USDT" ] }
+			usdtInfo = { props.userDetailData[ "USDT" ] }
 			etusdInfo = { props.userDetailData[ "ETUSD" ] }
 			slbtInfo = { props.userDetailData[ "SLBT" ] }
 		/>

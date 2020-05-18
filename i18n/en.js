@@ -214,7 +214,7 @@ export default {
 		submitError1: "Please fill in the information correctly",
 		submitError2: "The number of inputs must not be greater than the number available"
 	},
-	ustdRecharge: {
+	usdtRecharge: {
 		title: "Recharge( USDT )",
 		fetchOrderDataError: "Query to see if there is an order error",
 		usdtPrice: "Price",
@@ -254,7 +254,7 @@ export default {
 		state4tip: "cancelled",
 
 		tip1: "A single transaction cannot exceed 49,000 RMB",
-		tip2: "The minimum top-up value is 20 USTD",
+		tip2: "The minimum top-up value is 20 USDT",
 		tip3: "You can only enter the number of integer recharge",
 
 		tip4: "Please do not fill in any remarks when transferring money! Otherwise, the account may be frozen and the platform is not responsible for the loss",
