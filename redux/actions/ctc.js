@@ -70,8 +70,8 @@ function wsData()
 {
 	return function( dispatch, getState )
 	{
-		if( ws ) return;
-
+		// if( ws ) return;
+		
 		ws = new Ws( "ws://tcp.slb.one:9595/", {
 			heartCheck: function()
 			{
@@ -161,7 +161,7 @@ export function fetchData()
 		{
 			dispatch( setFetchLoading( true ) );
 			const res = await fetchPost( "/new_heyue.php", { "提交": "返回用户货币数量" } );
-
+			console.log( "res", res );
 			if( isObject( res ) )
 			{
 				const obj = objectValueGetNum( res, keys, 3 );

@@ -56,7 +56,6 @@ export function setIsShowPrevState( isShowPrevState, isInit = false )
 			try
 			{
 				const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
-				console.log( "isInit", res )
 				if( res === "null" )
 				{
 					await AsyncStorage.setItem( "isShowPrevState", String( false ) );
@@ -141,14 +140,16 @@ function startCountdown()
 			const nowTimeStamp = Date.now();
 			if ( nowTimeStamp >= overTimeStamp )
 			{
-				dispatch( setOrderData( Object.assign( {}, usdtRecharge.orderData, { countdown: 0 } ), false, null ) )
 				clearInterval( timer );
+				dispatch( setOrderData( Object.assign( {}, usdtRecharge.orderData, { countdown: 0 } ), false, null ) )
+				dispatch( fetchOrderData() );
 			} else
 			{
 				dispatch( setOrderData( Object.assign( {}, usdtRecharge.orderData, { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ) } ), false, null ) );
 			};
 		};
 		run();
+		clearInterval( timer );
 		timer = setInterval( run, 1000 );
 	};
 };
@@ -162,17 +163,25 @@ export function fetchOrderData()
 		try
 		{
 			const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
-			console.log( "res111111111", res );
+
+			console.log( "res111111111111", res );
+
 			if( res === "null" )
 			{
 				dispatch( setOrderData( {}, false, null ) );
 			} else
 			{
 				dispatch( setOrderData( assign( res ), false, null ) );
-				dispatch( startCountdown() );
+				console.log( "res22222222222", assign( res ) );
+
+				if( ( res[ "订单状态" ] === "0" ) && ( Number( Date.now() ) < Number( assign( res )[ "timeout" ] ) ) )
+				{
+					setTimeout( () => dispatch( startCountdown() ), 3000 );
+				};
 			};
 		} catch( err )
 		{
+			console.log( "err", err );
 			dispatch( setOrderData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "usdtRecharge.fetchOrderDataError" ) }` : err.err.toString() ) )
 		};
 	};
@@ -191,7 +200,7 @@ export function fetchRechargeSubmit()
 			try
 			{
 				const res = await fetchPost( "/Recharge.php", { "充值数量": usdtRecharge.rechargeNumber, "提交": "Recharge" } );
-				console.log( "res22222222222", res );
+
 				if( isObject( res ) )
 				{
 					if( res.code === 1 )

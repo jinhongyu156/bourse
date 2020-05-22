@@ -17,7 +17,7 @@ export function wsNotice()
 {
 	return async function( dispatch )
 	{
-		if( ws ) return;
+		// if( ws ) return;
 
 		ws = new Ws( "ws://tcp.slb.one:8308/", {
 			heartCheck: function()

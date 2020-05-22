@@ -174,7 +174,7 @@ function wsContract()
 {
 	return function( dispatch, getState )
 	{
-		if( ws ) return;
+		// if( ws ) return;
 
 		const keys = [ "BTC", "GOLD", "OIL" ];
 

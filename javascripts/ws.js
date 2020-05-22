@@ -19,6 +19,7 @@ export default class Ws
 	initWebSocket()
 	{
 		this.timer && clearInterval( this.timer );
+		this.ws && this.ws.close();
 		this.ws = new WebSocket( this.url );
 		this.initWsEvent();
 	}

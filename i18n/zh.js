@@ -113,6 +113,8 @@ export default {
 		header: {
 			chart: "走势",
 			recharge: "充值",
+			usdtRecharge: "充币",
+			usdtWithdrawal: "提币",
 			withdrawal: "提现"
 		},
 		trading: "交易金",
@@ -210,6 +212,76 @@ export default {
 		submitError1: "请正确的填写信息",
 		submitError2: "输入数量不能大于可用数量"
 	},
+	myBankCard: {
+		title: "银行卡",
+		noDataText: "未查询到数据",
+		placeholderSearch: "键入银行名搜索银行",
+		back: "返回",
+		placeholderBankName: "请点击选中银行",
+		bankName: "银行名称",
+		placeholderUsername: "请输入用户姓名",
+		username: "用户姓名",
+		placeholderBankDeposit: "请输入开户支行",
+		bankDeposit: "开户支行",
+		placeholderBankCardNumber: "请输入银行卡号",
+		bankCardNumber: "银行卡号",
+		placeholderPassword: "请输入用户密码",
+		password: "用户密码",
+		bind: "绑定",
+		unBind: "解绑",
+		fetchBindCardError: "请求绑卡失败",
+		inputBindCardError: "请正确的填写信息",
+		fetchCardDataError: "获取银行卡数据失败",
+		fetchUnBindCardError: "解绑失败",
+		fetchUnBindCardSuccess: "解绑成功",
+		fetchBindCardSuccess: "绑定成功"
+	},
+
+	history: {
+		title: "历史记录",
+		tabText1: "充值",
+		tabText2: "提现",
+		amount: "金额",
+		number: "数量",
+		createTime: "创建时间",
+		state: "订单状态",
+		order: "订单号",
+		type: "方式",
+		endTime: "完成时间",
+		noDataText: "暂无数据",
+		state0Tip: "待付款",
+		state1Tip: "已付款, 待放币",
+		state2Tip: "已放币",
+		state3Tip: "已完成",
+		state4Tip: "已取消",
+		rate: "汇率",
+		submitText: "确认放币",
+		fetchSubmitError: "请求放币出现错误",
+		fetchHistoryDataError: "获取历史记录错误"
+	},
+	usdtMention: {
+		title: "提现( USDT )",
+		fetchValuationDataError: "请求估值错误",
+		inputValuationDataError: "请正确的填写信息",
+		usable: "可提数量",
+		placeholderNumber: "请输入提现数量",
+		password: "密码",
+		placeholderPassword: "请输入提现密码",
+		number: "提现数量",
+		nextText: "下一步",
+		amount: "金额",
+		currency: "币种",
+		number: "数量",
+		unitPrice: "单价",
+		bankCard: "银行卡",
+		notBoundTip: "你还未绑定银行卡",
+		bind: "绑定",
+		submitText: "提现",
+		fetchMentionSubmitError: "请求提现错误",
+		inputMentionSubmitError: "请正确的填写信息",
+		fetchMentionSubmitSuccess: "提交成功"
+
+	},
 	usdtRecharge: {
 		title: "充值( USDT )",
 		fetchOrderDataError: "查询订单错误",
@@ -227,7 +299,7 @@ export default {
 		countdownText: "请在 %{seconds} 秒内完成付款",
 		noticePaid: "通知已付款",
 		fetchNoticePaidError: "通知已付款请求失败",
-		inputNoticePaidError: "T请正确的填写信息",
+		inputNoticePaidError: "请正确的填写信息",
 		fetchRechargeSubmitError: "获取订单数据失败",
 		inputRechargeSubmitError: "请正确的填写信息",
 
@@ -277,7 +349,7 @@ export default {
 			chart: "推广码",
 			theme: "主题",
 			tip1: "欢迎注册香港数字",
-			tip2: "注册免费赠送10USDT"
+			tip2: "首次投单激活 ETU 金融 赠送 10 USDT"
 		},
 		myClient: "我的客户",
 		myInfo: "我的信息",
@@ -370,7 +442,9 @@ export default {
 		downloadSuccess: "下载成功",
 		noContract: "未进行投资",
 		wait: "请稍等",
-		version: "版"
+		version: "版",
+		notBound: "未绑定",
+		history: "充值历史"
 	},
 	chart: {
 		noDataText: "未查询到数据",

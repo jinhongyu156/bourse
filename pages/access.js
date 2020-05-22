@@ -23,7 +23,7 @@ const INPUTBOXWIDTH = Dimensions.get( "window" ).width * 0.9;
 const INPUTBOXHEIGHT = 60;
 
 // 提交按钮高度
-const SUBMITBTNHEIGHT = 42
+const SUBMITBTNHEIGHT = 42;
 
 // 提示信息 box 高度
 const TIPBOXHEIGHT = 150;

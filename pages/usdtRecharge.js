@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ToastAndroid, StyleSheet, Keyboard, Dimensions } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ToastAndroid, StyleSheet, Keyboard, Dimensions } from "react-native";
 
 import I18n from "i18n-js";
 
@@ -38,7 +38,7 @@ const styles = StyleSheet.create( {
 	inputStyle: { height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 	copyInputStyle: { flex: 9, fontSize: 14 },
 
-	btnBox: { flex: 3, flexDirection: "row", justifyContent: "flex-end" },
+	btnBox: { flex: 4, flexDirection: "row", justifyContent: "flex-end" },
 	btn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#696DAC" },
 	btnText: { color: "#FFFFFF" },
 
@@ -233,6 +233,7 @@ const Exist = React.memo( function( { orderData, prevOrderDataState, setIsShowPr
 
 const Recharge = React.memo( function( props )
 {
+	console.log( "props", props );
 	React.useEffect( function()
 	{
 		props.fetchOrderData();
@@ -288,7 +289,7 @@ export default connect(
 		return {
 			isShowPrevState: usdtRechargeData.isShowPrevState,
 			orderData: usdtRechargeData.orderData,
-			prevOrderDataState: Number( usdtRechargeData.orderData[ "订单状态" ] ),
+			prevOrderDataState: Object.keys( usdtRechargeData.orderData ).length ? Number( usdtRechargeData.orderData[ "订单状态" ] ) : -1,
 			fetchOrderDataLoading: usdtRechargeData.fetchOrderDataLoading,
 			fetchOrderDataError: usdtRechargeData.fetchOrderDataError,
 

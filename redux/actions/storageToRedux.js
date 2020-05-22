@@ -100,7 +100,6 @@ export function asyncStorageToRedux( callback )
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: true } );
 
 		} catch( e ) {
-			console.log( "e", e );
 			dispatch( { type: ACTION_SET_STORAGETOREDUX_ISSYNC, payload: false } );
 
 		};

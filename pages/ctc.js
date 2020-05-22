@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Image, Text, TouchableOpacity, ToastAndroid, ActivityIndicator, SectionList, StyleSheet } from "react-native";
+import { View, Image, Text, TouchableOpacity, ToastAndroid, ActivityIndicator, SectionList, RefreshControl, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -247,8 +247,20 @@ const Ctc = React.memo( function( props )
 
 	const goToUsdtRecharge = React.useCallback( function()
 	{
-		props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length && props.navigation.push( "UsdtRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+		if( props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length )
+		{
+			props.navigation.push( "UsdtRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+		} else
+		{
+			return;
+		};
 	}, [ props.data ] );
+
+	// const goToUsdtMention = React.useCallback( function()
+	// {
+	// 	props.navigation.push( "UsdtMention", { usdtInfo: props.originalData[ "USDT" ] } );
+	// }, [ props.originalData ] );
+
 
 	return <View style = { styles.container }>
 		<Header usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
@@ -256,9 +268,13 @@ const Ctc = React.memo( function( props )
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => {} }>
-				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/withdrawal.png" ) } />
-				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.withdrawal" ) }</Text>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "recharge", "USDT" ) }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_recharge.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtRecharge" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "mention", "USDT" ) }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_withdrawal.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtWithdrawal" ) }</Text>
 			</TouchableOpacity>
 		</Header>
 		<Notice />
@@ -269,6 +285,7 @@ const Ctc = React.memo( function( props )
 			ListHeaderComponent = { () => <ListHeader /> }
 			ItemSeparatorComponent = { () => <ItemSeparator /> }
 			SectionSeparatorComponent = { () => <SectionSeparator /> }
+			refreshControl = { <RefreshControl refreshing = { props.fetchLoading } onRefresh = { props.fetchData } /> }
 			renderItem = { ( { item, index } ) => <SectionRow
 				key = { index }
 				type = { item.type }
@@ -286,7 +303,7 @@ const Ctc = React.memo( function( props )
 				fetchBuy = { props.fetchBuy }
 			/> }
 			renderSectionHeader = { ( { section: { title } } ) => <SectionHeader title = { title } /> }
-			ListEmptyComponent = { () => props.fetchLoading ? <ListLoading /> : <ListError fetchError = { props.fetchError } /> }
+			ListEmptyComponent = { () => <ListError fetchError = { props.fetchError } /> }
 			keyExtractor = { ( item, index ) => item.key + index }
 		/>
 	</View>

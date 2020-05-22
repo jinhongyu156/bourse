@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import "react-native-get-random-values"
 
 import React from "react";
-import { StyleSheet, StatusBar, Image } from "react-native";
+import { TextInput, StyleSheet, StatusBar, Image } from "react-native";
 
 /** react-navigation */
 import { NavigationContainer, CommonActions } from "@react-navigation/native";
@@ -28,12 +28,18 @@ import MyQrCode from "./pages/myQrCode.js";
 import Chart from "./pages/chart.js";
 import Article from "./pages/article.js";
 import UsdtRecharge from "./pages/usdtRecharge.js";
+import UsdtMention from "./pages/usdtMention.js";
+import MyBankCard from "./pages/myBankCard.js";
+import History from "./pages/history.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
 import Contract from "./pages/contract.js";
 import Ctc from "./pages/ctc.js";
 import User from "./pages/user.js";
+
+// 限制 TextInput 长度不超过 50;
+TextInput.defaultProps = Object.assign( {}, TextInput.defaultProps, { maxLength: 50 } );
 
 /** create Navigators */
 // StackNavigator
@@ -87,8 +93,6 @@ export default function()
 
 	status || store.dispatch( asyncStorageToRedux( () => setStatus( true ) ) );
 
-	console.log( "status", status );
-
 	return status && <React.Fragment>
 		<StatusBar barStyle = "dark-content" backgroundColor = "rgba( 0, 0, 0, 0 )" translucent = { true } />
 		<Provider store = { store }>
@@ -103,10 +107,11 @@ export default function()
 					<Stack.Screen name = "Chart" component = { Chart } />
 					<Stack.Screen name = "Article" component = { Article } />
 					<Stack.Screen name = "UsdtRecharge" component = { UsdtRecharge } options = { () => ( { title: I18n.t( "usdtRecharge.title" ) } ) } />
+					<Stack.Screen name = "UsdtMention" component = { UsdtMention } options = { () => ( { title: I18n.t( "usdtMention.title" ) } ) } />
+					<Stack.Screen name = "MyBankCard" component = { MyBankCard } options = { () => ( { title: I18n.t( "myBankCard.title" ) } ) } />
+					<Stack.Screen name = "History" component = { History } options = { () => ( { title: I18n.t( "history.title" ) } ) } />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>
 	</React.Fragment>;
 };
-
-

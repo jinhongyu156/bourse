@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ScrollView, Text, ToastAndroid, TouchableOpacity, StyleSheet } from "react-native";
+import { View, ScrollView, Text, ToastAndroid, TouchableOpacity, StyleSheet } from "react-native";
 
 import I18n from "i18n-js";
 

@@ -102,8 +102,6 @@ const InputBox = React.memo( function( { theme, loginType, setInputText, phoneNu
 	const passwordHasError = inputError[ "password" ];
 	const isPhoneNumber = loginType == 0;
 
-	console.log( "InputBox", theme, typeof theme );
-
 	const renderCodeImage = React.useCallback( function()
 	{
 		return imageBlob
@@ -168,7 +166,6 @@ const InputBox = React.memo( function( { theme, loginType, setInputText, phoneNu
 
 const Login = function( props )
 {
-	console.log( "Login", props );
 	// componentWillUnmount
 	useFocusEffect(
 		React.useCallback( function()
@@ -262,9 +259,9 @@ const Login = function( props )
 			<TouchableOpacity onPress = { props.showLanguageActionSheet }>
 				<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetLanguageBtn" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress = { props.showThemeActionSheet }>
+			{/*<TouchableOpacity onPress = { props.showThemeActionSheet }>
 				<Text style = { styles.optionsText }>{ I18n.t( "login.actionSheetThemeBtn" ) }</Text>
-			</TouchableOpacity>
+			</TouchableOpacity>*/}
 		</View>
 		<ActionSheet
 			{ ...props.actionSheetData }

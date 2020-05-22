@@ -13,6 +13,8 @@ import {
 } from "./../redux/actions/user.js";
 import { showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexActionSheet } from "./../redux/actions/user.js";
 import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
+import { fetchCardData } from "./../redux/actions/myBankCard.js";
+
 import { logout } from "./../redux/actions/login.js";
 
 import I18n from "i18n-js";
@@ -202,6 +204,7 @@ export default connect(
 		const userData = state.user;
 		const loginData = state.login;
 		const languageData = state.language;
+		const myBankCardData = state.myBankCard;
 
 		return {
 			myClientProps: {
@@ -211,6 +214,7 @@ export default connect(
 			myInfoProps: {
 				id: userData.userDetailData[ "id" ], vouchers: userData.userDetailData[ "代金券" ],
 				userLanguage: languageData.userLanguage,
+				hasCard: myBankCardData.hasCard, bankName: myBankCardData.bankName,
 				actionSheetData: loginData.actionSheetData, isShowActionSheet: loginData.isShowActionSheet, isLogin: loginData.isLogin
 			},
 			editPasswordProps: {
@@ -248,7 +252,7 @@ export default connect(
 	{
 		return {
 			callbackForMyClient: bindActionCreators( { fetchData: fetchMyClientData }, dispatch ),
-			callbackForMyInfo: bindActionCreators( { showLanguageActionSheet: showLanguageActionSheet, hideActionSheet: hideLanguageActionSheet, logout: logout }, dispatch ),
+			callbackForMyInfo: bindActionCreators( { fetchData: fetchCardData, showLanguageActionSheet: showLanguageActionSheet, hideActionSheet: hideLanguageActionSheet, logout: logout }, dispatch ),
 			callbackForEditPassword: bindActionCreators( { setInputText: setInputText, submit: fetchEditPassword }, dispatch ),
 			callbackForQuery: bindActionCreators( { fetchData: fetchUserQueryData, setQueryNavIndex: setQueryNavIndex, showQueryTypeIndexActionSheet: showQueryTypeIndexActionSheet, hideActionSheet: hideQueryTypeIndexActionSheet }, dispatch ),
 			callbackForSubAccounts: bindActionCreators( { fetchData: fetchSubAccountsData, unbind: fetchSubAccountsUnbind }, dispatch ),

@@ -81,11 +81,7 @@ function unicodeToChinese( str )
 // post fetch
 export function fetchPost( url, data, config = {} )
 {
-	const mergeConfig = Object.assign( {}, {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-		body: setSearch( { params: data } )
-	}, config );
+	const mergeConfig = Object.assign( {}, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }, body: setSearch( { params: data } ) }, config );
 
 	return new Promise( function( resolve, reject )
 	{
@@ -100,9 +96,9 @@ export function fetchPost( url, data, config = {} )
 			};
 		} ).then( function( res )
 		{
-			if( isJSON( res ) )
+			if( isJSON( String( res ) ) )
 			{
-				resolve( JSON.parse( unicodeToChinese( res ) ) );
+				resolve( JSON.parse( String( res ) ) );
 			} else
 			{
 				resolve( res );

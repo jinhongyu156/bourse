@@ -76,7 +76,7 @@ const Finance = function ( props )
 				return false;
 			} else {
 				lastTime = Date.now();
-				ToastAndroid.show( I18n.t( "finance.quit" ), ToastAndroid.SHORT)
+				ToastAndroid.show( I18n.t( "finance.quit" ), ToastAndroid.SHORT )
 				return true;
 			};
 			return true;

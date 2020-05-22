@@ -53,7 +53,7 @@ const List1Item = React.memo( function( { title, time, img, content, isEnd } )
 				<Text style = { styles.title }>{ title }</Text>
 			</View>
 			<View style = { styles.contentBox }>
-				<Text style = { styles.content }>{ content }</Text>
+				<Text style = { styles.content }>&emsp;&emsp;{ content }</Text>
 			</View>
 			{ img ? <View style = { styles.image }><Image resizeMode = { "contain" } style = { styles.image } source = { { uri: img } } /></View> : null }
 		</View>
@@ -64,7 +64,7 @@ const List2Item = React.memo( function( { time, content } )
 {
 	return <View style = { styles.item2 }>
 		<Text style = { styles.time2 }>{ time }</Text>
-		<Text style = { styles.content2 }>{ content }</Text>
+		<Text style = { styles.content2 }>&emsp;&emsp;{ content }</Text>
 	</View>;
 } );
 

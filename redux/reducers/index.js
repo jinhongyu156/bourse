@@ -12,7 +12,11 @@ import userReducer from "./user.js";
 import chartReducer from "./chart.js";
 import articleReducer from "./article.js";
 import themeReducer from "./theme.js";
+import myBankCardReducer from "./myBankCard.js";
+
 import usdtRechargeReducer from "./usdtRecharge.js";
+import usdtMentionReducer from "./usdtMention.js";
+import historyReducer from "./history.js";
 
 
 import languageReducer from "./language.js";
@@ -32,7 +36,10 @@ export default combineReducers( {
 	chart: chartReducer,
 	article: articleReducer,
 	theme: themeReducer,
+	myBankCard: myBankCardReducer,
 	usdtRecharge: usdtRechargeReducer,
+	usdtMention: usdtMentionReducer,
+	history: historyReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

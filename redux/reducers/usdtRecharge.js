@@ -31,7 +31,6 @@ export default function( state = defaultState, action )
 	switch( action.type )
 	{
 		case ACTION_SET_USDTRECHARGE_ISSHOWPREVSTATE:
-			console.log( "收到", action );
 			return Object.assign( {}, state, { isShowPrevState: action.payload } );
 
 		case ACTION_SET_USDTRECHARGE_ORDERDATA:

@@ -128,8 +128,6 @@ export function showThemeActionSheet()
 	{
 		const { theme } = getState();
 
-		console.log( "theme", theme );
-
 		dispatch( showActionSheet( Object.assign( {},
 			{
 				title: I18n.t( "login.actionSheetThemeTitle" ),

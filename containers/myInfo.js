@@ -29,10 +29,25 @@ const styles = StyleSheet.create( {
 } );
 
 
-export default React.memo( function MyInfo( { id, vouchers, userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet, isLogin, logout } )
+export default React.memo( function MyInfo( { id, vouchers, userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet, isLogin, hasCard, bankName, fetchData, logout } )
 {
 	const navigation = useNavigation();
 	isLogin || navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
+
+	React.useEffect( function()
+	{
+		fetchData();
+	}, [] )
+
+	const goToMyBankCard = React.useCallback( function()
+	{
+		navigation.push( "MyBankCard" );
+	}, [] );
+
+	const goToHistory = React.useCallback( function()
+	{
+		navigation.push( "History" );
+	}, [] );
 
 	return <React.Fragment>
 		<View style = { styles.container }>
@@ -43,6 +58,14 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 			<TouchableOpacity style = { styles.row }>
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.vouchers" ) }</Text>
 				<Text style = { styles.rowValueText }>{ vouchers }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.row } onPress = { goToMyBankCard }>
+				<Text style = { styles.rowKeyText }>{ I18n.t( "myBankCard.title" ) }</Text>
+				<Text style = { styles.rowValueText }>{ hasCard ? bankName : I18n.t( "user.notBound" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.row } onPress = { goToHistory }>
+				<Text style = { styles.rowKeyText }>{ I18n.t( "user.history" ) }</Text>
+				<Text style = { styles.rowValueText }></Text>
 			</TouchableOpacity>
 			<TouchableOpacity style = { styles.row } onPress = { showLanguageActionSheet }>
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.language" ) }</Text>
