@@ -497,6 +497,10 @@ export default {
 		transactionInformation: "Serive News",
 		fetchDataError: "Failed to get data",
 		noDataText: "No data was queried",
+	},
+	auth: {
+		title: "Auth",
+		fetchAuthDataError: "Failed to obtain real-name authentication information"
 	}
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, FlatList, Keyboard, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, RefreshControl, Keyboard, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
 
 import I18n from "i18n-js";
 
@@ -261,6 +261,7 @@ export default React.memo( function Query( { data, loading, error, queryNavIndex
 			ListEmptyComponent = { () => error ? <ListError error = { error } /> : loading ? <Loading /> : <ListEmpty /> }
 			ItemSeparatorComponent = { () => <ItemSeparator /> }
 			showsVerticalScrollIndicator = { false }
+			refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }
 			keyExtractor = { ( item, index ) => String( index ) }
 		/>
 		<View style = { styles.handleBox }>

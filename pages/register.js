@@ -45,7 +45,7 @@ const LOGINBTNHEIGHT = 40;
 
 const styles = StyleSheet.create( {
 
-	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE" },
+	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE", paddingTop: 28 },
 
 	tabBox: { width: LISTITEMWIDTH },
 	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },

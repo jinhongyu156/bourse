@@ -58,7 +58,7 @@ const KEYBOARDVERTICALOFFSET = Dimensions.get( "window" ).height - ICONBOXHEIGHT
 
 const styles = StyleSheet.create( {
 
-	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE" },
+	container: { flex: 1, alignItems: "center", backgroundColor: "#FEFEFE", paddingTop: 28 },
 
 	iconBox: { width: LISTITEMWIDTH, height: ICONBOXHEIGHT, justifyContent: "center", alignItems: "center" },
 	icon: { width: ICONSIZE, height: ICONSIZE, borderColor: "#FFFFFF", borderRadius: 80, borderWidth: 2 },

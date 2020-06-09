@@ -235,10 +235,16 @@ const SectionSeparator = React.memo( function()
 
 const Ctc = React.memo( function( props )
 {
-	React.useEffect( function()
-	{
-		props.fetchData();
-	}, [] );
+	// React.useEffect( function()
+	// {
+	// 	props.fetchData();
+	// }, [] );
+
+	React.useEffect( () => {
+		props.navigation.addListener( "focus", () => {
+			props.fetchData();
+		} );
+	}, [ props.navigation ] );
 
 	const goToAccess = React.useCallback( function( type, title )
 	{

@@ -102,10 +102,16 @@ const Finance = function ( props )
 		setModalMenuData( { left: bounds.left, top: bounds.top } )
 	}, [] );
 
-	React.useEffect( function()
-	{
-		fetchData();
-	}, [] );
+	// React.useEffect( function()
+	// {
+	// 	fetchData();
+	// }, [] );
+
+	React.useEffect( () => {
+		props.navigation.addListener( "focus", () => {
+			fetchData();
+		} );
+	}, [ props.navigation ] );
 
 	if( !showAlert && props.version && PACKAGEJSON.version !== props.version )
 	{

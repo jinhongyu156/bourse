@@ -495,6 +495,10 @@ export default {
 		transactionInformation: "交易资讯",
 		fetchDataError: "获取数据失败",
 		noDataText: "暂无记录",
+	},
+	auth: {
+		title: "实名认证",
+		fetchAuthDataError: "获取实名认证信息失败"
 	}
 };
 

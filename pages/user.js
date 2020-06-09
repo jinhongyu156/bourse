@@ -117,10 +117,16 @@ const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, electronicC
 
 const User = React.memo( function( props )
 {
-	React.useEffect( function()
-	{
-		props.fetchUserDetailData();
-	}, [] );
+	// React.useEffect( function()
+	// {
+	// 	props.fetchUserDetailData();
+	// }, [] );
+
+	React.useEffect( () => {
+		props.navigation.addListener( "focus", () => {
+			props.fetchUserDetailData();
+		} );
+	}, [ props.navigation ] );
 
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{

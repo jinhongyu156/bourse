@@ -56,10 +56,16 @@ const Content = function ( { productId, setProductId, setCount, contractData, cu
 
 const Contract = React.memo( function ( props )
 {
-	React.useEffect( function()
-	{
-		props.fetchContractData();
-	}, [] );
+	// React.useEffect( function()
+	// {
+	// 	props.fetchContractData();
+	// }, [] );
+
+	React.useEffect( () => {
+		props.navigation.addListener( "focus", () => {
+			props.fetchContractData();
+		} );
+	}, [ props.navigation ] );
 
 	const goToChart = React.useCallback( function()
 	{

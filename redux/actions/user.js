@@ -19,6 +19,7 @@ export const ACTION_SET_USER_QUERYTYPEINDEX = "ACTION_SET_USER_QUERYTYPEINDEX";
 export const ACTION_SET_USER_ISSHOWACTIONSHEET = "ACTION_SET_USER_ISSHOWACTIONSHEET";
 export const ACTION_SET_USER_USERQUERYDATA = "ACTION_SET_USER_USERQUERYDATA";
 
+export const ACTION_SET_USER_AUTHDATA = "ACTION_SET_USER_AUTHDATA";
 export const ACTION_SET_USER_SUBACCOUNTSDATA = "ACTION_SET_USER_SUBACCOUNTSDATA";
 export const ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT = "ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT";
 export const ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR = "ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR";
@@ -96,6 +97,12 @@ function setFetchBindSubAccountError( fetchBindSubAccountError )
 function setHotkeyData( hotkeyData, isLoadingHotkeyData, fetchHotkeyDataError )
 {
 	return { type: ACTION_SET_USER_HOTKEYDATA, payload: { hotkeyData, isLoadingHotkeyData, fetchHotkeyDataError } };
+};
+
+// 设置 authData, fetchAuthDataError
+function setAuthData( authData, fetchAuthDataError )
+{
+	return { type: ACTION_SET_USER_AUTHDATA, payload: { authData, fetchAuthDataError } };
 };
 
 // 设置 summarizeData
@@ -453,6 +460,29 @@ export function fetchElectronicContractData()
 		} catch( err )
 		{
 			dispatch( setElectronicContractData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchElectronicContractDataError" ) }` : err.err.toString() ) );
+		};
+	};
+};
+
+// 请求实名认证信息
+export function fetchAuthData()
+{
+	return async function( dispatch )
+	{
+		dispatch( setAuthData( {}, null ) );
+		try
+		{
+			const res = await fetchPost( "/user.php", { "提交": "提交实名认证信息" } );
+			if( res && isObject( res ) )
+			{
+				dispatch( setAuthData( res, null ) );
+			} else
+			{
+				dispatch( setAuthData( {}, res.toString() ) );
+			};
+		} catch( err )
+		{
+			dispatch( setAuthData( {}, err.type === "network" ? `${ err.status }: ${ I18n.t( "auth.fetchAuthDataError" ) }` : err.err.toString() ) );
 		};
 	};
 };
