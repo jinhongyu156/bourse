@@ -30,7 +30,6 @@ export default React.memo( function ShowText( { data, loading, error, fetchData 
 	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }>
 	{
 		error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
-		: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />
 		: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
 		: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } text = { item } /> )
 		: null

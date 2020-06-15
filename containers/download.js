@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, ToastAndroid, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import QRCode from "react-native-qrcode-svg";
 
@@ -19,9 +21,9 @@ export default React.memo( function()
 {
 	const onPressAndroid = React.useCallback( function()
 	{
-		ToastAndroid.show( I18n.t( "user.wait" ), ToastAndroid.SHORT );
+		Toast.show( I18n.t( "user.wait" ) );
 		RNFS.downloadFile( { fromUrl: "http://ca.slb.one/app.apk", toFile: `${ RNFS.ExternalDirectoryPath }/${ ( ( Math.random() * 1000 ) | 0 ) }.apk` } ).promise.then( res => {
-			ToastAndroid.show( I18n.t( "user.downloadSuccess" ), ToastAndroid.SHORT );
+			Toast.show( I18n.t( "user.downloadSuccess" ) );
 		} );
 	}, [] );
 

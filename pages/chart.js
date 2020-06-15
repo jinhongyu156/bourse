@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, TextInput, ScrollView, ActivityIndicator, TouchableOpacity, ToastAndroid, Dimensions, StyleSheet } from "react-native";
+import { View, Text, TextInput, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import { LineChart, YAxis, XAxis, Grid } from "react-native-svg-charts"
 
@@ -202,7 +204,7 @@ const UserInfo = React.memo( function( { usdtInfo, etusdInfo, slbtInfo } )
 } );
 
 
-const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSelect, data, loading, error, submit, number, price, inputError, setInputText } )
+const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSelect, fetchData, data, loading, error, submit, number, price, inputError, setInputText } )
 {
 	const tabIndexArr = [ I18n.t( "chart.buy" ), I18n.t( "chart.sell" ) ];
 
@@ -210,7 +212,7 @@ const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSele
 
 	const bindSubmit = React.useCallback( function()
 	{
-		return submit( res => ToastAndroid.show( res, ToastAndroid.SHORT ) );
+		return submit( res => Toast.show( res ) );
 	}, [] )
 
 	const dropdownButton = React.useCallback( function( buttonText )
@@ -260,7 +262,7 @@ const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSele
 				<Text>{ I18n.t( "chart.price" ) } USDT</Text>
 				<Text>{ I18n.t( "chart.number" ) }</Text>
 			</View>
-			<View style = { styles.orderListBox }>
+			<TouchableOpacity style = { styles.orderListBox } onPress = { fetchData }>
 			{
 				error
 					? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
@@ -294,7 +296,7 @@ const Order = React.memo( function( { tabIndex, dropdownIndex, changeTab, onSele
 					</View>
 				</React.Fragment>
 			}
-			</View>
+			</TouchableOpacity>
 		</View>
 	</View>;
 } );
@@ -326,7 +328,7 @@ const UserOrderTabItemRow = React.memo( function( { index, item, cancel } )
 {
 	const bindCancel = React.useCallback( function()
 	{
-		cancel( item[ "订单号" ], res => ToastAndroid.show( res, ToastAndroid.SHORT ) );
+		cancel( item[ "订单号" ], res => Toast.show( res ) );
 	}, [] );
 
 	return <View style = { [ styles.userOrderListRow ] }>
@@ -446,7 +448,8 @@ const Line = React.memo( function( { index, data, loading, error } )
 
 const Chart = function( props )
 {
-	React.useEffect( function()
+
+	const refresh = React.useCallback( function()
 	{
 		props.fetchUserDetailData();
 		props.fetchOrderList();
@@ -456,11 +459,15 @@ const Chart = function( props )
 
 	React.useEffect( function()
 	{
+		refresh();
+	}, [] );
+
+	React.useEffect( function()
+	{
 		props.navigation.setOptions( { header: () => <Header onSelect = { props.setHeaderDropdownIndex } goBack = { props.navigation.goBack } /> } )
 	}, [] );
 
-	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false }>
-		
+	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { false } onRefresh = { refresh } /> }>
 		<UserInfo
 			usdtInfo = { props.userDetailData[ "USDT" ] }
 			etusdInfo = { props.userDetailData[ "ETUSD" ] }
@@ -472,6 +479,7 @@ const Chart = function( props )
 			changeTab = { props.setOrderParamsTabIndex }
 			onSelect = { props.setOrderParamsDropdownIndex }
 
+			fetchData = { props.fetchOrderList }
 			data = { props.orderListData }
 			loading = { props.loadingOrderListData }
 			error = { props.fetchOrderListDataError }

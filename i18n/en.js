@@ -6,6 +6,7 @@ export default {
 		user: "User"
 	},
 	login: {
+		title: "Login",
 		placeholder: {
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			password: "Please enter your password", code: "Please enter the code"
@@ -29,6 +30,7 @@ export default {
 		actionSheetThemeOptions: [ "Contracted", "Science and Technology", "Cancel" ]
 	},
 	register: {
+		title: "Register",
 		placeholder: {
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			name: "Please enter your name", referee: "Please enter your referee",
@@ -63,6 +65,7 @@ export default {
 		trading: "Trading"
 	},
 	finance: {
+		title: "Index",
 		quit: "Press again to exit the application",
 		tip1: "There is a new version that can be updated",
 		tip2: "Please update for a better experience",
@@ -323,13 +326,16 @@ export default {
 		state3tip: "Recharge complete",
 		state4tip: "cancelled",
 
-		tip1: "A single transaction cannot exceed 49,000 RMB",
+		tip1: "A single transaction cannot exceed 200000 RMB",
 		tip2: "The minimum top-up value is 20 USDT",
 		tip3: "You can only enter the number of integer recharge",
 
 		tip4: "Please do not fill in any remarks when transferring money! Otherwise, the account may be frozen and the platform is not responsible for the loss",
 		tip5: "Please fill in the correct transfer amount when transferring money. If the amount is not correct, the recharge will fail",
-		tip6: "Please pay correctly after filling in the payer send out"
+		tip6: "Please pay correctly after filling in the payer send out",
+
+		tip7: "Screenshot save the transfer receipt",
+		tip8: "Recharge time: 10 am to 12 PM every day"
 
 	},
 	turn: {

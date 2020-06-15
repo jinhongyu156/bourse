@@ -2,7 +2,7 @@ import React from "react";
 
 import I18n from "i18n-js";
 
-import { View, Text, ScrollView, TouchableOpacity, ToastAndroid, StyleSheet, Keyboard, Dimensions } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Keyboard, Dimensions } from "react-native";
 
 import { useNavigation, CommonActions } from "@react-navigation/native";
 

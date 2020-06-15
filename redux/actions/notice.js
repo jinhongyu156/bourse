@@ -19,7 +19,7 @@ export function wsNotice()
 	{
 		// if( ws ) return;
 
-		ws = new Ws( "ws://tcp.slb.one:8308/", {
+		ws = new Ws( "ws://tcp.slb.one:8080/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );

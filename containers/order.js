@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, Alert, TouchableOpacity, ToastAndroid, StyleSheet } from "react-native";
+import { View, Text, Alert, TouchableOpacity, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -96,7 +98,7 @@ const AccordionContent = React.memo( function( { data, submit } )
 
 		Alert.alert( I18n.t( "contract.submitMessage" ), "", [
 			{ text: I18n.t( "contract.cancel" ), style: "cancel" },
-			{ text: I18n.t( "contract.confirm" ), onPress: () => submit( { id: data[ "订单号" ] }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) ) },
+			{ text: I18n.t( "contract.confirm" ), onPress: () => submit( { id: data[ "订单号" ] }, res => Toast.show( res ) ) },
 		], { cancelable: false } );
 	}, [ data[ "订单号" ] ] );
 

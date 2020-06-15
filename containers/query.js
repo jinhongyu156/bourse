@@ -258,7 +258,7 @@ export default React.memo( function Query( { data, loading, error, queryNavIndex
 			keyboardDismissMode = { "on-drag" }
 			onScrollBeginDrag = { Keyboard.dismiss }
 			renderItem = { ( { item, index } ) => <Row item = { item } queryTypeIndex = { queryTypeIndex } /> }
-			ListEmptyComponent = { () => error ? <ListError error = { error } /> : loading ? <Loading /> : <ListEmpty /> }
+			ListEmptyComponent = { () => error ? <ListError error = { error } /> : loading ? null : <ListEmpty /> }
 			ItemSeparatorComponent = { () => <ItemSeparator /> }
 			showsVerticalScrollIndicator = { false }
 			refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }

@@ -72,7 +72,7 @@ function wsData()
 	{
 		// if( ws ) return;
 		
-		ws = new Ws( "ws://tcp.slb.one:9595/", {
+		ws = new Ws( "ws://tcp.slb.one:80/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );

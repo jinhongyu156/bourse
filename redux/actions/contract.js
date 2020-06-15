@@ -178,7 +178,7 @@ function wsContract()
 
 		const keys = [ "BTC", "GOLD", "OIL" ];
 
-		ws = new Ws( "ws://tcp.slb.one:9595/", {
+		ws = new Ws( "ws://tcp.slb.one:80/", {
 			heartCheck: function()
 			{
 				ws.sendMessage( "1" );

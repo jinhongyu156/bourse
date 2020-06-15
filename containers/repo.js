@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, ScrollView, Text, ToastAndroid, TouchableOpacity, StyleSheet } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -30,7 +32,7 @@ export default React.memo( function( { etusd } )
 			fromUrl: "http://ca.slb.one/data/矿机回购申请书.doc",
 			toFile: `${ Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.ExternalDirectoryPath }/${ ( ( Math.random() * 1000 ) | 0 ) }.doc`
 		} ).promise.then( res => {
-			ToastAndroid.show( I18n.t( "user.downloadSuccess" ), ToastAndroid.SHORT );
+			Toast.show( I18n.t( "user.downloadSuccess" ) );
 		} );
 	}, [] );
 	if( Number( etusd ) > 0 )

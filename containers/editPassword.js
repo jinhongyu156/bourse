@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, ToastAndroid, ScrollView, Keyboard, StyleSheet, Dimensions } from "react-native";
+import { View, Text, ScrollView, Keyboard, StyleSheet, Dimensions } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -37,7 +39,7 @@ export default React.memo( function EditPassword( { oldPassWord, newPassWord, co
 {
 	const bindSubmit = React.useCallback( function()
 	{
-		return submit( () => ToastAndroid.show( I18n.t( "user.fetchEditPassWordSuccess" ), ToastAndroid.SHORT ) );
+		return submit( () => Toast.show( I18n.t( "user.fetchEditPassWordSuccess" ) ) );
 	}, [] );
 
 	return <ScrollView

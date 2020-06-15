@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, ScrollView, TouchableOpacity, ToastAndroid, StyleSheet, Keyboard, Dimensions } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Keyboard, Dimensions } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import Clipboard from "@react-native-community/clipboard";
 
@@ -106,13 +108,14 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 	</View>;
 } );
 
-const Turn = React.memo( function( { number, account, password, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
+const Turn = React.memo( function( { number, account, password, note, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
 {
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>{ fetchSubmitError ? <Text style = { styles.errorText }>{ fetchSubmitError }</Text> : null }</View>
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "turn.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.number" ) }: </Text> } />
 		<Input index = { "account" } value = { account } placeholder = { I18n.t( "turn.placeholderAccount" ) } hasError = { inputError[ "account" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.account" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "turn.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.password" ) }: </Text> } />
+		<Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } />
 		<SubmitBtn title = { I18n.t( "turn.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
 	</View>;
 } );
@@ -133,7 +136,7 @@ const Access = React.memo( function( props )
 		const fetchSubmit = React.useCallback( function()
 		{
 			props.fetchTurnSubmit( props.route.params.name, () => {
-				ToastAndroid.show( I18n.t( "turn.fetchSubmitSuccess" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "turn.fetchSubmitSuccess" ) );
 				props.navigation.goBack();
 				props.fetchData();
 			} );
@@ -143,6 +146,7 @@ const Access = React.memo( function( props )
 			number = { props.number }
 			account = { props.account }
 			password = { props.password }
+			note = { props.note }
 			inputError = { props.inputError }
 			fetchSubmit = { fetchSubmit }
 			fetchSubmitError = { props.fetchSubmitError }
@@ -160,7 +164,7 @@ const Access = React.memo( function( props )
 		const fetchSubmit = React.useCallback( function()
 		{
 			props.fetchMentionSubmit( props.route.params.name, () => {
-				ToastAndroid.show( I18n.t( "mention.fetchSubmitSuccess" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "mention.fetchSubmitSuccess" ) );
 				props.navigation.goBack();
 				props.fetchData();
 			} );
@@ -191,17 +195,17 @@ const Access = React.memo( function( props )
 			if( props.address )
 			{
 				Clipboard.setString( props.address );
-				ToastAndroid.show( I18n.t( "recharge.copySuccess" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "recharge.copySuccess" ) );
 			} else
 			{
-				ToastAndroid.show( I18n.t( "recharge.placeholderAddress" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "recharge.placeholderAddress" ) );
 			};
 		}, [ props.address ] );
 
 		const fetchSubmit = React.useCallback( function()
 		{
 			props.fetchRechargeSubmit( props.route.params.name, () => {
-				ToastAndroid.show( I18n.t( "recharge.fetchSubmitSuccess" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "recharge.fetchSubmitSuccess" ) );
 				props.navigation.goBack();
 				props.fetchData();
 			} );

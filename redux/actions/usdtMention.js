@@ -1,5 +1,5 @@
 import I18n from "i18n-js";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-root-toast";
 
 import { fetchPost, isObject } from "./../../javascripts/util.js";
 import { intReg, passwordReg } from "./../../javascripts/regExp.js";
@@ -103,7 +103,7 @@ export function fetchMentionSubmit()
 					{
 						dispatch( clear() );
 						dispatch( setMentionSubmit( false, null ) );
-						ToastAndroid.show( I18n.t( "usdtMention.fetchMentionSubmitSuccess" ), ToastAndroid.SHORT );
+						Toast.show( I18n.t( "usdtMention.fetchMentionSubmitSuccess" ) );
 					} else
 					{
 						dispatch( setMentionSubmit( false, res.message ) );

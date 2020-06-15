@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, FlatList, RefreshControl, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, Image, FlatList, RefreshControl, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -82,10 +82,10 @@ const ListError = React.memo( function( { error } )
 	</View>;
 } );
 
-const ListLoading = React.memo( function()
-{
-	return <ActivityIndicator size = "small" color = "#696DAC" />;
-} );
+// const ListLoading = React.memo( function()
+// {
+// 	return <ActivityIndicator size = "small" color = "#696DAC" />;
+// } );
 
 const Article = React.memo( function( props )
 {
@@ -112,7 +112,7 @@ const Article = React.memo( function( props )
 			? <List2Item key = { index } { ...item } />
 			: <List1Item key = { index } isEnd = { props.data.length - 1 === index } { ...item } />
 		}
-		ListEmptyComponent = { () => props.error ? <ListError /> : props.loading ? <ListLoading /> : <ListEmpty /> }
+		ListEmptyComponent = { () => props.error ? <ListError /> : props.loading ? null : <ListEmpty /> }
 		showsVerticalScrollIndicator = { false }
 		keyExtractor = { ( item, index ) => item + index }
 		refreshControl = { <RefreshControl refreshing = { props.loading } onRefresh = { fetchData } /> }

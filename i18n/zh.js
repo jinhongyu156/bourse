@@ -6,6 +6,7 @@ export default {
 		user: "用户"
 	},
 	login: {
+		title: "登陆",
 		placeholder: { email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
 		loginType: { phoneNumber: "电话号码登录", email: "邮箱登录" },
 		forgetPassword: "忘记密码 ?",
@@ -26,6 +27,7 @@ export default {
 		actionSheetThemeOptions: [ "简约版", "科技版", "取消" ]
 	},
 	register: {
+		title: "注册",
 		placeholder: {
 			email: "请输入电子邮箱", phoneNumber: "请输入电话号码", name: "请输入姓名", referee: "请输入推荐人",
 			password: "请输入密码", newPassword: "请输入新密码",
@@ -60,6 +62,7 @@ export default {
 		trading: "交易金",
 	},
 	finance: {
+		title: "首页",
 		quit: "再按一次退出应用",
 		tip1: "存在新版本可以更新",
 		tip2: "请更新以便获得更好的体验",
@@ -176,7 +179,7 @@ export default {
 		placeholderNumber: "请输入充币数量",
 		number: "充币数量",
 		placeholderNote: "推荐填写本平台 ID 号",
-		note: "转账备注",
+		note: "备注",
 		submitText: "我已充币",
 		tip1: "1、本次充币地址有效时间120分钟",
 		tip2: "2、当前公司收币地址为一次性地址，下次充币会变更地址，请勿重复使用",
@@ -321,13 +324,16 @@ export default {
 		state3tip: "充值完成",
 		state4tip: "充值已被取消",
 
-		tip1: "单笔最高不能超过 4.9 万人民币",
+		tip1: "单笔最高不能超过 27000 USDT",
 		tip2: "最低充值 20 USDT",
 		tip3: "只能输入整数的充值数量",
 
 		tip4: "转账时请勿填写任何备注信息! 否则可能导致账户被冻结, 造成的损失平台概不负责",
 		tip5: "请在转账时, 填写正确的转账金额, 若金额不正确, 会导致充值失败",
-		tip6: "请正确付款后, 填写付款人送出"
+		tip6: "请正确付款后, 填写付款人送出",
+
+		tip7: "截图保存转汇款单据",
+		tip8: "充值时间:每日上午10時 ~ 至晚上12时"
 	},
 	turn: {
 		title: "转币",

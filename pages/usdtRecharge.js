@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, ScrollView, TouchableOpacity, ToastAndroid, StyleSheet, Keyboard, Dimensions } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Keyboard, Dimensions } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -57,7 +59,7 @@ const CopyBtn = React.memo( function( { text } )
 	const copy = React.useCallback( function( text )
 	{
 		Clipboard.setString( text );
-		ToastAndroid.show( I18n.t( "usdtRecharge.copySuccess" ), ToastAndroid.SHORT );
+		Toast.show( I18n.t( "usdtRecharge.copySuccess" ) );
 	}, [] );
 
 	return <View style = { styles.btnBox }>
@@ -123,6 +125,8 @@ const NoExist = React.memo( function( { fetchRechargeSubmit, fetchRechargeSubmit
 				<Text style = { styles.tipText }>1: { I18n.t( "usdtRecharge.tip1" ) }</Text>
 				<Text style = { styles.tipText }>2: { I18n.t( "usdtRecharge.tip2" ) }</Text>
 				<Text style = { styles.tipText }>3: { I18n.t( "usdtRecharge.tip3" ) }</Text>
+				<Text style = { styles.tipText }>4: { I18n.t( "usdtRecharge.tip7" ) }</Text>
+				<Text style = { styles.tipText }>5: { I18n.t( "usdtRecharge.tip8" ) }</Text>
 			</View>
 			<ActionSheet
 				{ ...actionSheetData }

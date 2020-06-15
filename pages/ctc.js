@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Image, Text, TouchableOpacity, ToastAndroid, ActivityIndicator, SectionList, RefreshControl, StyleSheet } from "react-native";
+import { View, Image, Text, TouchableOpacity, ActivityIndicator, SectionList, RefreshControl, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import { bindActionCreators } from "redux";
 
@@ -176,13 +178,13 @@ const SectionRowContent = React.memo( function( { type, title, goToAccess, price
 		}
 		<View style = { [ styles.sectionRowContentItem, styles.sectionRowContentItemAround ] }>
 			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type
-				? fetchSell( { coin: title, number: count }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) )
+				? fetchSell( { coin: title, number: count }, res => Toast.show( res ) )
 				: goToAccess( "recharge", title )
 			}>
 				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.sell" ) :I18n.t( "ctc.charge" ) }</Text>
 			</TouchableOpacity>
 			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => type
-				? fetchBuy( { coin: title, number: count }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) )
+				? fetchBuy( { coin: title, number: count }, res => Toast.show( res ) )
 				: goToAccess( "mention", title )
 			}>
 				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.buy" ) : I18n.t( "ctc.mention" ) }</Text>

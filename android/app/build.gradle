@@ -131,6 +131,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled = true
         applicationId "com.bourse"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -202,6 +203,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation project(':react-native-splash-screen')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

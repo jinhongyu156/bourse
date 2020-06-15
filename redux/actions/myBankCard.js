@@ -1,5 +1,5 @@
 import I18n from "i18n-js";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-root-toast";
 
 import { fetchPost, isObject } from "./../../javascripts/util.js";
 import { intReg, passwordReg } from "./../../javascripts/regExp.js";
@@ -168,7 +168,7 @@ export function fetchBindCard()
 				{
 					dispatch( setBindCard( false, null ) );
 					dispatch( fetchCardData() );
-					ToastAndroid.show( I18n.t( "myBankCard.fetchBindCardSuccess" ), ToastAndroid.SHORT );
+					Toast.show( I18n.t( "myBankCard.fetchBindCardSuccess" ) );
 				} else
 				{
 					dispatch( setBindCard( false, res.toString() ) );
@@ -198,7 +198,7 @@ export function fetchUnBindCard()
 			{
 				dispatch( setUnBindCard( false, null ) );
 				dispatch( fetchCardData() );
-				ToastAndroid.show( I18n.t( "myBankCard.fetchUnBindCardSuccess" ), ToastAndroid.SHORT );
+				Toast.show( I18n.t( "myBankCard.fetchUnBindCardSuccess" ) );
 			} else
 			{
 				dispatch( setUnBindCard( false, res.toString() ) );

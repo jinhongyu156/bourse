@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, Modal, TextInput, ActivityIndicator, TouchableOpacity, ToastAndroid, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Modal, TextInput, ActivityIndicator, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -37,11 +39,17 @@ const styles = StyleSheet.create( {
 
 	modalInput: { fontSize: 18, textAlign: "center", width: MODALINPUTBOXWIDTH, height: MODALINPUTHEIGHT * 0.5, borderWidth: 1 },
 	modalInputTip: { fontSize: 10, color: "#6D6E77" },
-	modalOptionBox: { flexDirection: "row", width: MODALWIDTH, height: MODALOPTIONBOXHEIGHT },
+	modalOptionBox: { flexDirection: "row", width: MODALWIDTH, height: MODALOPTIONBOXHEIGHT},
 	modalOptionBoxItem: { flex: 1, justifyContent: "center", alignItems: "center" },
-	modalOptionBoxItemText: { fontSize: 16, fontWeight: "bold", borderRadius: 50, paddingVertical: 10, paddingHorizontal: 40 },
-	modalCancelBtn: { color: "#88898A", borderWidth: 1, borderColor: "#88898A" },
-	modalConfirmBtn: { color: "#FFFFFF", backgroundColor: "#696DAC" },
+	modalOptionBoxItemView: { height: MODALOPTIONBOXHEIGHT * 0.4, justifyContent: "center", borderRadius: 50, paddingHorizontal: 40 },
+	modalOptionBoxItemText: { fontSize: 16, fontWeight: "bold" },
+	modalCancelBtn: { color: "#88898A" },
+	modalConfirmBtn: { color: "#FFFFFF" },
+
+	modalCancelBtnView: { borderWidth: 1, borderColor: "#88898A" },
+	modalConfirmBtnView: { backgroundColor: "#696DAC" },
+
+
 	modalInfoBox: { width: MODALWIDTH, height: MODALINFOBOXHEIGHT, flexDirection: "row", justifyContent: "space-around", alignItems: "center" },
 	modalInfoItem: { alignItems: "center" },
 	modalInfoBoxText: { fontSize: 12, color: "#6D6E77" },
@@ -65,7 +73,7 @@ export default React.memo( function( { callback, visible, title, text, times, in
 	{
 		hideModal( 1, () => {
 			callback();
-			ToastAndroid.show( I18n.t( "finance.exchange.exchangeSuccess" ), ToastAndroid.SHORT );
+			Toast.show( I18n.t( "finance.exchange.exchangeSuccess" ) );
 		} );
 	}, [] );
 
@@ -92,7 +100,9 @@ export default React.memo( function( { callback, visible, title, text, times, in
 				</View>
 				<View style = { styles.modalOptionBox }>
 					<TouchableOpacity style = { styles.modalOptionBoxItem } onPress = { hide }>
-						<Text style = { [ styles.modalOptionBoxItemText, styles.modalCancelBtn ] }>{ I18n.t( "finance.exchange.cancelText" ) }</Text>
+						<View style = { [ styles.modalOptionBoxItemView, styles.modalCancelBtnView ] }>
+							<Text style = { [ styles.modalOptionBoxItemText, styles.modalCancelBtn ] }>{ I18n.t( "finance.exchange.cancelText" ) }</Text>
+						</View>
 					</TouchableOpacity>
 					<TouchableOpacity style = { styles.modalOptionBoxItem } disabled = { isloading } onPress = { submit }>
 					{
@@ -100,7 +110,9 @@ export default React.memo( function( { callback, visible, title, text, times, in
 							? <View style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>
 								<ActivityIndicator size = "small" color = "#FFFFFF" />
 							</View>
-							: <Text style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>{ I18n.t( "finance.exchange.exchangeText" ) }</Text>
+							: <View style = { [ styles.modalOptionBoxItemView, styles.modalConfirmBtnView ] }>
+								<Text style = { [ styles.modalOptionBoxItemText, styles.modalConfirmBtn ] }>{ I18n.t( "finance.exchange.exchangeText" ) }</Text>
+							</View>
 					}
 					</TouchableOpacity>
 				</View>

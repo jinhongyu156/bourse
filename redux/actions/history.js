@@ -1,5 +1,5 @@
 import I18n from "i18n-js";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-root-toast";
 
 import { fetchPost, isArray } from "./../../javascripts/util.js";
 
@@ -67,10 +67,10 @@ export function fetchSubmit( params )
 			const res = await fetchPost( "/Recharge.php", { "提交": "BindCoin", "orderid": params } );
 			dispatch( setFetchSubmit( false ) );
 			dispatch( fetchHistoryData() );
-			ToastAndroid.show( res, ToastAndroid.SHORT );
+			Toast.show( res );
 		} catch( err )
 		{
-			ToastAndroid.show( err.type === "network" ? `${ err.status }: ${ I18n.t( "history.fetchSubmitError" ) }` : err.err.toString(), ToastAndroid.SHORT );
+			Toast.show( err.type === "network" ? `${ err.status }: ${ I18n.t( "history.fetchSubmitError" ) }` : err.err.toString() );
 		};
 	};
 };

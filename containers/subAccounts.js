@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, ScrollView, ToastAndroid, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import I18n from "i18n-js";
 
@@ -59,14 +61,13 @@ export default React.memo( function SubAccounts( { data, loading, error, unbind,
 
 	const onPress = React.useCallback( function( id )
 	{
-		unbind( id, res => ToastAndroid.show( res, ToastAndroid.SHORT ) );
+		unbind( id, res => Toast.show( res ) );
 	}, [] );
 
-	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } stickyHeaderIndices = { [ 0 ] }>
+	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } stickyHeaderIndices = { [ 0 ] } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }>
 		<Header />
 		{
 			error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
-			: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />
 			: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
 			: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } rowData = { item } onPress = { onPress } /> )
 			: null

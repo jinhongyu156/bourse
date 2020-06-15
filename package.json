@@ -1,6 +1,6 @@
 {
   "name": "bourse",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -27,8 +27,10 @@
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-reanimated": "^1.8.0",
     "react-native-restart": "0.0.14",
+    "react-native-root-toast": "^3.2.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-vector-icons": "^6.6.0",
@@ -45,7 +47,6 @@
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
-    "react-devtools": "^4.6.0",
     "react-test-renderer": "16.11.0"
   },
   "jest": {

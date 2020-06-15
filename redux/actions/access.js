@@ -123,7 +123,7 @@ export function fetchAddress()
 	};
 };
 
-// 请求充值
+// 请求充币
 export function fetchRechargeSubmit( coin, callback )
 {
 	return async function( dispatch, getState )
@@ -132,6 +132,7 @@ export function fetchRechargeSubmit( coin, callback )
 		if( Object.values( access.inputError ).every( item => item === false ) && access.address && access.number )
 		{
 			dispatch( setIsLoading( true ) );
+			// const params = { "提交": "充币", "钱包地址": access.address, "充币备注": access.note, "充币数量": access.number, "充币类型": coin };
 			const params = { "提交": "充币", "钱包地址": access.address, "充币备注": access.note, "充币数量": access.number, "充币类型": coin };
 			try
 			{
@@ -211,7 +212,7 @@ export function fetchTurnSubmit( coin, callback )
 		if( Object.values( access.inputError ).every( item => item === false ) && access.account && access.number && access.password )
 		{
 			dispatch( setIsLoading( true ) );
-			const params = { "提交": "转币", "转币数量": access.number, "转币类型": coin, "转入账号": access.account, "资金密码": access.password };
+			const params = { "提交": "转币", "转出备注": access.note, "转币数量": access.number, "转币类型": coin, "转入账号": access.account, "资金密码": access.password };
 			try
 			{
 				const res = await fetchPost( "/otc.php", params );

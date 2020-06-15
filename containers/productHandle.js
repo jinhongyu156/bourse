@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, TextInput, ToastAndroid, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import Counter from "./../components/counter.js";
 
@@ -39,7 +41,7 @@ const Row = function( { count, setCount, code, total, msg, submit } )
 
 	const bindSubmit = React.useCallback( function( direction )
 	{
-		submit( { code, count, direction }, res => ToastAndroid.show( res, ToastAndroid.SHORT ) )
+		submit( { code, count, direction }, res => Toast.show( res ) )
 	}, [ code, count ] )
 
 	return <View style = { styles.row }>

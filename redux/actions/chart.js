@@ -116,7 +116,19 @@ export function fetchOrderList()
 
 			if( isObject( res ) )
 			{
-				res[ "buy" ].reverse();
+				if( !res[ "buy" ] )
+				{
+					res[ "buy" ] = [];
+				} else
+				{
+					res[ "buy" ].reverse();
+				};
+				
+				if( !res[ "sell" ] )
+				{
+					res[ "sell" ] = [];
+				};
+
 				dispatch( setOrderListData( res, false, null ) );
 			} else
 			{
@@ -240,6 +252,8 @@ export function fetchOrderSubmit( callback )
 					callback( I18n.t( "chart.fetchOrderSubmitSuccess" ) );
 					dispatch( fetchUserOrderListData() );
 					dispatch( fetchUserDetailData() );
+					dispatch( fetchOrderList() );
+					dispatch( fetchKline() );
 					dispatch( clearInputText() );
 				} else
 				{

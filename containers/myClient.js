@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, ScrollView, RefreshControl, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
 
 import I18n from "i18n-js";
 
@@ -84,11 +84,10 @@ export default React.memo( function MyClient( { id, data, loading, error, fetchD
 	const disabled = loading || ( idArr.current.length === 2 );
 
 	return <React.Fragment>
-		<ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } stickyHeaderIndices = { [ 0 ] }>
+		<ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } stickyHeaderIndices = { [ 0 ] } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchCurrent } /> }>
 			<Header />
 			{
 				error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
-				: ( loading && data.length === 0 ) ? <ActivityIndicator size = "small" color = "#696DAC" />
 				: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
 				: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } rowData = { item } onPress = { fetchDown } /> )
 				: null

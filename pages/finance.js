@@ -1,6 +1,8 @@
 import React from "react";
 
-import { View, Text, Image, TouchableOpacity, ScrollView, ToastAndroid, BackHandler, Linking, Alert, RefreshControl, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, BackHandler, Linking, Alert, RefreshControl, StyleSheet, Dimensions } from "react-native";
+
+import Toast from "react-native-root-toast";
 
 import { bindActionCreators } from "redux";
 
@@ -76,7 +78,7 @@ const Finance = function ( props )
 				return false;
 			} else {
 				lastTime = Date.now();
-				ToastAndroid.show( I18n.t( "finance.quit" ), ToastAndroid.SHORT )
+				Toast.show( I18n.t( "finance.quit" ) );
 				return true;
 			};
 			return true;
@@ -104,7 +106,7 @@ const Finance = function ( props )
 
 	// React.useEffect( function()
 	// {
-	// 	fetchData();
+	//	fetchData();
 	// }, [] );
 
 	React.useEffect( () => {
@@ -126,7 +128,7 @@ const Finance = function ( props )
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/invest_etu.png" ) } />
 					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "finance.header.investment" ) } ETU</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.fetchGetBenefits( res => ToastAndroid.show( res, ToastAndroid.SHORT ) ) }>
+				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.fetchGetBenefits( res => Toast.show( res ) ) }>
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/get_benefits.png" ) } />
 					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "finance.header.benefits" ) }</Text>
 				</TouchableOpacity>
