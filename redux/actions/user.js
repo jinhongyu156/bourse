@@ -178,7 +178,7 @@ export function showQueryTypeIndexActionSheet()
 };
 
 // 请求 userDetailData
-export function fetchUserDetailData()
+export function fetchUserDetailData( callback = () => {} )
 {
 	return async function( dispatch )
 	{
@@ -186,6 +186,12 @@ export function fetchUserDetailData()
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
+			
+			if( res === "load" )
+			{
+				callback();
+			};
+
 			if( isObject( res ) )
 			{
 				const userData = objectValueGetNum( res, [ "ETUSD", "SLBT", "USDT", "交易金", "代金券", "投资ETUSD" ] );

@@ -146,7 +146,7 @@ export function fetchGet( url, data, config = {} )
 {
 	return new Promise( function( resolve, reject )
 	{
-		return fetch( setSearch( { url: domain.concat( url ), params: data } ), config ).then( function( response )
+		return fetch( setSearch( { url: domain.concat( url ), params: data } ), config ).then( async function( response )
 		{
 			if( response.status === 200 )
 			{

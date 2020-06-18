@@ -15,7 +15,8 @@ const checkboxStyles = StyleSheet.create( {
 } );
 
 const underlineStyles = {
-	tabBarItem: { flex: 1, alignItems: "center" },
+	tabBarItem: { flex: 1 },
+	tabBarItemView: { flex: 1, alignItems: "center", justifyContent: "center" },
 	tabBarItemLine: { width: 40, height: 4, marginTop: 6, backgroundColor: "#696DAC" },
 	tabBarItemText: { fontSize: 16 },
 	active: { color: "#696DAC", fontWeight: "bold" },
@@ -23,7 +24,8 @@ const underlineStyles = {
 };
 
 const defaultStyles = {
-	tabBarItem: { flexDirection: "row", alignItems: "center" },
+	tabBarItem: { flex: 1 },
+	tabBarItemView: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center" },
 	active: { fontSize: 16, fontWeight: "bold", color: "#696DAC" },
 	inactive: { fontSize: 14, fontWeight: "normal", color: "#888888" }
 };
@@ -46,19 +48,23 @@ const CheckBoxTabBarItem = React.memo( function( { index, title, activeStyle, is
 const UnderlineTabBarItem = React.memo( function( { index, title, activeStyle, isActive, onPress } )
 {
 	return <TouchableOpacity style = { underlineStyles.tabBarItem } onPress = { () => onPress( index ) }>
-		<Text style = { [ underlineStyles.tabBarItemText, isActive ? ( activeStyle ? { color: activeStyle } : underlineStyles.active ) : underlineStyles.inactive ] }>{ title }</Text>
-		{
-			isActive
-				? <View style = { Object.assign( {}, underlineStyles.tabBarItemLine, activeStyle ? { backgroundColor: activeStyle } : {} ) } />
-				: null
-		}
+		<View style = { underlineStyles.tabBarItemView } >
+			<Text style = { [ underlineStyles.tabBarItemText, isActive ? ( activeStyle ? { color: activeStyle } : underlineStyles.active ) : underlineStyles.inactive ] }>{ title }</Text>
+			{
+				isActive
+					? <View style = { Object.assign( {}, underlineStyles.tabBarItemLine, activeStyle ? { backgroundColor: activeStyle } : {} ) } />
+					: null
+			}
+		</View>
 	</TouchableOpacity>;
 } );
 
 const DefaultTabBarItem = React.memo( function( { index, title, activeStyle, isActive, onPress } )
 {
 	return <TouchableOpacity style = { defaultStyles.tabBarItem } onPress = { () => onPress( index ) }>
-		<Text style = { [ defaultStyles.tabBarItemText ], isActive ? ( activeStyle ? { color: activeStyle } : defaultStyles.active ) : defaultStyles.inactive }>{ title }</Text>
+		<View style = { underlineStyles.tabBarItemView } >
+			<Text style = { [ defaultStyles.tabBarItemText ], isActive ? ( activeStyle ? { color: activeStyle } : defaultStyles.active ) : defaultStyles.inactive }>{ title }</Text>
+		</View>
 	</TouchableOpacity>;
 } );
 

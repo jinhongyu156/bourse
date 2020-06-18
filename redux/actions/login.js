@@ -158,6 +158,7 @@ export function logout()
 		const { login } = getState();
 		if ( login.isLogin )
 		{
+			console.log( res )
 			await AsyncStorage.setItem( "isLogin", "false" );
 			dispatch( setIsLogin( false ) );
 		};

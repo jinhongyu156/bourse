@@ -10,6 +10,10 @@ import { connect } from "react-redux";
 
 import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
 
+import { fetchUserDetailData as testLogin } from "./../redux/actions/user.js";
+
+import { CommonActions } from "@react-navigation/native";
+
 import I18n from "i18n-js";
 
 import FloatAction from "./../components/floatAction.js";
@@ -67,6 +71,7 @@ const Finance = function ( props )
 		props.fetchStatement();
 		props.fetchUserDetailData();
 		props.getVersion();
+		props.testLogin( () => props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) ) );
 	}, [] );
 
 	React.useEffect( () => {
@@ -200,7 +205,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
+		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, testLogin, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
 	}
 )( Finance );
 
