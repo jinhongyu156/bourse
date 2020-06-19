@@ -29,6 +29,8 @@ export const ACTION_SET_USER_SUMMARIZEDATA = "ACTION_SET_USER_SUMMARIZEDATA";
 export const ACTION_SET_USER_ELECTRONICCONTRACTDATA = "ACTION_SET_USER_ELECTRONICCONTRACTDATA";
 /* action create */
 
+import { logout } from "./login.js"
+
 // 设置 tabIndex1
 export function setTabIndex1( tabIndex1 )
 {
@@ -186,10 +188,10 @@ export function fetchUserDetailData( callback = () => {} )
 		try
 		{
 			const res = await fetchPost( "/user.php", params );
-			
 			if( res === "load" )
 			{
-				callback();
+				dispatch( logout() );
+				callback()
 			};
 
 			if( isObject( res ) )
