@@ -1,6 +1,6 @@
 {
   "name": "bourse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -28,6 +28,7 @@
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-reanimated": "^1.8.0",
     "react-native-restart": "0.0.14",
+    "react-native-root-siblings": "^4.0.6",
     "react-native-root-toast": "^3.2.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",

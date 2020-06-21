@@ -123,7 +123,7 @@ export function setInputText( key, value )
 
 		if( key === "rechargeNumber" )
 		{
-			dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTERROR, payload: Object.assign( {}, usdtRecharge.inputError, { [ key ]: !( intReg.test( value ) && Number( value ) >= 20 && usdtInfo * Number( value ) < 49000 ) } ) } );
+			dispatch( { type: ACTION_SET_USDTRECHARGE_INPUTERROR, payload: Object.assign( {}, usdtRecharge.inputError, { [ key ]: !intReg.test( value ) } ) } );
 		};
 	};
 };

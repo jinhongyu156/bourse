@@ -1,10 +1,12 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from "react-native";
 
 import Toast from "react-native-root-toast";
 
 import QRCode from "react-native-qrcode-svg";
+
+import Clipboard from "@react-native-community/clipboard";
 
 import I18n from "i18n-js";
 
@@ -27,10 +29,19 @@ export default React.memo( function()
 		} );
 	}, [] );
 
+	const copy = React.useCallback( function()
+	{
+		Clipboard.setString( "http://ca.slb.one/appdown.php" );
+		Toast.show( I18n.t( "usdtRecharge.copySuccess" ) );
+	}, [] );
+
 	return <React.Fragment>
 		<View style = { styles.container } contentContainerStyle = { styles.contentContainer } showsVerticalScrollIndicator = { false }>
 			<QRCode size = { 120 } value = "http://ca.slb.one/appdown.php" color = { "#696DAC" } />
-			<Text style = { styles.text }>香港数字</Text>
+			<Text style = { styles.text } onPress = { onPressAndroid }>香港数字</Text>
+			<TouchableOpacity onPress = { copy } onLongPress = { () => Linking.openURL( "http://ca.slb.one/app.apk" ) }>
+				<Text>http://ca.slb.one/appdown.php</Text>
+			</TouchableOpacity>
 		</View>
 		<View style = { styles.copyrightBox }>
 			<Text style = { styles.copyrightText }>Copyright © 香港数字  All Rights Reserved</Text>

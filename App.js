@@ -2,6 +2,7 @@ import "react-native-gesture-handler";
 import "react-native-get-random-values"
 
 import SplashScreen from "react-native-splash-screen";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, Image } from "react-native";
@@ -119,23 +120,25 @@ export default function()
 	return status && <React.Fragment>
 		<StatusBar barStyle = "dark-content" backgroundColor = "rgba( 0, 0, 0, 0 )" translucent = { true } />
 		<Provider store = { store }>
-			<NavigationContainer>
-				<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
-					<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false, headerTitle: I18n.t( "login.title" ) } ) } />
-					<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false, headerTitle: I18n.t( "register.title" ) } ) } />
-					<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
-					<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false, headerTitle: I18n.t( "finance.title" ) } ) } />
-					<Stack.Screen name = "Access" component = { Access } />
-					<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
-					<Stack.Screen name = "Chart" component = { Chart } />
-					<Stack.Screen name = "Article" component = { Article } />
-					<Stack.Screen name = "UsdtRecharge" component = { UsdtRecharge } options = { () => ( { title: I18n.t( "usdtRecharge.title" ) } ) } />
-					<Stack.Screen name = "UsdtMention" component = { UsdtMention } options = { () => ( { title: I18n.t( "usdtMention.title" ) } ) } />
-					<Stack.Screen name = "MyBankCard" component = { MyBankCard } options = { () => ( { title: I18n.t( "myBankCard.title" ) } ) } />
-					<Stack.Screen name = "History" component = { History } options = { () => ( { title: I18n.t( "history.title" ) } ) } />
-					<Stack.Screen name = "Auth" component = { Auth } options = { () => ( { title: I18n.t( "auth.title" ) } ) } />
-				</Stack.Navigator>
-			</NavigationContainer>
+			<RootSiblingParent>
+				<NavigationContainer>
+					<Stack.Navigator initialRouteName = { store.getState().login.isLogin ? "TabNavigator" : "Login" }>
+						<Stack.Screen name = "Login" component = { Login } options = { () => ( { headerShown: false, headerTitle: I18n.t( "login.title" ) } ) } />
+						<Stack.Screen name = "Register" component = { Register } options = { () => ( { headerShown: false, headerTitle: I18n.t( "register.title" ) } ) } />
+						<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
+						<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false, headerTitle: I18n.t( "finance.title" ) } ) } />
+						<Stack.Screen name = "Access" component = { Access } />
+						<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
+						<Stack.Screen name = "Chart" component = { Chart } />
+						<Stack.Screen name = "Article" component = { Article } />
+						<Stack.Screen name = "UsdtRecharge" component = { UsdtRecharge } options = { () => ( { title: I18n.t( "usdtRecharge.title" ) } ) } />
+						<Stack.Screen name = "UsdtMention" component = { UsdtMention } options = { () => ( { title: I18n.t( "usdtMention.title" ) } ) } />
+						<Stack.Screen name = "MyBankCard" component = { MyBankCard } options = { () => ( { title: I18n.t( "myBankCard.title" ) } ) } />
+						<Stack.Screen name = "History" component = { History } options = { () => ( { title: I18n.t( "history.title" ) } ) } />
+						<Stack.Screen name = "Auth" component = { Auth } options = { () => ( { title: I18n.t( "auth.title" ) } ) } />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</RootSiblingParent>
 		</Provider>
 	</React.Fragment>;
 };
