@@ -377,6 +377,10 @@ export default {
 		newbieGuide: "Guide",
 		vouchers: "Vouchers",
 		language: "Language",
+		version: "Version",
+		update: "A new version is available for update",
+
+
 		logout: "Logout",
 
 		trading: "Trading",

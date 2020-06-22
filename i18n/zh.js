@@ -374,6 +374,8 @@ export default {
 		newbieGuide: "新手指南",
 		vouchers: "代金券",
 		language: "语言",
+		version: "版本",
+		update: "存在新版本可更新",
 		logout: "退出登录",
 
 		trading: "交易金",

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, Linking, StyleSheet, Dimensions } from "react-native";
 
 import { useNavigation, CommonActions } from "@react-navigation/native";
 
@@ -9,6 +9,8 @@ import SubmitBtn from "./../containers/submit.js";
 import I18n from "i18n-js";
 
 import ActionSheet from "./../components/actionSheet.js";
+
+const PACKAGEJSON = require( "./../package.json" );
 
 // 提交按钮宽度
 const SUBMITBTNWIDTH = Dimensions.get( "window" ).width * 0.9;
@@ -24,12 +26,12 @@ const styles = StyleSheet.create( {
 	rowKeyText: { color: "#000000", fontSize: 14 },
 	rowValueText: { color: "#333333", fontSize: 12, paddingTop: 5 },
 
-	logoutBtnBox: { height: 100, backgroundColor: "#F6F6F6", alignItems: "center" },
-	logoutBtn: { width: SUBMITBTNWIDTH * 0.8, height: SUBMITBTNHEIGHT * 0.8, marginVertical: 10 },
+	logoutBtnBox: { height: SUBMITBTNHEIGHT * 1.6, backgroundColor: "#F6F6F6", justifyContent: "center", alignItems: "center" },
+	logoutBtn: { width: SUBMITBTNWIDTH * 0.8, height: SUBMITBTNHEIGHT * 0.8 },
 } );
 
 
-export default React.memo( function MyInfo( { id, vouchers, userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet, isLogin, hasCard, bankName, fetchData, logout } )
+export default React.memo( function MyInfo( { id, vouchers, version, userLanguage, actionSheetData, isShowActionSheet, showLanguageActionSheet, hideActionSheet, isLogin, hasCard, bankName, fetchData, getVersion, logout } )
 {
 	const navigation = useNavigation();
 	isLogin || navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) );
@@ -37,6 +39,7 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 	React.useEffect( function()
 	{
 		fetchData();
+		getVersion();
 	}, [] )
 
 	const goToMyBankCard = React.useCallback( function()
@@ -48,6 +51,8 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 	{
 		navigation.push( "History" );
 	}, [] );
+
+	const hasNewVersion = PACKAGEJSON.version !== version
 
 	return <React.Fragment>
 		<View style = { styles.container }>
@@ -70,6 +75,10 @@ export default React.memo( function MyInfo( { id, vouchers, userLanguage, action
 			<TouchableOpacity style = { styles.row } onPress = { showLanguageActionSheet }>
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.language" ) }</Text>
 				<Text style = { styles.rowValueText }>{ userLanguage }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.row } onPress = { () => Linking.openURL( "http://ca.slb.one/app.apk" ) }>
+				<Text style = { styles.rowKeyText }>{ I18n.t( "user.version" ) }</Text>
+				<Text style = { styles.rowValueText }>{ PACKAGEJSON.version }{ hasNewVersion ? `( ${ I18n.t( "user.update" ) } )` : "" }</Text>
 			</TouchableOpacity>
 		</View>
 		<View style = { styles.logoutBtnBox }>

@@ -15,6 +15,8 @@ import { showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexAct
 import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
 import { fetchCardData } from "./../redux/actions/myBankCard.js";
 
+import { getVersion } from "./../redux/actions/finance.js";
+
 import { logout } from "./../redux/actions/login.js";
 
 import I18n from "i18n-js";
@@ -207,6 +209,7 @@ const User = React.memo( function( props )
 export default connect(
 	function mapStateToProps( state, ownProps )
 	{
+		const financeData = state.finance;
 		const userData = state.user;
 		const loginData = state.login;
 		const languageData = state.language;
@@ -220,6 +223,8 @@ export default connect(
 			myInfoProps: {
 				id: userData.userDetailData[ "id" ], vouchers: userData.userDetailData[ "代金券" ],
 				userLanguage: languageData.userLanguage,
+				version: financeData.version,
+				version: "0.1.3",
 				hasCard: myBankCardData.hasCard, bankName: myBankCardData.bankName,
 				actionSheetData: loginData.actionSheetData, isShowActionSheet: loginData.isShowActionSheet, isLogin: loginData.isLogin
 			},
@@ -258,7 +263,7 @@ export default connect(
 	{
 		return {
 			callbackForMyClient: bindActionCreators( { fetchData: fetchMyClientData }, dispatch ),
-			callbackForMyInfo: bindActionCreators( { fetchData: fetchCardData, showLanguageActionSheet: showLanguageActionSheet, hideActionSheet: hideLanguageActionSheet, logout: logout }, dispatch ),
+			callbackForMyInfo: bindActionCreators( { fetchData: fetchCardData, getVersion: getVersion, showLanguageActionSheet: showLanguageActionSheet, hideActionSheet: hideLanguageActionSheet, logout: logout }, dispatch ),
 			callbackForEditPassword: bindActionCreators( { setInputText: setInputText, submit: fetchEditPassword }, dispatch ),
 			callbackForQuery: bindActionCreators( { fetchData: fetchUserQueryData, setQueryNavIndex: setQueryNavIndex, showQueryTypeIndexActionSheet: showQueryTypeIndexActionSheet, hideActionSheet: hideQueryTypeIndexActionSheet }, dispatch ),
 			callbackForSubAccounts: bindActionCreators( { fetchData: fetchSubAccountsData, unbind: fetchSubAccountsUnbind }, dispatch ),
