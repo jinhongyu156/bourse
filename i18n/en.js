@@ -180,6 +180,8 @@ export default {
 		placeholderAddress: "Please get address first",
 		getAddress: "Get",
 		copy: "Copy",
+		chainName: "ChainName",
+
 		placeholderNumber: "Please enter the charge amount",
 		number: "Number",
 		placeholderNote: "It is recommended to fill in the ID number of this platform",
@@ -511,6 +513,12 @@ export default {
 	auth: {
 		title: "Auth",
 		fetchAuthDataError: "Failed to obtain real-name authentication information"
+	},
+	camera: {
+		title: "Permission to use camera",
+		message: "We need your permission to use your camera",
+		buttonPositive: "Ok",
+		buttonNegative: "Cancel"
 	}
 };
 

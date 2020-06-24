@@ -152,7 +152,7 @@ const SectionRowTitle = React.memo( function( { title, number, unit, total, unit
 	</View>;
 } );
 
-const SectionRowContent = React.memo( function( { type, title, goToAccess, price, count, setCount, fetchSell, fetchBuy } )
+const SectionRowContent = React.memo( function( { type, title, number, goToAccess, price, count, setCount, fetchSell, fetchBuy } )
 {
 	const bindSetCount = React.useCallback( function( text )
 	{
@@ -189,7 +189,7 @@ const SectionRowContent = React.memo( function( { type, title, goToAccess, price
 			}>
 				<Text style = { styles.sectionRowContentBtnText }>{ type ? I18n.t( "ctc.buy" ) : I18n.t( "ctc.mention" ) }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => goToAccess( "turn", title ) }>
+			<TouchableOpacity style = { styles.sectionRowContentBtn } onPress = { () => goToAccess( "turn", title, number ) }>
 				<Text style = { styles.sectionRowContentBtnText }>{ I18n.t( "ctc.turn" ) }</Text>
 			</TouchableOpacity>
 		</View>
@@ -202,7 +202,7 @@ const SectionRow = React.memo( function( { type, title, number, count, price, un
 		index = { title }
 		expanded = { [] }
 		renderTitle = { () => <SectionRowTitle title = { title } number = { number } unit = { unit } total = { total } unitRate = { unitRate } totalRate = { totalRate } /> }
-		renderContent = { () => <SectionRowContent type = { type } title = { title } goToAccess = { goToAccess } price = { price } count = { count } setCount = { setCount } fetchSell = { fetchSell } fetchBuy = { fetchBuy } /> }
+		renderContent = { () => <SectionRowContent type = { type } number = { number } title = { title } goToAccess = { goToAccess } price = { price } count = { count } setCount = { setCount } fetchSell = { fetchSell } fetchBuy = { fetchBuy } /> }
 	/>;
 } );
 
@@ -248,9 +248,9 @@ const Ctc = React.memo( function( props )
 		} );
 	}, [ props.navigation ] );
 
-	const goToAccess = React.useCallback( function( type, title )
+	const goToAccess = React.useCallback( function( type, title, count = 0 )
 	{
-		props.navigation.push( "Access", { type: type, name: title } );
+		props.navigation.push( "Access", { type: type, name: title, count: count } );
 	}, [] );
 
 	const goToUsdtRecharge = React.useCallback( function()

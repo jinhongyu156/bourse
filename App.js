@@ -35,6 +35,7 @@ import UsdtMention from "./pages/usdtMention.js";
 import MyBankCard from "./pages/myBankCard.js";
 import History from "./pages/history.js";
 import Auth from "./pages/auth.js";
+import Camera from "./pages/camera.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -136,6 +137,8 @@ export default function()
 						<Stack.Screen name = "MyBankCard" component = { MyBankCard } options = { () => ( { title: I18n.t( "myBankCard.title" ) } ) } />
 						<Stack.Screen name = "History" component = { History } options = { () => ( { title: I18n.t( "history.title" ) } ) } />
 						<Stack.Screen name = "Auth" component = { Auth } options = { () => ( { title: I18n.t( "auth.title" ) } ) } />
+						<Stack.Screen name = "Camera" component = { Camera } options = { () => ( { headerShown: false, title: "xiangji" } ) } />
+						
 					</Stack.Navigator>
 				</NavigationContainer>
 			</RootSiblingParent>

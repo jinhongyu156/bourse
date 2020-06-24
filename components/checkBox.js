@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 
-import Icon from "react-native-vector-icons/Fontisto";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const styles = StyleSheet.create( {
 	container: { flexDirection: "row", alignItems: "center" },
@@ -38,8 +38,8 @@ export default React.memo( function ( {
 	function _renderCheckbox()
 	{
 		return isChecked
-			? <Icon name = "checkbox-active" color = { checkedCheckBoxColor } size = { 18 } />
-			: <Icon name = "checkbox-passive" color = { uncheckedCheckBoxColor } size = { 18 } />
+			? <Icon name = "dot-circle-o" color = { checkedCheckBoxColor } size = { 18 } />
+			: <Icon name = "circle-o" color = { uncheckedCheckBoxColor } size = { 18 } />
 	};
 
 	return <TouchableOpacity style = { [ styles.container, style ] } onPress = { onClick } underlayColor = "transparent" disabled = { disabled }>

@@ -53,7 +53,7 @@ const styles = StyleSheet.create( {
 	errorText: { color: "#F00" }
 } );
 
-const Recharge = React.memo( function( { address, number, note, inputError, copy, fetchSubmit, fetchAddress, fetchAddressError, fetchSubmitError, isLoading, setInputText } )
+const Recharge = React.memo( function( { name, address, number, note, inputError, copy, fetchSubmit, fetchAddress, fetchAddressError, fetchSubmitError, isLoading, setInputText } )
 {
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>
@@ -66,16 +66,23 @@ const Recharge = React.memo( function( { address, number, note, inputError, copy
 			disabled = { true }
 			multiline = { true }
 			inputBoxStyle = { styles.inputBoxStyle }
-			inputStyle = { [ styles.inputStyle, styles.addressInputStyle ] }
+			// inputStyle = { [ styles.inputStyle, styles.addressInputStyle ] }
+			inputStyle = { styles.inputStyle }
 			renderInputLeft = { () => <Text>{ I18n.t( "recharge.address" ) }: </Text> }
-			renderInputRight = { () => <View style = { styles.addressBtnBox }>
-				<TouchableOpacity style = { styles.addressBtn } onPress = { fetchAddress }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.getAddress" ) }</Text></TouchableOpacity>
-				<TouchableOpacity style = { styles.addressBtn } onPress = { copy }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.copy" ) }</Text></TouchableOpacity>
-			</View> }
+			// renderInputRight = { () => <View style = { styles.addressBtnBox }>
+			//	<TouchableOpacity style = { styles.addressBtn } onPress = { fetchAddress }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.getAddress" ) }</Text></TouchableOpacity>
+			//	<TouchableOpacity style = { styles.addressBtn } onPress = { copy }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.copy" ) }</Text></TouchableOpacity>
+			// </View> }
 		/>
-		<Input index = { "number" } value = { number } placeholder = { I18n.t( "recharge.placeholderNumber" ) } disabled = { false } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.number" ) }: </Text> } />
-		<Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } />
-		<SubmitBtn title = { I18n.t( "recharge.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
+		<Input value = { name === "USDT" ? "USTD_ERC20" : name } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "recharge.chainName" ) }:</Text> } />
+		{ /* <Input index = { "number" } value = { number } placeholder = { I18n.t( "recharge.placeholderNumber" ) } disabled = { false } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.number" ) }: </Text> } /> */ }
+		{ /* <Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } /> */ }
+		{ /* <SubmitBtn title = { I18n.t( "recharge.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } /> */ }
+		{
+			fetchAddressError
+				? null
+				: <SubmitBtn title = { I18n.t( "recharge.copy" ) } submitBtnStyle = { styles.submitBtn } loading = { false } onSubmit = { copy } />
+		}
 		<View style = { styles.tipBox }>
 			<Text style = { styles.tipText }>{ I18n.t( "recharge.tip1" ) }</Text>
 			<Text style = { styles.tipText }>{ I18n.t( "recharge.tip2" ) }</Text>
@@ -108,10 +115,11 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 	</View>;
 } );
 
-const Turn = React.memo( function( { number, account, password, note, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
+const Turn = React.memo( function( { count, number, account, password, note, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
 {
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>{ fetchSubmitError ? <Text style = { styles.errorText }>{ fetchSubmitError }</Text> : null }</View>
+		<Input value = { count } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.usable" ) }: </Text> } />
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "turn.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.number" ) }: </Text> } />
 		<Input index = { "account" } value = { account } placeholder = { I18n.t( "turn.placeholderAccount" ) } hasError = { inputError[ "account" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.account" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "turn.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.password" ) }: </Text> } />
@@ -143,6 +151,7 @@ const Access = React.memo( function( props )
 		}, [] );
 
 		return <Turn
+			count = { props.route.params.count }
 			number = { props.number }
 			account = { props.account }
 			password = { props.password }
@@ -190,6 +199,10 @@ const Access = React.memo( function( props )
 
 	if( isRecharge )
 	{
+		React.useEffect( () => {
+			props.fetchAddress( props.route.params.name );
+		}, [] );
+
 		const copy = React.useCallback( function()
 		{
 			if( props.address )
@@ -213,6 +226,7 @@ const Access = React.memo( function( props )
 
 		return <ScrollView showsVerticalScrollIndicator = { false } keyboardDismissMode = { "on-drag" } onScrollBeginDrag = { Keyboard.dismiss }>
 			<Recharge
+				name = { props.route.params.name }
 				address = { props.address }
 				number = { props.number }
 				note = { props.note }

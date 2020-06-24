@@ -176,6 +176,7 @@ export default {
 		placeholderAddress: "请先获取公司充币地址",
 		getAddress: "获取",
 		copy: "复制",
+		chainName: "链名称",
 		placeholderNumber: "请输入充币数量",
 		number: "充币数量",
 		placeholderNote: "推荐填写本平台 ID 号",
@@ -507,6 +508,12 @@ export default {
 	auth: {
 		title: "实名认证",
 		fetchAuthDataError: "获取实名认证信息失败"
+	},
+	camera: {
+		title: "使用相机的许可",
+		message: "我们需要你的许可才能使用你的照相机",
+		buttonPositive: "我同意",
+		buttonNegative: "我拒绝"
 	}
 };
 

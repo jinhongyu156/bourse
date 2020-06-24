@@ -224,7 +224,6 @@ export default connect(
 				id: userData.userDetailData[ "id" ], vouchers: userData.userDetailData[ "代金券" ],
 				userLanguage: languageData.userLanguage,
 				version: financeData.version,
-				version: "0.1.3",
 				hasCard: myBankCardData.hasCard, bankName: myBankCardData.bankName,
 				actionSheetData: loginData.actionSheetData, isShowActionSheet: loginData.isShowActionSheet, isLogin: loginData.isLogin
 			},

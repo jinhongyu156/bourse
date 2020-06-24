@@ -200,6 +200,11 @@ const Register = function( props )
 		props.navigation.push( "Disclaimer" );
 	}, [] );
 
+	const gotoCamera = React.useCallback( function()
+	{
+		props.navigation.push( "Camera" );
+	}, [] );
+
 	const fetchRegister = React.useCallback( function()
 	{
 		props.fetchRegister( pageType, function()
@@ -304,6 +309,9 @@ const Register = function( props )
 				submitBtnStyle = { styles.submitBtn }
 				loading = { props.isLoading }
 				onSubmit = { fetchRegister }
+				onSubmit = { gotoCamera }
+
+				
 			/>
 			<View style = { styles.loginBox }>
 				<TouchableOpacity onPress = { gotoLogin }>

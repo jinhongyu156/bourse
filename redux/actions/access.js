@@ -100,23 +100,24 @@ export function fetchUsable( coin )
 };
 
 // 请求地址数据
-export function fetchAddress()
+export function fetchAddress( coin )
 {
 	return async function( dispatch )
 	{
 		try
 		{
-			const res = await fetchPost( "/otc.php", { "提交": "获取公司钱包地址" } );
+			const res = await fetchPost( "/chongbi.php", { "提交": "applyAddress", "coin": coin } );
 
-			if( isObject( res ) && res[ "钱包地址" ] )
+			if( isObject( res ) && res[ "充币地址" ] )
 			{
-				dispatch( setAddress( res[ "钱包地址" ], null ) );
+				dispatch( setAddress( res[ "充币地址" ], null ) );
 			} else
 			{
 				dispatch( setAddress( "", res.toString() ) );
 			};
 		} catch( err )
 		{
+			console.log( "err", err );
 
 			dispatch( setAddress( "", err.type === "network" ? `${ err.status }: ${ I18n.t( "recharge.fetchAddressError" ) }` : err.err.toString() ) );
 		};
@@ -136,7 +137,7 @@ export function fetchRechargeSubmit( coin, callback )
 			const params = { "提交": "充币", "钱包地址": access.address, "充币备注": access.note, "充币数量": access.number, "充币类型": coin };
 			try
 			{
-				const res = await fetchPost( "/otc.php", params );
+				const res = await fetchPost( "/chongbi.php", params );
 
 				if( res === "ok" )
 				{
@@ -172,10 +173,12 @@ export function fetchMentionSubmit( coin, callback )
 			if( Number( access.number ) < Number( access.usable ) )
 			{
 				dispatch( setIsLoading( true ) );
-				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
+				const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
+				console.log( "params", params )
 				try
 				{
-					const res = await fetchPost( "/otc.php", params );
+					const res = await fetchPost( "/chongbi.php", params );
+			console.log( "res", res );
 
 					if( res === "成功" )
 					{
