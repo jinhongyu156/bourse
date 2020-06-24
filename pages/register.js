@@ -50,6 +50,10 @@ const styles = StyleSheet.create( {
 	tabBox: { width: LISTITEMWIDTH },
 	tabBar: { width: LISTITEMWIDTH, height: TABBARHEIGHT },
 
+	cameraBtn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#696DAC" },
+	cameraBtnBox: { width: LISTITEMWIDTH * 0.2, height: TABBARHEIGHT, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+	cameraBtnText: { color: "#FFFFFF" },
+
 	textInputBox: { width: LISTITEMWIDTH, height: LISTITEMHEIGIT, justifyContent: "center" },
 	textInput: { height: LISTITEMHEIGIT * 0.8 },
 	codeTextInput: { flex: 2, height: LISTITEMHEIGIT * 0.8 },
@@ -76,7 +80,8 @@ const styles = StyleSheet.create( {
 const InputBox = React.memo( function( {
 	pageType, registerType, setInputText, phoneNumber, emailText, name, referee, password, newPassword, code, imageCode, inputError,
 	sendCode, countdown, sendCodeStatus,
-	imageBlob, fetchImageError, fetchImageCode
+	imageBlob, fetchImageError, fetchImageCode,
+	gotoCamera
 } ) {
 	const phoneNumberOrEmailTextHasError = ( registerType === 0 && inputError[ "phoneNumber" ] ) || ( registerType === 1 && inputError[ "emailText" ] );
 
@@ -144,6 +149,14 @@ const InputBox = React.memo( function( {
 			hasError = { pageType === "register" ? inputError[ "referee" ] : inputError[ "newPassword" ] }
 			disabled = { false }
 			inputBoxStyle = { styles.textInputBox }
+			renderInputRight = { () => pageType === "register"
+				? <View style = { styles.cameraBtnBox }>
+					<TouchableOpacity style = { styles.cameraBtn } onPress = { gotoCamera }>
+						<Text style = { styles.cameraBtnText }>{ I18n.t( "camera.entry" ) }</Text>
+					</TouchableOpacity>
+				 </View>
+				: null
+			}
 			inputStyle = { styles.textInput }
 			setInputText = { setInputText }
 		/>
@@ -202,7 +215,10 @@ const Register = function( props )
 
 	const gotoCamera = React.useCallback( function()
 	{
-		props.navigation.push( "Camera" );
+		props.navigation.push( "Camera", { callback: text => {
+			console.log( text );
+			props.setInputText( "referee", text );
+		} } );
 	}, [] );
 
 	const fetchRegister = React.useCallback( function()
@@ -260,6 +276,8 @@ const Register = function( props )
 					sendCode = { props.sendCode }
 					countdown = { props.countdown }
 					sendCodeStatus = { props.sendCodeStatus }
+
+					gotoCamera = { gotoCamera }
 				/>
 				<InputBox
 					tabLabel = { pageType === "register" ? I18n.t( "register.registerType.email" ) : I18n.t( "register.findType.email" ) }
@@ -284,6 +302,8 @@ const Register = function( props )
 					sendCode = { props.sendCode }
 					countdown = { props.countdown }
 					sendCodeStatus = { props.sendCodeStatus }
+
+					gotoCamera = { gotoCamera }
 				/>
 			</Tab>
 			{
@@ -309,9 +329,6 @@ const Register = function( props )
 				submitBtnStyle = { styles.submitBtn }
 				loading = { props.isLoading }
 				onSubmit = { fetchRegister }
-				onSubmit = { gotoCamera }
-
-				
 			/>
 			<View style = { styles.loginBox }>
 				<TouchableOpacity onPress = { gotoLogin }>

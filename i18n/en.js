@@ -515,6 +515,7 @@ export default {
 		fetchAuthDataError: "Failed to obtain real-name authentication information"
 	},
 	camera: {
+		entry: "Scan",
 		title: "Permission to use camera",
 		message: "We need your permission to use your camera",
 		buttonPositive: "Ok",
