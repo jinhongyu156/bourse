@@ -22,7 +22,7 @@ export default React.memo( function( props )
 	return <ImageBackground source = { require( "./../images/my_code.jpg" ) } style = { styles.container }>
 		<Text style = { styles.hello }>{ I18n.t( "user.header.tip1" ) }</Text>
 		<View style = { styles.infoBox }>
-			<QRCode size = { 180 } value = "http://ca.slb.one/appdown.php" />
+			<QRCode size = { 180 } value = { props.route.params.id } />
 			<Text style = { styles.title }>ID: { props.route.params.id }</Text>
 			<Text style = { styles.message }>{ I18n.t( "user.header.tip2" ) }</Text>
 		</View>

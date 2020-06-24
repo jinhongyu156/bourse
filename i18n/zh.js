@@ -510,6 +510,8 @@ export default {
 		fetchAuthDataError: "获取实名认证信息失败"
 	},
 	camera: {
+		successTitle: "识别内容",
+		confirm: "确定",
 		entry: "扫一扫",
 		title: "使用相机的许可",
 		message: "我们需要你的许可才能使用你的照相机",

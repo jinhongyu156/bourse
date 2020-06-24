@@ -215,10 +215,7 @@ const Register = function( props )
 
 	const gotoCamera = React.useCallback( function()
 	{
-		props.navigation.push( "Camera", { callback: text => {
-			console.log( text );
-			props.setInputText( "referee", text );
-		} } );
+		props.navigation.push( "Camera", { callback: text => props.setInputText( "referee", text ) } );
 	}, [] );
 
 	const fetchRegister = React.useCallback( function()
