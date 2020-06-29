@@ -128,7 +128,7 @@ const Finance = function ( props )
 	};
 
 	return <React.Fragment>
-		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }>
+		<Header logoKey = { 1 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }>
 			<React.Fragment>
 				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.showExchangeModal( "投资ETU金融" ) }>
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/invest_etu.png" ) } />

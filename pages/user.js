@@ -144,7 +144,7 @@ const User = React.memo( function( props )
 	}, [ props.userDetailData[ "id" ] ] );
 
 	return <View style = { styles.container }>
-		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+		<Header logoKey = { 1 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
 			<TouchableOpacity style = { styles.headerRightViewItem }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/theme.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "user.header.theme" ) }</Text>

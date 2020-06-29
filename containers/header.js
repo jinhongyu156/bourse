@@ -31,11 +31,11 @@ const styles = StyleSheet.create( {
 
 } );
 
-export default React.memo( function Header( { children, usdtInfo, tradingInfo, etusdInfo, slbtInfo } )
+export default React.memo( function Header( { children, logoKey, usdtInfo, tradingInfo, etusdInfo, slbtInfo } )
 {
 	return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.headerBackground }>
 		<View style = { styles.headerLeftView }>
-			<Image style = { styles.headerLeftViewLogo } source = { require( "./../images/logo.png" ) } />
+			<Image style = { styles.headerLeftViewLogo } source = { logoKey == 1 ? require( "./../images/logo.png" ) : require( "./../images/logo2.png" ) } />
 			<View style = { styles.headerLeftViewInfo }>
 				<Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text>
 				{

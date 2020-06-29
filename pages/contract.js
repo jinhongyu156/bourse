@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, Image, ImageBackground, TouchableOpacity, ScrollView, Dimensions, Keyboard, StyleSheet } from "react-native";
+import { View, Text, Image, ImageBackground, TouchableOpacity, ScrollView, RefreshControl, Dimensions, Keyboard, StyleSheet } from "react-native";
 
 import { bindActionCreators } from "redux";
 
@@ -44,9 +44,14 @@ const styles = StyleSheet.create( {
 	errorText: { fontSize: 16 }
 } );
 
-const Content = function ( { productId, setProductId, setCount, contractData, currentProduct, userOrderData, fetchSubmit, fetchClosing } )
+const Content = function ( { productId, setProductId, setCount, contractData, currentProduct, userOrderData, fetchData, loading, fetchSubmit, fetchClosing } )
 {
-	return <ScrollView keyboardDismissMode = { "on-drag" } onScrollBeginDrag = { Keyboard.dismiss } showsVerticalScrollIndicator = { false }>
+	return <ScrollView
+		keyboardDismissMode = { "on-drag" }
+		onScrollBeginDrag = { Keyboard.dismiss }
+		showsVerticalScrollIndicator = { false }
+		refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }
+	>
 		<Product data = { contractData } id = { productId } setId = { setProductId } />
 		<Notice />
 		<ProductHandle data = { currentProduct } setCount = { setCount } submit = { fetchSubmit } />
@@ -81,7 +86,7 @@ const Contract = React.memo( function ( props )
 	}, [] );
 
 	return <View style = { styles.container }>
-		<Header usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+		<Header logoKey = { 2 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToChart }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
@@ -101,6 +106,8 @@ const Contract = React.memo( function ( props )
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
 						userOrderData = { props.userOrderData }
+						fetchData = { props.fetchContractData }
+						loading = { props.isloading }
 						fetchSubmit = { props.fetchSubmit }
 						fetchClosing = { props.fetchClosing }
 					/>
@@ -112,6 +119,8 @@ const Contract = React.memo( function ( props )
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
 						userOrderData = { props.userOrderData }
+						fetchData = { props.fetchContractData }
+						loading = { props.isloading }
 						fetchSubmit = { props.fetchSubmit }
 						fetchClosing = { props.fetchClosing }
 					/>
@@ -123,6 +132,8 @@ const Contract = React.memo( function ( props )
 						contractData = { props.contractData }
 						currentProduct = { props.currentProduct }
 						userOrderData = { props.userOrderData }
+						fetchData = { props.fetchContractData }
+						loading = { props.isloading }
 						fetchSubmit = { props.fetchSubmit }
 						fetchClosing = { props.fetchClosing }
 					/>
@@ -140,6 +151,7 @@ export default connect(
 			productId: contractData.productId,
 			fetchDataError: contractData.fetchDataError,
 			contractData: contractData.contractData,
+			isloading:  contractData.isloading,
 			currentProduct: contractData.currentProduct,
 			userOrderData: contractData.userOrderData,
 			userDetailData: contractData.userDetailData

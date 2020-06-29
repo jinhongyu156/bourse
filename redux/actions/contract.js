@@ -9,6 +9,8 @@ export const ACTIONS_SET_CONTRACT_PRODUCTID = "ACTIONS_SET_CONTRACT_PRODUCTID";
 export const ACTIONS_SET_CONTRACT_ALLDATA = "ACTIONS_SET_CONTRACT_ALLDATA";
 export const ACTIONS_SET_CONTRACT_PARTDATA = "ACTIONS_SET_CONTRACT_PARTDATA";
 export const ACTIONS_SET_CONTRACT_FETCHDATAERROR = "ACTIONS_SET_CONTRACT_FETCHDATAERROR";
+
+export const ACTIONS_SET_CONTRACT_ISLOADING = "ACTIONS_SET_CONTRACT_ISLOADING";
 /* action create */
 
 let ws = null;
@@ -105,6 +107,12 @@ function setAllData( contractData, productId, currentProduct, userOrderData, use
 function setFetchDataError( fetchDataError )
 {
 	return { type: ACTIONS_SET_CONTRACT_FETCHDATAERROR, payload: fetchDataError };
+};
+
+// 设置是否正在加载
+function setIsLoading( isLoading )
+{
+	return { type: ACTIONS_SET_CONTRACT_ISLOADING, payload: isLoading };
 };
 
 // 设置 contractData 和 currentProduct
@@ -217,6 +225,7 @@ export function fetchContractData()
 	{
 		const { contract } = getState();
 		const params = { "提交": "返回登录参数", "交易区": contract.tabIndex === 0 ? "USDT" : contract.tabIndex === 1 ? "交易金" : contract.tabIndex === 2 ? "SLBT" : "" };
+		dispatch( setIsLoading( true ) );
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", params );
@@ -233,12 +242,16 @@ export function fetchContractData()
 
 				dispatch( setAllData( newContractData, productId, currentProduct, newUserOrderData, userDetailData, null ) );
 				dispatch( wsContract() );
+				dispatch( setIsLoading( false ) );
+
 			} else
 			{
 				dispatch( setFetchDataError( res ) );
+				dispatch( setIsLoading( false ) );
 			};
 		} catch( err )
 		{
+			dispatch( setIsLoading( false ) );
 			dispatch( setFetchDataError( err.type === "network" ? `${ err.status }: ${ I18n.t( "contract.fetchDataError" ) }` : err.err.toString() ) );
 		};
 	};
