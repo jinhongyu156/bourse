@@ -66,22 +66,22 @@ const Recharge = React.memo( function( { name, address, number, note, inputError
 			disabled = { true }
 			multiline = { true }
 			inputBoxStyle = { styles.inputBoxStyle }
-			// inputStyle = { [ styles.inputStyle, styles.addressInputStyle ] }
-			inputStyle = { styles.inputStyle }
+			inputStyle = { [ styles.inputStyle, styles.addressInputStyle ] }
+			// inputStyle = { styles.inputStyle }
 			renderInputLeft = { () => <Text>{ I18n.t( "recharge.address" ) }: </Text> }
-			// renderInputRight = { () => <View style = { styles.addressBtnBox }>
-			//	<TouchableOpacity style = { styles.addressBtn } onPress = { fetchAddress }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.getAddress" ) }</Text></TouchableOpacity>
-			//	<TouchableOpacity style = { styles.addressBtn } onPress = { copy }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.copy" ) }</Text></TouchableOpacity>
-			// </View> }
+			renderInputRight = { () => <View style = { styles.addressBtnBox }>
+				<TouchableOpacity style = { styles.addressBtn } onPress = { fetchAddress }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.getAddress" ) }</Text></TouchableOpacity>
+				<TouchableOpacity style = { styles.addressBtn } onPress = { copy }><Text style = { styles.addressBtnText }>{ I18n.t( "recharge.copy" ) }</Text></TouchableOpacity>
+			</View> }
 		/>
-		<Input value = { name === "USDT" ? "USTD_ERC20" : name } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "recharge.chainName" ) }:</Text> } />
-		{ /* <Input index = { "number" } value = { number } placeholder = { I18n.t( "recharge.placeholderNumber" ) } disabled = { false } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.number" ) }: </Text> } /> */ }
-		{ /* <Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } /> */ }
-		{ /* <SubmitBtn title = { I18n.t( "recharge.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } /> */ }
+		{/*<Input value = { name === "USDT" ? "USDT_ERC20" : name } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "recharge.chainName" ) }:</Text> } />*/}
+		<Input index = { "number" } value = { number } placeholder = { I18n.t( "recharge.placeholderNumber" ) } disabled = { false } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.number" ) }: </Text> } />
+		<Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } />
+		{/*<SubmitBtn title = { I18n.t( "recharge.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />*/}
 		{
 			fetchAddressError
 				? null
-				: <SubmitBtn title = { I18n.t( "recharge.copy" ) } submitBtnStyle = { styles.submitBtn } loading = { false } onSubmit = { copy } />
+				: <SubmitBtn title = { I18n.t( "recharge.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { false } onSubmit = { fetchSubmit } />
 		}
 		<View style = { styles.tipBox }>
 			<Text style = { styles.tipText }>{ I18n.t( "recharge.tip1" ) }</Text>
@@ -102,7 +102,7 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 		<Input value = { usable } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.usable" ) }: </Text> } />
 		<Input index = { "address" } value = { address } placeholder = { I18n.t( "mention.placeholderAddress" ) } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.address" ) }: </Text> } />
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "mention.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.number" ) }: </Text> } />
-		<Input value = { number ? String( fee ) : ( name === "ETH" ? "3%" : "0.3%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
+		<Input value = { number ? String( fee ) : ( name === "ETH" ? "3%" : "5%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "mention.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.password" ) }: </Text> } />
 		<SubmitBtn title = { I18n.t( "mention.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
 		<View style = { styles.tipBox }>
@@ -199,9 +199,9 @@ const Access = React.memo( function( props )
 
 	if( isRecharge )
 	{
-		React.useEffect( () => {
+		/*React.useEffect( () => {
 			props.fetchAddress( props.route.params.name );
-		}, [] );
+		}, [] );*/
 
 		const copy = React.useCallback( function()
 		{

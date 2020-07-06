@@ -152,7 +152,7 @@ export default {
 		unit: "最新价",
 		number: "数量",
 		total: "价值",
-		type1: "冲提币种",
+		type1: "充提币种",
 		type2: "交易币种",
 
 		price: "价值",

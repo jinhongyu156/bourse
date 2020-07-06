@@ -61,7 +61,7 @@ export function setInputText( key, value )
 		if( key === "number" )
 		{
 			dispatch( { type: ACTION_SET_ACCESS_INPUTERROR, payload: Object.assign( {}, access.inputError, { number: !numberReg.test( value ) } ) } );
-			dispatch( { type: ACTION_SET_ACCESS_INPUTTEXT, payload: { fee: getNum( String( Number( value ) * ( access.coin === "ETH" ? 0.03 : 0.003 ) ), 2 ) } } );
+			dispatch( { type: ACTION_SET_ACCESS_INPUTTEXT, payload: { fee: getNum( String( Number( value ) * ( access.coin === "ETH" ? 0.03 : 0.05 ) ), 2 ) } } );
 		};
 		if( key === "password" )
 		{
@@ -106,11 +106,12 @@ export function fetchAddress( coin )
 	{
 		try
 		{
-			const res = await fetchPost( "/chongbi.php", { "提交": "applyAddress", "coin": coin } );
+			// const res = await fetchPost( "/chongbi.php", { "提交": "applyAddress", "coin": coin } ); // 新版本
+			const res = await fetchPost( "/otc.php", { "提交": "获取公司钱包地址", "coin": coin } );
 
-			if( isObject( res ) && res[ "充币地址" ] )
+			if( isObject( res ) && res[ "钱包地址" ] )
 			{
-				dispatch( setAddress( res[ "充币地址" ], null ) );
+				dispatch( setAddress( res[ "钱包地址" ], null ) );
 			} else
 			{
 				dispatch( setAddress( "", res.toString() ) );
@@ -133,11 +134,11 @@ export function fetchRechargeSubmit( coin, callback )
 		if( Object.values( access.inputError ).every( item => item === false ) && access.address && access.number )
 		{
 			dispatch( setIsLoading( true ) );
-			// const params = { "提交": "充币", "钱包地址": access.address, "充币备注": access.note, "充币数量": access.number, "充币类型": coin };
 			const params = { "提交": "充币", "钱包地址": access.address, "充币备注": access.note, "充币数量": access.number, "充币类型": coin };
 			try
 			{
-				const res = await fetchPost( "/chongbi.php", params );
+				// const res = await fetchPost( "/chongbi.php", params ); // 新版本
+				const res = await fetchPost( "/otc.php", params );
 
 				if( res === "ok" )
 				{
@@ -173,12 +174,14 @@ export function fetchMentionSubmit( coin, callback )
 			if( Number( access.number ) < Number( access.usable ) )
 			{
 				dispatch( setIsLoading( true ) );
-				const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
+				// const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password }; // 新版本
+				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
 				console.log( "params", params )
 				try
 				{
-					const res = await fetchPost( "/chongbi.php", params );
-			console.log( "res", res );
+					// const res = await fetchPost( "/chongbi.php", params ); // 新版本
+					const res = await fetchPost( "/otc.php", params );
+					console.log( "res", res );
 
 					if( res === "成功" )
 					{

@@ -113,7 +113,7 @@ const NewbieGuide = React.memo( function( { tabIndex2, setTabIndex2, electronicC
 		<Download tabLabel = { I18n.t( "user.downloadCenter" ) } />
 		<Introduction tabLabel = { I18n.t( "user.introduction" ) } />
 		<ElectronicContract tabLabel = { I18n.t( "user.contract" ) } { ...electronicContractProps } { ...callbackForElectronicContract } />
-		<Repo tabLabel = { I18n.t( "user.repo" ) } { ...repoProps } />
+		{/*<Repo tabLabel = { I18n.t( "user.repo" ) } { ...repoProps } />*/}
 	</Tab>;
 } );
 
