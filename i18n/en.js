@@ -367,7 +367,7 @@ export default {
 		},
 		myClient: "My Client",
 		myInfo: "My Info",
-		editPassword: "Edit Password",
+		editPassword: "Edit",
 		query: "Query",
 		subAccounts: "Sub",
 		bindSubaccount: "Bind",
@@ -553,6 +553,7 @@ export default {
 		noData: "No data was queried",
 		noFocuMasterInfo: "You're not paying attention to any great players",
 		focuMaster: "Focus on master",
+		queryTitle: "S-Query",
 		submit: "Submit"
 
 	}
