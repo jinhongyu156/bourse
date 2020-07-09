@@ -5,7 +5,7 @@ import SplashScreen from "react-native-splash-screen";
 import { RootSiblingParent } from "react-native-root-siblings";
 
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, Image } from "react-native";
+import { AppState, View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, Image } from "react-native";
 
 /** react-navigation */
 import { NavigationContainer } from "@react-navigation/native";
@@ -17,6 +17,11 @@ import { Provider } from "react-redux";
 /** redux store */
 import store from "./redux/store/index.js";
 import { asyncStorageToRedux } from "./redux/actions/storageToRedux.js";
+
+import { closeWs as closeWs1, ws as ws1 } from "./redux/actions/ctc.js"
+import { closeWs as closeWs2, ws as ws2 } from "./redux/actions/contract.js"
+import { closeWs as closeWs3, ws as ws3 } from "./redux/actions/notice.js"
+import { closeWs as closeWs4, ws as ws4 } from "./redux/actions/simulator.js"
 
 /** I18n */
 import I18n from "./i18n/index.js";
@@ -36,6 +41,10 @@ import MyBankCard from "./pages/myBankCard.js";
 import History from "./pages/history.js";
 import Auth from "./pages/auth.js";
 import Camera from "./pages/camera.js";
+import Activity from "./pages/activity.js";
+import Ranking from "./pages/ranking.js";
+import Simulator from "./pages/simulator.js";
+import SimulatorAccess from "./pages/simulatorAccess.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -92,6 +101,13 @@ function TabNavigator( props )
 				? <Image style = { styles.image } source = { require( "./images/contract_active.png" ) } />
 				: <Image style = { styles.image } source = { require( "./images/contract_inactive.png" ) } />
 		} } />
+		<Tab.Screen name = "Simulator" component = { Simulator } options = { {
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.simulator" ) }</Text>,
+			tabBarIcon: ( focused ) => focused
+				? <Image style = { styles.image } source = { require( "./images/simulator_inactive.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/simulator_active.png" ) } />
+		} } />
+
 		<Tab.Screen name = "Ctc" component = { Ctc } options = { {
 			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.ctc" ) }</Text>,
 			tabBarIcon: ( focused ) => focused
@@ -109,6 +125,8 @@ function TabNavigator( props )
 
 export default function()
 {
+	const index = React.useRef( [] );
+
 	const [ status, setStatus ] = React.useState( false );
 
 	status || store.dispatch( asyncStorageToRedux( () => setStatus( true ) ) );
@@ -117,6 +135,32 @@ export default function()
 	{
 		SplashScreen.hide();
 	}, [] );
+
+	React.useEffect( () => {
+		AppState.addEventListener( "change", _handleAppStateChange );
+		return () => {
+			AppState.removeEventListener( "change", _handleAppStateChange );
+		};
+	}, [] );
+
+	const _handleAppStateChange = nextAppState => {
+		if( nextAppState === "background" )
+		{
+			( ws1 && ws1.ws.readyState === WebSocket.OPEN ) && index.current.push( 1 ) && closeWs1();
+			( ws2 && ws2.ws.readyState === WebSocket.OPEN ) && index.current.push( 2 ) && closeWs2();
+			( ws3 && ws3.ws.readyState === WebSocket.OPEN ) && index.current.push( 3 ) && closeWs3();
+			( ws4 && ws4.ws.readyState === WebSocket.OPEN ) && index.current.push( 4 ) && closeWs4();
+			
+		};
+		if( nextAppState === "active" )
+		{
+			index.current.includes( 1 ) && ws1.reconnect();
+			index.current.includes( 2 ) && ws2.reconnect();
+			index.current.includes( 3 ) && ws3.reconnect();
+			index.current.includes( 4 ) && ws3.reconnect();
+			index.current = [];
+		};
+	};
 
 	return status && <React.Fragment>
 		<StatusBar barStyle = "dark-content" backgroundColor = "rgba( 0, 0, 0, 0 )" translucent = { true } />
@@ -137,7 +181,10 @@ export default function()
 						<Stack.Screen name = "MyBankCard" component = { MyBankCard } options = { () => ( { title: I18n.t( "myBankCard.title" ) } ) } />
 						<Stack.Screen name = "History" component = { History } options = { () => ( { title: I18n.t( "history.title" ) } ) } />
 						<Stack.Screen name = "Auth" component = { Auth } options = { () => ( { title: I18n.t( "auth.title" ) } ) } />
-						<Stack.Screen name = "Camera" component = { Camera } options = { () => ( { headerShown: false, title: "xiangji" } ) } />
+						<Stack.Screen name = "Camera" component = { Camera } options = { () => ( { headerShown: false, title: I18n.t( "camera.pageTitle" ) } ) } />
+						<Stack.Screen name = "Activity" component = { Activity } options = { () => ( { title: I18n.t( "activity.title" ) } ) } />
+						<Stack.Screen name = "Ranking" component = { Ranking } options = { () => ( { title: I18n.t( "ranking.title" ) } ) } />
+						<Stack.Screen name = "SimulatorAccess" component = { SimulatorAccess } />
 						
 					</Stack.Navigator>
 				</NavigationContainer>

@@ -164,15 +164,12 @@ export function fetchOrderData()
 		{
 			const res = await fetchPost( "/Recharge.php", { "提交": "Getrecharge" } );
 
-			console.log( "res111111111111", res );
-
 			if( res === "null" )
 			{
 				dispatch( setOrderData( {}, false, null ) );
 			} else
 			{
 				dispatch( setOrderData( assign( res ), false, null ) );
-				console.log( "res22222222222", assign( res ) );
 
 				if( ( res[ "订单状态" ] === "0" ) && ( Number( Date.now() ) < Number( assign( res )[ "timeout" ] ) ) )
 				{
@@ -181,7 +178,6 @@ export function fetchOrderData()
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
 			dispatch( setOrderData( {}, false, err.type === "network" ? `${ err.status }: ${ I18n.t( "usdtRecharge.fetchOrderDataError" ) }` : err.err.toString() ) )
 		};
 	};

@@ -1,5 +1,5 @@
 import { amountReg } from "./../../javascripts/regExp.js";
-import { fetchPost, isObject, getNum, objectValueGetNum } from "./../../javascripts/util.js";
+import { fetchPost, isObject, isArray, getNum, objectValueGetNum } from "./../../javascripts/util.js";
 
 import I18n from "i18n-js";
 
@@ -17,6 +17,8 @@ export const ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA = "ACTION_SET_FINANCE_IS
 
 export const ACTION_SET_FINANCE_MODALDATA = "ACTION_SET_FINANCE_MODALDATA";
 
+export const ACTION_SET_FINANCE_ACTIVITYSWIPER = "ACTION_SET_FINANCE_ACTIVITYSWIPER";
+
 /* action create */
 
 // 设置用户流水信息
@@ -29,6 +31,12 @@ function setStatementData( statementData, fecthStatementError )
 function setIsloadingStatementData( isloadingStatementData )
 {
 	return { type: ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, payload: isloadingStatementData };
+};
+
+// 设置活动以及活动轮播图
+function setActivitySwiper( hasActivity, swiper )
+{
+	return { type: ACTION_SET_FINANCE_ACTIVITYSWIPER, payload: { hasActivity, swiper } };
 };
 
 // 设置当前选项卡 index
@@ -189,7 +197,7 @@ export function fetchUserDetailData()
 			const res = await fetchPost( "/ETC.php", params );
 			if( isObject( res ) && res[ "用户信息" ] && res[ "USDCNH" ] )
 			{
-				const userData = objectValueGetNum( res[ "用户信息" ], [ "USDT", "ETUSD", "SLBT", "交易金", "今日收益", "团队业绩", "总计收益", "昨日收益", "机器算力", "积分余额" ] )
+				const userData = objectValueGetNum( res[ "用户信息" ], [ "USDT", "ETUSD", "SLBT", "交易金", "今日收益", "团队业绩", "累计投资", "总计收益", "昨日收益", "机器算力", "积分余额" ] )
 				const data = Object.assign( {}, userData, { rate: Number( res[ "USDCNH" ][ "baojia" ] ) } )
 				dispatch( setUserDetailData( data ) );
 				dispatch( setIsloadingUserDetailData( false ) );
@@ -204,6 +212,28 @@ export function fetchUserDetailData()
 			dispatch( setIsloadingUserDetailData( false ) );
 		};
 	};
+};
+
+// 请求活动轮播图
+export function fetchSwiper()
+{
+	return async function( dispatch )
+	{
+		try
+		{
+			const res = await fetchPost( "/moni.php", { "提交": "banner" } );
+			if( isArray( res ) && res.length )
+			{
+				dispatch( setActivitySwiper( true, res ) );
+			} else
+			{
+				dispatch( setActivitySwiper( false, [] ) );
+			};
+		} catch( err )
+		{
+			dispatch( setActivitySwiper( false, [] ) );
+		};
+	}
 };
 
 // 请求领取收益

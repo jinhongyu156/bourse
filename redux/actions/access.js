@@ -118,8 +118,6 @@ export function fetchAddress( coin )
 			};
 		} catch( err )
 		{
-			console.log( "err", err );
-
 			dispatch( setAddress( "", err.type === "network" ? `${ err.status }: ${ I18n.t( "recharge.fetchAddressError" ) }` : err.err.toString() ) );
 		};
 	};
@@ -176,12 +174,11 @@ export function fetchMentionSubmit( coin, callback )
 				dispatch( setIsLoading( true ) );
 				// const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password }; // 新版本
 				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
-				console.log( "params", params )
+
 				try
 				{
 					// const res = await fetchPost( "/chongbi.php", params ); // 新版本
 					const res = await fetchPost( "/otc.php", params );
-					console.log( "res", res );
 
 					if( res === "成功" )
 					{

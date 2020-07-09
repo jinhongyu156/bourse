@@ -15,6 +15,11 @@ import { showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexAct
 import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
 import { fetchCardData } from "./../redux/actions/myBankCard.js";
 
+import { fetchSimulatorUserQueryData, showSimulatorQueryTypeIndexActionSheet, hideSimulatorActionSheet } from "./../redux/actions/simulator.js";
+
+
+
+
 import { getVersion } from "./../redux/actions/finance.js";
 
 import { logout } from "./../redux/actions/login.js";
@@ -37,6 +42,8 @@ import ElectronicContract from "./../containers/electronicContract.js";
 import Repo from "./../containers/repo.js";
 import SubAccounts from "./../containers/subAccounts.js";
 import Download from "./../containers/download.js";
+
+import SimulatorQuery from "./../containers/simulatorQuery.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 32;
@@ -74,7 +81,7 @@ const TabBar2 = React.memo( function( { tabs, activeTab, goToPage } )
 	return <TabBar tabs = { tabs } type = { "default" } tabBarStyle = { styles.tabBar2 } activeTab = { activeTab } goToPage = { goToPage } />
 } );
 
-const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProps, myInfoProps, editPasswordProps, queryProps, callbackForEditPassword, callbackForMyInfo, callbackForMyClient, callbackForQuery } )
+const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProps, myInfoProps, editPasswordProps, queryProps, simulatorProps, callbackForEditPassword, callbackForMyInfo, callbackForMyClient, callbackForQuery, callbackForSimulatorQuery } )
 {
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
@@ -86,6 +93,7 @@ const UserCenter = React.memo( function( { tabIndex2, setTabIndex2, myClientProp
 		<MyClient tabLabel = { I18n.t( "user.myClient" ) } { ...callbackForMyClient } { ...myClientProps } />
 		<EditPassword tabLabel = { I18n.t( "user.editPassword" ) } { ...editPasswordProps } { ...callbackForEditPassword } />
 		<Query tabLabel = { I18n.t( "user.query" ) } { ...queryProps } { ...callbackForQuery } />
+		<SimulatorQuery tabLabel = { I18n.t( "simulator.queryTitle" ) } { ...simulatorProps } { ...callbackForSimulatorQuery } />
 	</Tab>;
 } );
 
@@ -175,6 +183,9 @@ const User = React.memo( function( props )
 						callbackForMyInfo = { props.callbackForMyInfo }
 						callbackForEditPassword = { props.callbackForEditPassword }
 						callbackForQuery = { props.callbackForQuery }
+
+						simulatorProps = { props.simulatorProps }
+						callbackForSimulatorQuery = { props.callbackForSimulatorQuery }
 					/>
 					<SystemCenter
 						tabLabel = { I18n.t( "user.systemCenter" ) }
@@ -214,6 +225,7 @@ export default connect(
 		const loginData = state.login;
 		const languageData = state.language;
 		const myBankCardData = state.myBankCard;
+		const simulatorData = state.simulator;
 
 		return {
 			myClientProps: {
@@ -234,7 +246,12 @@ export default connect(
 			queryProps: {
 				data: userData.userQueryData, loading: userData.isLoadingUserQueryData, error: userData.fetchUserQueryDataError,
 				queryNavIndex: userData.queryNavIndex, queryTypeIndex: userData.queryTypeIndex,
-				isShowActionSheet: userData.isShowActionSheet, actionSheetData: userData.actionSheetData,
+				isShowActionSheet: userData.isShowActionSheet, actionSheetData: userData.actionSheetData
+			},
+			simulatorProps: {
+				data: simulatorData.userQueryData, loading: simulatorData.isLoadingUserQueryData, error: simulatorData.fetchUserQueryDataError,
+				queryTypeIndex: simulatorData.queryTypeIndex,
+				isShowActionSheet: simulatorData.isShowActionSheet, actionSheetData: simulatorData.actionSheetData
 			},
 			subAccountsProps: {
 				data: userData.subAccountsData, loading: userData.isLoadingSubAccountsData, error: userData.fetchSubAccountsError
@@ -271,8 +288,11 @@ export default connect(
 			callbackForSummarize: bindActionCreators( { fetchData: fetchSetSummarizeData }, dispatch ),
 			callbackForElectronicContract: bindActionCreators( { fetchData: fetchElectronicContractData }, dispatch ),
 
+			callbackForSimulatorQuery: bindActionCreators( { fetchData: fetchSimulatorUserQueryData, showQueryTypeIndexActionSheet: showSimulatorQueryTypeIndexActionSheet, hideActionSheet: hideSimulatorActionSheet }, dispatch ),
+
 			...bindActionCreators( { setTabIndex1, setTabIndex2, fetchUserDetailData }, dispatch )
 		};
 	}
 )( User );
+
 

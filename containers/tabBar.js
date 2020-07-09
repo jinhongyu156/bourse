@@ -31,7 +31,7 @@ const defaultStyles = {
 };
 
 // 选项卡项: 带有 checkBox 效果
-const CheckBoxTabBarItem = React.memo( function( { index, title, activeStyle, isActive, onPress } )
+const CheckBoxTabBarItem = React.memo( function( { index, title, fontSize, activeStyle, isActive, onPress } )
 {
 	return <TouchableOpacity style = { checkboxStyles.tabBarItem } onPress = { () => onPress( index ) }>
 		{
@@ -39,17 +39,17 @@ const CheckBoxTabBarItem = React.memo( function( { index, title, activeStyle, is
 				? <Image style = { checkboxStyles.tabBarItemIcon } source = { require( "./../images/tabbar_active.png" ) } />
 				: <Image style = { checkboxStyles.tabBarItemIcon } source = { require( "./../images/tabbar_inactive.png" ) } />
 		}
-		<Text style = { checkboxStyles.tabBarItemText }>{ title }</Text>
+		<Text style = { [ checkboxStyles.tabBarItemText, fontSize ? { fontSize: fontSize } : {} ] }>{ title }</Text>
 	</TouchableOpacity>;
 
 } );
 
 // 选项卡项: 带有下划线效果
-const UnderlineTabBarItem = React.memo( function( { index, title, activeStyle, isActive, onPress } )
+const UnderlineTabBarItem = React.memo( function( { index, title, fontSize, activeStyle, isActive, onPress } )
 {
 	return <TouchableOpacity style = { underlineStyles.tabBarItem } onPress = { () => onPress( index ) }>
 		<View style = { underlineStyles.tabBarItemView } >
-			<Text style = { [ underlineStyles.tabBarItemText, isActive ? ( activeStyle ? { color: activeStyle } : underlineStyles.active ) : underlineStyles.inactive ] }>{ title }</Text>
+			<Text style = { [ underlineStyles.tabBarItemText, fontSize ? { fontSize: fontSize } : {}, isActive ? ( activeStyle ? { color: activeStyle } : underlineStyles.active ) : underlineStyles.inactive ] }>{ title }</Text>
 			{
 				isActive
 					? <View style = { Object.assign( {}, underlineStyles.tabBarItemLine, activeStyle ? { backgroundColor: activeStyle } : {} ) } />
@@ -69,7 +69,7 @@ const DefaultTabBarItem = React.memo( function( { index, title, activeStyle, isA
 } );
 
 // 选项卡导航栏
-const TabBar = React.memo( function( { tabs, type, tabBarStyle, activeStyle, activeTab, goToPage } )
+const TabBar = React.memo( function( { tabs, type, tabBarStyle, fontSize, activeStyle, activeTab, goToPage } )
 {
 	const onPress = React.useCallback( i => goToPage( i ), [ goToPage ] );
 
@@ -79,11 +79,11 @@ const TabBar = React.memo( function( { tabs, type, tabBarStyle, activeStyle, act
 		{
 			const isActive = activeTab === index;
 			return type === "checkBox"
-				? <CheckBoxTabBarItem key = { index } index = { index } title = { item } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
+				? <CheckBoxTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: type === "underline"
-				? <UnderlineTabBarItem key = { index } index = { index } title = { item } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
+				? <UnderlineTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: type === "default"
-				? <DefaultTabBarItem key = { index } index = { index } title = { item } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
+				? <DefaultTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: null
 		} )
 	}

@@ -6,7 +6,9 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { wsNotice } from "./../redux/actions/notice.js";
+import { wsNotice, closeWs } from "./../redux/actions/notice.js";
+
+import { useNavigation } from "@react-navigation/native";
 
 import MarqueeVertical from "./../components/marquee.js";
 
@@ -37,11 +39,23 @@ const Notice = React.memo( function( { wsNotice, noticeMessage: msg } )
 	const msgArr = React.useRef( [] );
 	const [ state, update ] = React.useState( 0 );
 
+	const navigation = useNavigation();
 
-	React.useEffect( function()
+	/*React.useEffect( function()
 	{
 		wsNotice();
-	}, [] )
+	}, [] )*/
+
+	React.useEffect( () => {
+		navigation.addListener( "focus", () => {
+			wsNotice();
+		} );
+		navigation.addListener( "blur", () => {
+			closeWs();
+		} );
+	}, [ navigation ] );
+
+
 
 	if( msg )
 	{

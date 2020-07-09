@@ -72,7 +72,6 @@ export default class Ws
 	 **/
 	onerror( error )
 	{
-		
 		this.callback.onerror && this.callback.onerror( error );
 		this.reconnect();
 	}
@@ -82,7 +81,13 @@ export default class Ws
 	onclose()
 	{
 		this.callback.onclose && this.callback.onclose();
-		this.reconnect();
+	}
+	/**
+	 * 断开链接
+	 **/
+	close()
+	{
+		this.ws && this.ws.close();
 	}
 	/**
 	 * 重连
@@ -93,6 +98,6 @@ export default class Ws
 		this.timeout = setTimeout( () =>
 		{
 			this.initWebSocket();
-		}, 10000);
+		}, 1000);
 	}
 };

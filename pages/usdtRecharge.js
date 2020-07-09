@@ -237,7 +237,6 @@ const Exist = React.memo( function( { orderData, prevOrderDataState, setIsShowPr
 
 const Recharge = React.memo( function( props )
 {
-	console.log( "props", props );
 	React.useEffect( function()
 	{
 		props.fetchOrderData();

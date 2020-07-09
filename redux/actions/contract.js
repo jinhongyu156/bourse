@@ -13,7 +13,7 @@ export const ACTIONS_SET_CONTRACT_FETCHDATAERROR = "ACTIONS_SET_CONTRACT_FETCHDA
 export const ACTIONS_SET_CONTRACT_ISLOADING = "ACTIONS_SET_CONTRACT_ISLOADING";
 /* action create */
 
-let ws = null;
+export let ws = null;
 
 // 计算总价格
 function getTotal( productId, tabIndex, count, float, unit )
@@ -28,7 +28,7 @@ function getTotal( productId, tabIndex, count, float, unit )
 };
 
 // 获取中文注释
-function getMessage( code, productId )
+export function getMessage( code, productId )
 {
 	return code.replace( productId, productId === "BTC" ? I18n.t( "contract.btc" )
 		: productId === "GOLD" ? I18n.t( "contract.gold" )
@@ -38,7 +38,7 @@ function getMessage( code, productId )
 };
 
 // 整理 contractData 将新属性 count, msg, total 放入其中
-function getNewContractData( contractData, tabIndex )
+export function getNewContractData( contractData, tabIndex )
 {
 	const newContractData = contractData.slice( 0 );
 
@@ -59,7 +59,7 @@ function getNewContractData( contractData, tabIndex )
 };
 
 // 整理 userOrderData 将新属性 newprice 放入其中( 新属性来自 contractData ), 并将某些字段保留 3 位小数
-function getNewUserOrderData( userOrderData, contractData )
+export function getNewUserOrderData( userOrderData, contractData )
 {
 	const newUserOrderData = userOrderData.slice( 0 );
 
@@ -83,7 +83,7 @@ function getNewUserOrderData( userOrderData, contractData )
 };
 
 // 获取当前产品数据
-function getCurrentProduct( contractData, productId )
+export function getCurrentProduct( contractData, productId )
 {
 	let currentProduct = [];
 	for ( let i = contractData.length - 1; i >= 0; i-- )
@@ -177,6 +177,13 @@ export function setCount( text, code )
 	};
 };
 
+export function closeWs()
+{
+	if( ws ) {
+		ws.close();
+	}
+};
+
 // 获取 newprice 字段最新值
 function wsContract()
 {
@@ -185,6 +192,8 @@ function wsContract()
 		// if( ws ) return;
 
 		const keys = [ "BTC", "GOLD", "OIL" ];
+
+		closeWs();
 
 		ws = new Ws( "ws://tcp.slb.one:80/", {
 			heartCheck: function()
@@ -229,9 +238,11 @@ export function fetchContractData()
 		try
 		{
 			const res = await fetchPost( "/new_heyue.php", params );
+
 			if( isObject( res ) )
 			{
 				const contractData = ( res[ "biaojialist" ] && res[ "biaojialist" ][ "baojias" ] && isArray( res[ "biaojialist" ][ "baojias" ] ) && res[ "biaojialist" ][ "baojias" ].length ) ? res[ "biaojialist" ][ "baojias" ] : [];
+
 				const userOrderData = isArray( res[ "用户订单" ] ) ? res[ "用户订单" ] : [];
 				const userDetailData = res[ "登录参数" ] ? objectValueGetNum( res[ "登录参数" ], [ "USDT", "SLBT", "交易金" ] ) : {};
 

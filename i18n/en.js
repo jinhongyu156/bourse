@@ -2,6 +2,7 @@ export default {
 	bottomTabNavigator: {
 		finance: "Finance",
 		contract: "Contract",
+		simulator: "Simulator",
 		ctc: "Ctc",
 		user: "User"
 	},
@@ -62,7 +63,8 @@ export default {
 		info: "cannot send if condition is not satisfied"
 	},
 	header: {
-		trading: "Trading"
+		trading: "Trading",
+		simulatorUsdt: "Simulator USDT",
 	},
 	finance: {
 		title: "Index",
@@ -99,10 +101,11 @@ export default {
 			power: "Power",
 			communityPerformance: "Performance",
 			communityLevel: "Level",
-			numberOfTeam: "Number of Team",
+			numberOfTeam: "Team Number",
 			todayEarnings: "Today earnings",
 			yesterdayEarnings: "Yesterday Earnings",
-			allEarnings: "All Earnings"
+			allEarnings: "All Earnings",
+			allInvest: "All Invest"
 		},
 		statement: {
 			direction: "Direction",
@@ -515,6 +518,7 @@ export default {
 		fetchAuthDataError: "Failed to obtain real-name authentication information"
 	},
 	camera: {
+		pageTitle: "Camera",
 		successTitle: "Identify the content",
 		confirm: "Confirm",
 		entry: "Scan",
@@ -522,7 +526,46 @@ export default {
 		message: "We need your permission to use your camera",
 		buttonPositive: "Ok",
 		buttonNegative: "Cancel"
+	},
+	activity: {
+		title: "Activity Title"
+	},
+	ranking: {
+		title: "Ranking",
+		number: "Number",
+		amount: "Amount",
+		odds: "Odds",
+		cancel: "Cancel",
+		focus: "Focus",
+		index: "Index",
+		fetchRankingError: "Failed to get ranking data",
+		fetchFocusError: "Focus on superior failures",
+		fetchCancelError: "Untying master fails"
+	},
+	simulator: {
+		fetchSimulatorDataError: "The request for mock data failed",
+		fetchSimulatorSubmitError: "The request simulated a purchase failure",
+		fetchSimulatorClosingError: "The request to simulate closing failed",
+		fetchSimulatorSubmitSuccess: "Request to simulate successful purchase",
+		fetchSimulatorClosingSuccess: "Request simulated closing successfully",
+		masterTitle: "Master Order",
+		myTitle: "My Order",
+		noData: "No data was queried",
+		noFocuMasterInfo: "You're not paying attention to any great players",
+		focuMaster: "Focus on master",
+		submit: "Submit"
+
 	}
 };
+
+
+
+
+
+
+
+
+
+
 
 

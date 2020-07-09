@@ -13,10 +13,12 @@ import chartReducer from "./chart.js";
 import articleReducer from "./article.js";
 import themeReducer from "./theme.js";
 import myBankCardReducer from "./myBankCard.js";
+import simulatorReducer from "./simulator.js";
 
 import usdtRechargeReducer from "./usdtRecharge.js";
 import usdtMentionReducer from "./usdtMention.js";
 import historyReducer from "./history.js";
+import rankingReducer from "./ranking.js";
 
 
 import languageReducer from "./language.js";
@@ -40,6 +42,8 @@ export default combineReducers( {
 	usdtRecharge: usdtRechargeReducer,
 	usdtMention: usdtMentionReducer,
 	history: historyReducer,
+	ranking: rankingReducer,
+	simulator: simulatorReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

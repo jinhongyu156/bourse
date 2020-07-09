@@ -8,7 +8,7 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
+import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
 
 import { fetchUserDetailData as testLogin } from "./../redux/actions/user.js";
 
@@ -17,6 +17,9 @@ import { CommonActions } from "@react-navigation/native";
 import I18n from "i18n-js";
 
 import FloatAction from "./../components/floatAction.js";
+
+
+import Swiper from "./../containers/swiper.js";
 
 import Header from "./../containers/header.js";
 import Notice from "./../containers/notice.js";
@@ -33,6 +36,9 @@ const SCREENHEIGHT = Dimensions.get( "window" ).height;
 
 // 屏幕宽度
 const SCREENWIDTH = Dimensions.get( "window" ).width;
+
+// 轮播图高度
+const SWIPERHEIGHT = 100;
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 32;
@@ -71,27 +77,8 @@ const Finance = function ( props )
 		props.fetchStatement();
 		props.fetchUserDetailData();
 		props.getVersion();
+		props.fetchSwiper();
 		props.testLogin( () => props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) ) );
-	}, [] );
-
-	React.useEffect( () => {
-		let lastTime = null;
-		function onBack()
-		{
-			if ( lastTime && lastTime + 1000 > Date.now() ) {
-				BackHandler.exitApp();
-				return false;
-			} else {
-				lastTime = Date.now();
-				Toast.show( I18n.t( "finance.quit" ) );
-				return true;
-			};
-			return true;
-		};
-		BackHandler.addEventListener( "hardwareBackPress", onBack );
-		return () => {
-			BackHandler.removeEventListener( "hardwareBackPress", onBack );
-		}
 	}, [] );
 
 	const showMenu = React.useCallback( function( e )
@@ -115,13 +102,32 @@ const Finance = function ( props )
 	// }, [] );
 
 	React.useEffect( () => {
+		let lastTime = null;
+		function onBack()
+		{
+			if ( lastTime && lastTime + 1000 > Date.now() ) {
+				BackHandler.exitApp();
+				return false;
+			} else {
+				lastTime = Date.now();
+				Toast.show( I18n.t( "finance.quit" ) );
+				return true;
+			};
+			return true;
+		};
+
 		props.navigation.addListener( "focus", () => {
 			fetchData();
+			BackHandler.addEventListener( "hardwareBackPress", onBack );
 		} );
+		props.navigation.addListener( "blur", () => {
+			BackHandler.removeEventListener( "hardwareBackPress", onBack );
+		} );
+
 	}, [ props.navigation ] );
 
 	// 双数为强制更新, 单数为非必须更新
-	if( !showAlert && props.version && !( props.version.split(".")[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version )
+	if( !showAlert && props.version && !( props.version.split( "." )[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version )
 	{
 		setShowAlert( true );
 		Alert.alert( I18n.t( "finance.tip1" ), I18n.t( "finance.tip2" ), [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
@@ -142,12 +148,10 @@ const Finance = function ( props )
 		</Header>
 		<Notice />
 		<View style = { styles.container }>
-			<ScrollView
-				showsVerticalScrollIndicator = { false }
-				refreshControl = { <RefreshControl refreshing = { props.isloadingUserDetailData } onRefresh = { fetchData } /> }
-			>
+			<ScrollView showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { props.isloadingUserDetailData } onRefresh = { fetchData } /> }>
+				<Swiper hasActivity = { props.hasActivity } swiper = { props.swiper } />
 				<Exchange showModal = { props.showExchangeModal } />
-				<UserInfo data = { props.userDetailData } />
+				<UserInfo data = { props.userDetailData } hasActivity = { props.hasActivity } />
 				<Statement
 					tabIndex = { props.tabIndex }
 					setTabIndex = { props.setTabIndex }
@@ -198,6 +202,8 @@ export default connect(
 			fecthStatementError: financeData.fecthStatementError,
 			isloadingStatementData: financeData.isloadingStatementData,
 
+			hasActivity: financeData.hasActivity,
+			swiper: financeData.swiper,
 			userDetailData: financeData.userDetailData,
 			isloadingUserDetailData: financeData.isloadingUserDetailData,
 
@@ -206,7 +212,7 @@ export default connect(
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, testLogin, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
+		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, testLogin, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
 	}
 )( Finance );
 

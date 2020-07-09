@@ -8,7 +8,7 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { fetchData, fetchSell, fetchBuy, setCount } from "./../redux/actions/ctc.js";
+import { fetchData, fetchSell, fetchBuy, setCount, closeWs } from "./../redux/actions/ctc.js";
 
 import Counter from "./../components/counter.js";
 import { AccordionItem } from "./../components/accordion.js";
@@ -245,6 +245,9 @@ const Ctc = React.memo( function( props )
 	React.useEffect( () => {
 		props.navigation.addListener( "focus", () => {
 			props.fetchData();
+		} );
+		props.navigation.addListener( "blur", () => {
+			closeWs();
 		} );
 	}, [ props.navigation ] );
 

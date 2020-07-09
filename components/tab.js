@@ -68,6 +68,7 @@ export default React.memo( function(
 	locked = false,																		// 禁止滑动切换
 	animation = true,																	// 是否带有动画(仅在点击导航时)
 	numOfSibling = 0,																	// 预加载数量
+	swiperAutoPlay = false,																// 当成轮播图使用时是否自动播放, false = 无, number = 存在( 需在父组件 ComponentWillUnmount 中设置为 false )
 	tabBarPosition = "top",																// tabBar 位置: top, bottom
 	contentProps = {},																	// tabView 的其他属性
 	onChangeTab = function() {},														// 选项卡移动时的回调函数
@@ -81,7 +82,7 @@ export default React.memo( function(
 	const [ currentPage, setCurrentPage ] = React.useState( initialPage );
 	
 	const [ sceneKeys, setSceneKeys ] = React.useState( () => newSceneKeys( { currentPage: initialPage, numOfSibling: numOfSibling, children: pureChildren } ) );
-	
+
 	if( page && ( page != currentPage ) )												// props.page != state.currentPage 时设置最新 state.currentPage
 	{
 		setCurrentPage( page );
@@ -130,6 +131,27 @@ export default React.memo( function(
 		const nextPage = Math.round( e.nativeEvent.contentOffset.x / width );
 		currentPage !== nextPage && setState( nextPage );
 	};
+
+	React.useEffect( function()
+	{
+		let timer = null;
+		if( swiperAutoPlay )
+		{
+			let index = initialPage;
+			clearInterval( timer );
+			timer = setInterval( () => {
+				index = index === pureChildren.length - 1 ? 0 : index + 1;
+				tabViewRef.current.scrollTo( { x: index * width, y: 0, animated: true } );
+			}, swiperAutoPlay )
+		} else
+		{
+			clearInterval( timer );
+		}
+		return function()
+		{
+			clearInterval( timer );
+		}
+	}, [ swiperAutoPlay ] );
 
 	const tabBarProps = { goToPage: goToPage, activeTab: currentPage, tabs: pureChildren.map( child => child.props.tabLabel ) };
 

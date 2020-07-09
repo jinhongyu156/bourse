@@ -2,6 +2,7 @@ export default {
 	bottomTabNavigator: {
 		finance: "金融",
 		contract: "合约",
+		simulator: "模拟",
 		ctc: "币币",
 		user: "用户"
 	},
@@ -59,6 +60,7 @@ export default {
 		info: "条件不满足无法发送"
 	},
 	header: {
+		simulatorUsdt: "模拟 USDT",
 		trading: "交易金",
 	},
 	finance: {
@@ -98,7 +100,8 @@ export default {
 			numberOfTeam: "团队人数",
 			todayEarnings: "今日收益",
 			yesterdayEarnings: "昨日收益",
-			allEarnings: "累计收益"
+			allEarnings: "累计收益",
+			allInvest: "累计投资"
 		},
 		statement: {
 			direction: "流水方向",
@@ -361,7 +364,7 @@ export default {
 		myClient: "我的客户",
 		myInfo: "我的信息",
 		editPassword: "登录密码",
-		query: "查询",
+		query: "流水查询",
 		subAccounts: "子账户列表",
 		bindSubaccount: "绑定子账号",
 		hotkey: "一键领取",
@@ -510,6 +513,7 @@ export default {
 		fetchAuthDataError: "获取实名认证信息失败"
 	},
 	camera: {
+		pageTitle: "照相机",
 		successTitle: "识别内容",
 		confirm: "确定",
 		entry: "扫一扫",
@@ -517,9 +521,35 @@ export default {
 		message: "我们需要你的许可才能使用你的照相机",
 		buttonPositive: "我同意",
 		buttonNegative: "我拒绝"
+	},
+	activity: {
+		title: "活动标题"
+	},
+	ranking: {
+		title: "排行榜",
+		number: "交易笔数",
+		amount: "交易金额",
+		odds: "胜率",
+		cancel: "取消关注",
+		focus: "关注",
+		index: "排名",
+		fetchRankingError: "获取排行榜数据失败",
+		fetchFocusError: "关注高手失败",
+		fetchCancelError: "解绑高手失败"
+	},
+	simulator: {
+		fetchSimulatorDataError: "请求模拟数据失败",
+		fetchSimulatorSubmitError: "请求模拟购买失败",
+		fetchSimulatorClosingError: "请求模拟平仓失败",
+		fetchSimulatorSubmitSuccess: "请求模拟购买成功",
+		fetchSimulatorClosingSuccess: "请求模拟平仓成功",
+		masterTitle: "高手订单",
+		myTitle: "我的订单",
+		noData: "未查询到数据",
+		noFocuMasterInfo: "你没有关注任何高手",
+		focuMaster: "关注高手",
+		queryTitle: "模拟流水",
+		submit: "提交"
+
 	}
-};
-
-
-
-
+}

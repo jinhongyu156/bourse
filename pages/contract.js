@@ -17,7 +17,7 @@ import ProductHandle from "./../containers/productHandle.js";
 import Notice from "./../containers/notice.js";
 import Order from "./../containers/order.js";
 
-import { setTabIndex, setProductId, setCount, fetchContractData, fetchSubmit, fetchClosing } from "./../redux/actions/contract.js";
+import { setTabIndex, setProductId, setCount, fetchContractData, fetchSubmit, fetchClosing, closeWs } from "./../redux/actions/contract.js";
 
 // 头部操作 icon 宽高
 const HEADERHANDLESIZE = 32;
@@ -69,6 +69,9 @@ const Contract = React.memo( function ( props )
 	React.useEffect( () => {
 		props.navigation.addListener( "focus", () => {
 			props.fetchContractData();
+		} );
+		props.navigation.addListener( "blur", () => {
+			closeWs();
 		} );
 	}, [ props.navigation ] );
 

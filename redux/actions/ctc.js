@@ -8,7 +8,7 @@ export const ACTIONS_SET_CTC_DATA = "ACTIONS_SET_CTC_DATA";
 export const ACTIONS_SET_CTC_ORIGINALDATA = "ACTIONS_SET_CTC_ORIGINALDATA";
 export const ACTIONS_SET_CTC_FETCHLOADING = "ACTIONS_SET_CTC_FETCHLOADING";
 export const ACTIONS_SET_CTC_RATE = "ACTIONS_SET_CTC_RATE";
-let ws = null;
+export let ws = null;
 
 let keys = [ "USDT", "ETUSD", "ETH", "SLBT", "BTC", "DASH", "ZEC", "LTC", "NEO", "XMR", "OMG", "EOS", "XRP" ];
 
@@ -65,13 +65,20 @@ export function setCount( key, text )
 	};
 };
 
+export function closeWs()
+{
+	if( ws ) {
+		ws.close();
+	}
+};
+
 // ws price
 function wsData()
 {
 	return function( dispatch, getState )
 	{
 		// if( ws ) return;
-		
+		closeWs();
 		ws = new Ws( "ws://tcp.slb.one:80/", {
 			heartCheck: function()
 			{
@@ -161,7 +168,7 @@ export function fetchData()
 		{
 			dispatch( setFetchLoading( true ) );
 			const res = await fetchPost( "/new_heyue.php", { "提交": "返回用户货币数量" } );
-			console.log( "res", res );
+
 			if( isObject( res ) )
 			{
 				const obj = objectValueGetNum( res, keys, 3 );
