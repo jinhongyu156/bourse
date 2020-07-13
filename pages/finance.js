@@ -127,10 +127,10 @@ const Finance = function ( props )
 	}, [ props.navigation ] );
 
 	// 双数为强制更新, 单数为非必须更新
-	if( !showAlert && props.version && !( props.version.split( "." )[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version )
+	if( !showAlert && props.version && props.version.version && !( props.version.version.split( "." )[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version.version )
 	{
 		setShowAlert( true );
-		Alert.alert( I18n.t( "finance.tip1" ), I18n.t( "finance.tip2" ), [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
+		Alert.alert( I18n.t( "finance.tip1" ), `${ I18n.t( "finance.tip2" ) }  \r\n${ I18n.t( "finance.tip3" ) }: ${ props.version ? `\n${ props.version.content.join( "\n" ) }` : "" }`, [ { text: I18n.t( "finance.confirm" ), onPress: () => Linking.openURL( "http://ca.slb.one/appdown.php" ) } ], { cancelable: false } );
 	};
 
 	return <React.Fragment>

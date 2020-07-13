@@ -71,6 +71,7 @@ export default {
 		quit: "Press again to exit the application",
 		tip1: "There is a new version that can be updated",
 		tip2: "Please update for a better experience",
+		tip3: "Update the content",
 		confirm: "Confirm",
 		header: {
 			tip: "Note: minimum exchange of 300 trading gold minimum investment",

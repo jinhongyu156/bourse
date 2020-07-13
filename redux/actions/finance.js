@@ -254,11 +254,21 @@ export function fetchGetBenefits( callback )
 };
 
 // 获取版本
-export function getVersion()
+/*export function getVersion()
 {
 	return async function( dispatch )
 	{
 		const res = await fetchPost( "/version.php", {} );
 		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
 	};
+};*/
+
+export function getVersion()
+{
+	return async function( dispatch )
+	{
+		const res = await fetchPost( "/android_version.php", {} );
+		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
+	};
 };
+

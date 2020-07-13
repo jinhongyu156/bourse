@@ -52,7 +52,7 @@ export default React.memo( function MyInfo( { id, vouchers, version, userLanguag
 		navigation.push( "History" );
 	}, [] );
 
-	const hasNewVersion = PACKAGEJSON.version !== version;
+	const hasNewVersion = PACKAGEJSON.version !== version.version;
 
 	return <React.Fragment>
 		<View style = { styles.container }>
