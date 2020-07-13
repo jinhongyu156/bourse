@@ -14,7 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		184E7426249B574000EFE449 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 184E7425249B574000EFE449 /* Launch Screen.storyboard */; };
 		18704CC424972C0100D90676 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 18704CC324972C0100D90676 /* Fonts */; };
-		18A3570624B747FB0036DCF7 /* bundles in Resources */ = {isa = PBXBuildFile; fileRef = 18A3570524B747FB0036DCF7 /* bundles */; };
+		18A3570824B883CB0036DCF7 /* bundles in Resources */ = {isa = PBXBuildFile; fileRef = 18A3570724B883CA0036DCF7 /* bundles */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -57,7 +57,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = bourse/main.m; sourceTree = "<group>"; };
 		184E7425249B574000EFE449 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		18704CC324972C0100D90676 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
-		18A3570524B747FB0036DCF7 /* bundles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bundles; path = ../bundles; sourceTree = "<group>"; };
+		18A3570724B883CA0036DCF7 /* bundles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bundles; path = ../bundles; sourceTree = "<group>"; };
 		1DC84B7C84E662C161ED89AC /* Pods-bourse-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bourse-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-bourse-tvOSTests/Pods-bourse-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* bourse-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "bourse-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* bourse-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bourse-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,7 +146,7 @@
 		13B07FAE1A68108700A75B9A /* bourse */ = {
 			isa = PBXGroup;
 			children = (
-				18A3570524B747FB0036DCF7 /* bundles */,
+				18A3570724B883CA0036DCF7 /* bundles */,
 				18704CC324972C0100D90676 /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -350,7 +350,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18A3570624B747FB0036DCF7 /* bundles in Resources */,
+				18A3570824B883CB0036DCF7 /* bundles in Resources */,
 				18704CC424972C0100D90676 /* Fonts in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				184E7426249B574000EFE449 /* Launch Screen.storyboard in Resources */,
@@ -752,6 +752,7 @@
 				);
 				INFOPLIST_FILE = bourse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -759,7 +760,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bona2.bourse0709;
 				PRODUCT_NAME = bourse;
-				PROVISIONING_PROFILE_SPECIFIER = hoc;
+				PROVISIONING_PROFILE_SPECIFIER = 07092024;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -778,6 +779,7 @@
 				DEVELOPMENT_TEAM = 7V7M5G5786;
 				INFOPLIST_FILE = bourse/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -785,7 +787,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bona2.bourse0709;
 				PRODUCT_NAME = bourse;
-				PROVISIONING_PROFILE_SPECIFIER = hoc;
+				PROVISIONING_PROFILE_SPECIFIER = 07092024;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
