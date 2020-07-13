@@ -76,7 +76,7 @@ export default React.memo( function MyInfo( { id, vouchers, version, userLanguag
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.language" ) }</Text>
 				<Text style = { styles.rowValueText }>{ userLanguage }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.row } onPress = { () => Linking.openURL( "http://ca.slb.one/app.apk" ) }>
+			<TouchableOpacity style = { styles.row } onPress = { () => Linking.openURL( "http://ca.slb.one/appdown.php" ) }>
 				<Text style = { styles.rowKeyText }>{ I18n.t( "user.version" ) }</Text>
 				<Text style = { styles.rowValueText }>{ PACKAGEJSON.version }{ hasNewVersion ? `( ${ I18n.t( "user.update" ) } )` : "" }</Text>
 			</TouchableOpacity>
