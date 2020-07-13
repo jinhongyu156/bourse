@@ -1,6 +1,8 @@
 import { amountReg } from "./../../javascripts/regExp.js";
 import { fetchPost, isObject, isArray, getNum, objectValueGetNum } from "./../../javascripts/util.js";
 
+import { Platform } from "react-native";
+
 import I18n from "i18n-js";
 
 export const defaultModalData = { visible: false, key: "", title: "", text: "", times: 0, inputError: null, fecthError: null, isloading: false, tip: "" };
@@ -267,7 +269,7 @@ export function getVersion()
 {
 	return async function( dispatch )
 	{
-		const res = await fetchPost( "/android_version.php", {} );
+		const res = await fetchPost( Platform.OS === "android" ? "/android_version.php" : "/ios_version.php", {} );
 		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
 	};
 };
