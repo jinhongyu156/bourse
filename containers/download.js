@@ -45,11 +45,7 @@ export default React.memo( function()
 			</View>
 			<View style = { styles.item }>
 				<View style = { styles.qrcontainer }><QRCode size = { 100 } value = "http://ca.slb.one/appdown.php" color = { "#696DAC" } /></View>
-				<Text style = { styles.text } onPress = { onPressAndroid }>香港数字( IOS 版 )</Text>
-			</View>
-			<View style = { styles.item }>
-				<View style = { styles.qrcontainer }><QRCode size = { 100 } value = "http://ca.slb.one/index.html?userid=123" color = { "#696DAC" } /></View>
-				<Text style = { styles.text } onPress = { onPressAndroid }>香港数字( 网页注册 )</Text>
+				<Text style = { styles.text }>香港数字( IOS 版 )</Text>
 			</View>
 		</View>
 		{/*<TouchableOpacity onPress = { copy } onLongPress = { () => Linking.openURL( "http://ca.slb.one/app.apk" ) }>

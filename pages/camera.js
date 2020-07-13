@@ -17,9 +17,10 @@ export default class extends React.Component
 	}
 	onBarCodeRead( res )
 	{
+		const text = ( res.data && ( res.data.indexOf( "=" ) !== -1 ) ) ? res.data.split( "=" )[ 1 ] : "";
 		this.setState( { success: true }, () => Alert.alert( I18n.t( "camera.successTitle" ), res.data, [ { text: I18n.t( "camera.confirm" ), onPress: () => {
 			this.props.navigation.goBack();
-			this.props.route.params.callback( res.data );
+			this.props.route.params.callback( text );
 		} } ], { cancelable: false } ) );
 	}
 	render()
