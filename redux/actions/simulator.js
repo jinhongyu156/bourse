@@ -236,7 +236,7 @@ function wsContract()
 					// 获取 currentProduct 数据
 					const currentProduct = getCurrentProduct( newContractData, simulator.productId );
 					// 更新
-					dispatch( setPartData( newContractData, currentProduct, newUserOrderData ) );
+					dispatch( setPartData( newContractData, currentProduct, newMasterOrderData, newUserOrderData ) );
 				};
 			}
 		} );

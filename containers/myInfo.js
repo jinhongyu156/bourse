@@ -54,6 +54,8 @@ export default React.memo( function MyInfo( { id, vouchers, version, userLanguag
 
 	const hasNewVersion = PACKAGEJSON.version !== version.version;
 
+	console.log( "version.version", version.version )
+
 	return <React.Fragment>
 		<View style = { styles.container }>
 			<TouchableOpacity style = { styles.row }>
