@@ -201,7 +201,20 @@ export function fetchLogin()
 	{
 		const { login } = getState();
 
-		if ( ( ( login.loginType === 0 && login.phoneNumber ) || ( login.loginType === 1 && login.emailText ) ) && login.password && login.code && !login.isLoading && Object.values( login.inputError ).every( item => item === false ) )
+		const inputError = login.inputError;
+
+		if( login.loginType === 0 )
+		{
+			delete inputError.emailText;
+		};
+
+		if( login.loginType === 1 )
+		{
+			delete inputError.phoneNumber;
+		};
+
+		if (
+			( ( login.loginType === 0 && login.phoneNumber ) || ( login.loginType === 1 && login.emailText ) ) && login.password && login.code && !login.isLoading && Object.values( login.inputError ).every( item => item === false ) )
 		{
 			dispatch( { type: ACTION_SET_LOGIN_ISLOADING, payload: true } );
 

@@ -181,6 +181,18 @@ export function fetchRegister( type, callback )
 	{
 		const { register } = getState();
 
+		const inputError = register.inputError;
+
+		if( register.registerType === 0 )
+		{
+			delete inputError.emailText;
+		};
+
+		if( register.registerType === 1 )
+		{
+			delete inputError.phoneNumber;
+		};
+
 		if (
 			( ( register.registerType === 0 && register.phoneNumber ) || ( register.registerType === 1 && register.emailText ) ) &&
 			( type === "register" ? ( register.name && register.referee && register.agree ) : ( register.newPassword ) ) &&
@@ -215,6 +227,7 @@ export function fetchRegister( type, callback )
 				: {};
 
 				const res = await fetchPost( "/user.php", params );
+
 				if( res === "ok" )
 				{
 					dispatch( { type: ACTION_SET_REGISTER_FETCHREGISTERERROR, payload: null } );

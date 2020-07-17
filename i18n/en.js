@@ -38,7 +38,7 @@ export default {
 			password: "Please enter your password", newPassword: "Please enter your new password",
 			imageCode: "Please enter your image code", code: "Please enter the code"
 		},
-		registerType: { phoneNumber: "Telephone number register", email: "Email register" },
+		registerType: { phoneNumber: "Telephone number", email: "Email" },
 		findType: { phoneNumber: "Find by telephone number", email: "Find by email" },
 		login: "login",
 		adviceNote: "advice note",
