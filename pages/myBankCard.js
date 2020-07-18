@@ -30,9 +30,12 @@ const ERRORBOXHEIGHT = 30;
 const styles = StyleSheet.create( {
 	container: { flex: 1, alignItems: "center", marginTop: 10 },
 
+	bankBoxStyle: { flexDirection: "row", width: INPUTBOXWIDTH, height: INPUTBOXHEIGHT, alignItems: "center" },
 	inputBoxStyle: { width: INPUTBOXWIDTH, height: INPUTBOXHEIGHT, justifyContent: "center" },
 	inputStyle: { height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 	editInputStyle: { flex: 7, fontSize: 14 },
+	activeColor: { color: "#000000", paddingHorizontal: 14 },
+	inActiveColor: { color: "#999999", paddingHorizontal: 14 },
 
 	editBtnBox: { flex: 4, flexDirection: "row", justifyContent: "space-between" },
 	editBtn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#696DAC" },
@@ -51,7 +54,7 @@ const MyBankCard = function( props )
 	{
 		props.fetchCardData();
 	}, [] );
-
+	
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>
 			{
@@ -60,15 +63,17 @@ const MyBankCard = function( props )
 					: ( props.fetchBindCardError ? <Text style = { styles.errorText }>{ props.fetchBindCardError }</Text> : null )
 			}
 		</View>
-		<TouchableOpacity activeOpacity = { 1 } onPress = { props.showBankSelector } disabled = { props.hasCard }>
-			<Input
+		<TouchableOpacity activeOpacity = { 1 } style = { styles.bankBoxStyle } onPress = { props.showBankSelector } disabled = { !!props.hasCard }>
+			<Text>{ I18n.t( "myBankCard.bankName" ) }: </Text>
+			<Text style = { props.hasCard ? styles.inActiveColor : styles.activeColor }>{ props.bankName ? props.bankName : I18n.t( "myBankCard.placeholderBankName" ) }</Text>
+			{ /* <Input
 				disabled = { true }
 				value = { props.bankName }
 				placeholder = { I18n.t( "myBankCard.placeholderBankName" ) }
 				inputBoxStyle = { styles.inputBoxStyle }
 				inputStyle = { styles.inputStyle }
 				renderInputLeft = { () => <Text>{ I18n.t( "myBankCard.bankName" ) }: </Text> }
-			/>
+			/> */ }
 		</TouchableOpacity>
 		<Input
 			index = { "bankDeposit" }

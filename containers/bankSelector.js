@@ -27,7 +27,7 @@ const LIST_HEADER_PADDING_HORIZONTAL = 20;
 
 const styles = StyleSheet.create( {
 
-	container: { flex: 1 },
+	container: { flex: 1, paddingTop: 28 },
 
 	header: { height: HEADER_HEIGHT, flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: LSIT_BACKGROUNDCOLOR },
 	headerInput: { flex: 1, height: HEADER_INPUT_BTN_HEIGHT, borderRadius: 20, marginHorizontal: 10, paddingHorizontal: 20, paddingVertical: 0, backgroundColor: "#ECECEC" },

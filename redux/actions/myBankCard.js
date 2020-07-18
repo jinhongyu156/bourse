@@ -141,6 +141,7 @@ export function fetchCardData()
 				dispatch( setCardData( false, null ) );
 			} else
 			{
+				dispatch( setHasCard( false ) );
 				dispatch( setCardData( false, res.toString() ) );
 			};
 		} catch( err )
