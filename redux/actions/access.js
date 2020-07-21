@@ -13,6 +13,8 @@ export const ACTION_SET_ACCESS_ISLOADING = "ACTION_SET_ACCESS_ISLOADING";
 export const ACTION_SET_ACCESS_FETCHSUBMITERROR = "ACTION_SET_ACCESS_FETCHSUBMITERROR";
 export const ACTION_SET_ACCESS_CLEAR = "ACTION_SET_ACCESS_CLEAR";
 
+import { setSendCodeStatus, clearSendCodeError } from "./sendCode.js"
+
 /* action create */
 // 设置当前币种
 function setCoin( coin )
@@ -47,7 +49,12 @@ function setFetchSubmitError( fetchSubmitError )
 // 清空数据
 export function clear()
 {
-	return { type: ACTION_SET_ACCESS_CLEAR };
+	return function( dispatch )
+	{
+		dispatch( clearSendCodeError() );
+		dispatch( setSendCodeStatus( 0 ) );
+		dispatch( { type: ACTION_SET_ACCESS_CLEAR } );
+	};
 };
 
 // 设置 input 文本
@@ -66,6 +73,7 @@ export function setInputText( key, value )
 		if( key === "password" )
 		{
 			dispatch( { type: ACTION_SET_ACCESS_INPUTERROR, payload: Object.assign( {}, access.inputError, { password: !passwordReg.test( value ) } ) } );
+			dispatch( setSendCodeStatus( ( passwordReg.test( value ) ) ? 1 : 0 ) );
 		};
 		if( key === "account" )
 		{
@@ -167,19 +175,19 @@ export function fetchMentionSubmit( coin, callback )
 	{
 		const { access } = getState();
 
-		if( Object.values( access.inputError ).every( item => item === false ) && access.usable && access.address && access.number && access.password )
+		if( Object.values( access.inputError ).every( item => item === false ) && access.usable && access.address && access.number && access.password && access.code )
 		{
 			if( Number( access.number ) < Number( access.usable ) )
 			{
 				dispatch( setIsLoading( true ) );
 				// const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password }; // 新版本
-				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password };
+				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password, "验证码": access.code };
 
 				try
 				{
 					// const res = await fetchPost( "/chongbi.php", params ); // 新版本
 					const res = await fetchPost( "/otc.php", params );
-
+					console.log( "res", res )
 					if( res === "成功" )
 					{
 						callback();
@@ -215,7 +223,7 @@ export function fetchTurnSubmit( coin, callback )
 		if( Object.values( access.inputError ).every( item => item === false ) && access.account && access.number && access.password )
 		{
 			dispatch( setIsLoading( true ) );
-			const params = { "提交": "转币", "转出备注": access.note, "转币数量": access.number, "转币类型": coin, "转入账号": access.account, "资金密码": access.password };
+			const params = { "提交": "转币", "转出备注": access.note, "转币数量": access.number, "转币类型": coin, "转入账号": access.account, "转入电话": access.phone, "资金密码": access.password };
 			try
 			{
 				const res = await fetchPost( "/otc.php", params );

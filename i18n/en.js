@@ -35,7 +35,7 @@ export default {
 		placeholder: {
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			name: "Please enter your name", referee: "Please enter your referee",
-			password: "Please enter your password", newPassword: "Please enter your new password",
+			password: "Please enter your password", newPassword: "Please enter your new password", confirmPassword: "Please enter your password again",
 			imageCode: "Please enter your image code", code: "Please enter the code"
 		},
 		registerType: { phoneNumber: "Telephone number", email: "Email" },
@@ -188,7 +188,7 @@ export default {
 
 		placeholderNumber: "Please enter the charge amount",
 		number: "Number",
-		placeholderNote: "It is recommended to fill in the ID number of this platform",
+		placeholderNote: "Please enter the charge Note",
 		note: "Remark",
 		submitText: "Submit",
 		tip1: "1. The valid time of this coin charging address is 120 minutes ",
@@ -207,8 +207,10 @@ export default {
 		number: "Number",
 		fee: "Fee",
 		password: "Password",
+		code: "Code",
 
 		placeholderAddress: "Please enter ethereum-based money",
+		placeholderCode: "Please enter a verification code",
 		placeholderNumber: "Please enter the number of withdrawals",
 		placeholderPassword: "Please enter money password",
 
@@ -347,11 +349,13 @@ export default {
 	turn: {
 		title: "Turn",
 		number: "Number",
-		account: "Account",
+		account: "Account ID",
+		phone: "Account",
 		password: "Password",
 
 		placeholderNumber: "Please enter the amount of money transferred",
 		placeholderAccount: "Please enter the ID number of the transfer",
+		placeholderPhone: "Please enter the account you transferred to",
 		placeholderPassword: "Please enter the fund password",
 
 		submitText: "Confirm",
@@ -364,7 +368,8 @@ export default {
 			chart: "Code",
 			theme: "Theme",
 			tip1: "Welcome to register Hong Kong digital",
-			tip2: "Sign up for a free 10USDT"
+			tip2: "Sign up for a free 10USDT",
+			myQrCodeTitle: "my Qr Code"
 		},
 		myClient: "My Client",
 		myInfo: "My Info",
@@ -390,6 +395,8 @@ export default {
 		logout: "Logout",
 
 		trading: "Trading",
+		millWorkForce: "Mill Work Force",
+		teamTrading: "Team Trading",
 		tailNumber: "Tail",
 		noDataText: "No data was queried",
 		goBack: "Go Back",

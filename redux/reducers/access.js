@@ -4,7 +4,9 @@ const defaultState = {
 	coin: "",															// 当前币种
 	usable: "",															// 可用数量
 	address: "",														// 地址
-	account: "",														// 转入账号
+	account: "",														// 转入账号 Id
+	phone: "",															// 转入账号 电话
+	code: "",															// 提币验证码
 	number: "",															// 数量
 	fee: 0,																// 服务费
 	note: "",															// 备注

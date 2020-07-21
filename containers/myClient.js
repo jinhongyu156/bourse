@@ -34,13 +34,14 @@ const styles = StyleSheet.create( {
 	inactiveBgColor: { backgroundColor: "#888888" }
 } );
 
+
 // 列表头
 const Header = React.memo( function()
 {
 	return <View style = { styles.header }>
 		<Text style = { styles.headerText }>ID</Text>
-		<Text style = { styles.headerText }>USDT</Text>
-		<Text style = { styles.headerText }>SLBT</Text>
+		<Text style = { styles.headerText }>{ I18n.t( "user.millWorkForce" ) }</Text>
+		<Text style = { styles.headerText }>{ I18n.t( "user.teamTrading" ) }</Text>
 		<Text style = { styles.headerText }>{ I18n.t( "user.trading" ) }</Text>
 		<Text style = { styles.headerText }>{ I18n.t( "user.tailNumber" ) }</Text>
 	</View>;
@@ -51,8 +52,8 @@ const Row = React.memo( function( { rowData, onPress } )
 {
 	return <TouchableOpacity style = { styles.row } onPress = { () => onPress( rowData[ "id" ] ) }>
 		<Text style = { styles.rowText }>{ rowData[ "id" ] ? rowData[ "id" ] : "-" }</Text>
-		<Text style = { styles.rowText }>{ rowData[ "USDT" ] ? rowData[ "USDT" ] : "-" }</Text>
-		<Text style = { styles.rowText }>{ rowData[ "SLBT" ] ? rowData[ "SLBT" ] : "-" }</Text>
+		<Text style = { styles.rowText }>{ rowData[ "矿机算力" ] ? rowData[ "矿机算力" ] : "-" }</Text>
+		<Text style = { styles.rowText }>{ rowData[ "团队交易金" ] ? rowData[ "团队交易金" ] : "-" }</Text>
 		<Text style = { styles.rowText }>{ rowData[ "交易金" ] ? rowData[ "交易金" ] : "-" }</Text>
 		<Text style = { styles.rowText }>{ rowData[ "电话" ] ? rowData[ "电话" ] : "-" }</Text>
 	</TouchableOpacity>;

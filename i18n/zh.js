@@ -31,7 +31,7 @@ export default {
 		title: "注册",
 		placeholder: {
 			email: "请输入电子邮箱", phoneNumber: "请输入电话号码", name: "请输入姓名", referee: "请输入推荐人",
-			password: "请输入密码", newPassword: "请输入新密码",
+			password: "请输入密码", newPassword: "请输入新密码", confirmPassword: "请再次输入密码",
 			imageCode: "请输入图片验证码", code: "请输入设备验证码"
 		},
 		registerType: { phoneNumber: "电话号码注册", email: "邮箱注册" },
@@ -183,7 +183,7 @@ export default {
 		chainName: "链名称",
 		placeholderNumber: "请输入充币数量",
 		number: "充币数量",
-		placeholderNote: "推荐填写本平台 ID 号",
+		placeholderNote: "请输入备注",
 		note: "备注",
 		submitText: "我已充币",
 		tip1: "1、本次充币地址有效时间120分钟",
@@ -202,8 +202,10 @@ export default {
 		number: "提币数量",
 		fee: "服务费用",
 		password: "资金密码",
+		code: "验证码",
 
 		placeholderAddress: "请输入基于以太坊网络的钱包地址",
+		placeholderCode: "请输入验证码",
 		placeholderNumber: "请输入提币数量",
 		placeholderPassword: "请输入资金密码",
 
@@ -343,11 +345,13 @@ export default {
 	turn: {
 		title: "转币",
 		number: "转币数量",
-		account: "转入账号",
+		account: "转入账号 ID",
+		phone: "转入账号",
 		password: "资金密码",
 
 		placeholderNumber: "请输入转币数量",
 		placeholderAccount: "请输入转入的 ID 号",
+		placeholderPhone: "请输入转入的账号",
 		placeholderPassword: "请输入资金密码",
 
 		submitText: "确认转币",
@@ -360,7 +364,8 @@ export default {
 			chart: "推广码",
 			theme: "主题",
 			tip1: "欢迎注册香港数字",
-			tip2: "首次投单激活 ETU 金融 赠送 10 USDT"
+			tip2: "首次投单激活 ETU 金融 赠送 10 USDT",
+			myQrCodeTitle: "我的二维码"
 		},
 		myClient: "我的客户",
 		myInfo: "我的信息",
@@ -383,7 +388,11 @@ export default {
 		update: "存在新版本可更新",
 		logout: "退出登录",
 
+
+
 		trading: "交易金",
+		millWorkForce: "矿机算力",
+		teamTrading: "团队交易金",
 		tailNumber: "尾号",
 		noDataText: "未查询到数据",
 		goBack: "返回上一级",

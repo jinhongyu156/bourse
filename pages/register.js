@@ -135,7 +135,7 @@ const InputBox = React.memo( function( {
 		<Input
 			index = { "password" }
 			value = { password }
-			placeholder = { I18n.t( "register.placeholder.password" ) }
+			placeholder = { pageType === "register" ? I18n.t( "register.placeholder.password" ) : I18n.t( "register.placeholder.newPassword" ) }
 			hasError = { inputError[ "password" ] }
 			disabled = { false }
 			inputBoxStyle = { styles.textInputBox }
@@ -145,7 +145,7 @@ const InputBox = React.memo( function( {
 		<Input
 			index = { pageType === "register" ? "referee" : "newPassword" }
 			value = { pageType === "register" ? referee : newPassword }
-			placeholder = { pageType === "register" ? I18n.t( "register.placeholder.referee" ) : I18n.t( "register.placeholder.newPassword" ) }
+			placeholder = { pageType === "register" ? I18n.t( "register.placeholder.referee" ) : I18n.t( "register.placeholder.confirmPassword" ) }
 			hasError = { pageType === "register" ? inputError[ "referee" ] : inputError[ "newPassword" ] }
 			disabled = { false }
 			inputBoxStyle = { styles.textInputBox }

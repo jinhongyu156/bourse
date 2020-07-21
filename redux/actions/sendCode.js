@@ -103,6 +103,64 @@ export function sendCode()
 	};
 };
 
+export function sendMentionCode()
+{
+	return async function( dispatch, getState )
+	{
+		const { sendCode } = getState();
+
+		const seconds = sendCode.countdown;
+
+		// 开始倒计时
+		function startCountdown()
+		{
+			const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响
+			const run = function()
+			{
+				const nowTimeStamp = Date.now();
+
+
+				if ( nowTimeStamp >= overTimeStamp )
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: 3 } } );
+					clearInterval( timer );
+				} else
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ), sendCodeStatus: 2 } } );
+				};
+			};
+			run();
+			timer = setInterval( run, 1000 );
+		};
+
+		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 )
+		{
+			dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: I18n.t( "sendCode.info" ) } );
+		} else
+		{
+			try
+			{
+				const params = { "提交": "提币发送验证码" };
+
+				// const res = await fetchPost( "/user.php", params );
+				// console.log( "res", res );
+				const res = {"发送成功": ["发送成功"]};
+				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } );
+					startCountdown();
+				} else
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: res } );
+				};
+			} catch( err )
+			{
+				dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "sendCode.sendCodeError" ) }` : err.toString() } );
+			};
+		};
+	};
+};
+
 // 清空发送验证码的错误信息
 export function clearSendCodeError()
 {

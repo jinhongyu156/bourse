@@ -173,7 +173,7 @@ export default function()
 						<Stack.Screen name = "Disclaimer" component = { Disclaimer } options = { { title: I18n.t( "register.disclaimer" ) } } />
 						<Stack.Screen name = "TabNavigator" component = { TabNavigator } options = { () => ( { headerShown: false, headerTitle: I18n.t( "finance.title" ) } ) } />
 						<Stack.Screen name = "Access" component = { Access } />
-						<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { headerShown: false } ) } />
+						<Stack.Screen name = "MyQrCode" component = { MyQrCode } options = { () => ( { title: I18n.t( "user.header.myQrCodeTitle" ) } ) } />
 						<Stack.Screen name = "Chart" component = { Chart } />
 						<Stack.Screen name = "Article" component = { Article } />
 						<Stack.Screen name = "UsdtRecharge" component = { UsdtRecharge } options = { () => ( { title: I18n.t( "usdtRecharge.title" ) } ) } />

@@ -8,9 +8,11 @@ import Clipboard from "@react-native-community/clipboard";
 
 import { fetchData } from "./../redux/actions/ctc.js";
 import { setInputText, clear, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit } from "./../redux/actions/access.js";
+import { sendMentionCode } from "./../redux/actions/sendCode.js";
 
 import Input from "./../containers/input.js";
 import SubmitBtn from "./../containers/submit.js";
+import SendCodeBtn from "./../containers/sendCode.js";
 
 import { bindActionCreators } from "redux";
 
@@ -43,6 +45,8 @@ const styles = StyleSheet.create( {
 	addressBtnBox: { flex: 4, flexDirection: "row", justifyContent: "space-between" },
 	addressBtn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#696DAC" },
 	addressBtnText: { color: "#FFFFFF" },
+
+	codeInputStyle: { flex: 2, height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 
 	submitBtn: { width: INPUTBOXWIDTH, height: SUBMITBTNHEIGHT, marginTop: 30 },
 
@@ -92,18 +96,34 @@ const Recharge = React.memo( function( { name, address, number, note, inputError
 	</View>;
 } );
 
-const Mention = React.memo( function( { name, usable, address, number, fee, password, inputError, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
+const Mention = React.memo( function( { name, usable, address, number, fee, password, code, inputError, sendCodeStatus, countdown, sendCodeError, sendCode, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
 {
+	const renderCode = React.useCallback( function()
+	{
+		return <SendCodeBtn sendCode = { sendCode } countdown = { countdown } sendCodeStatus = { sendCodeStatus } />
+	}, [ sendCodeStatus, countdown ] );
+
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>
 			{ fetchUsableError ? <Text style = { styles.errorText }>{ fetchUsableError }</Text> : null }
 			{ fetchSubmitError ? <Text style = { styles.errorText }>{ fetchSubmitError }</Text> : null }
+			{ sendCodeError ? <Text style = { styles.errorText }>{ sendCodeError }</Text> : null }
 		</View>
 		<Input value = { usable } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.usable" ) }: </Text> } />
 		<Input index = { "address" } value = { address } placeholder = { I18n.t( "mention.placeholderAddress" ) } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.address" ) }: </Text> } />
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "mention.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.number" ) }: </Text> } />
 		<Input value = { number ? String( fee ) : ( name === "ETH" ? "3%" : "5%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "mention.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.password" ) }: </Text> } />
+
+		<Input index = { "code" } value = { code }
+			placeholder = { I18n.t( "mention.placeholderCode" ) }
+			inputBoxStyle = { styles.inputBoxStyle }
+			inputStyle = { styles.codeInputStyle }
+			setInputText = { setInputText }
+			renderInputLeft = { () => <Text>{ I18n.t( "mention.code" ) }: </Text> }
+			renderInputRight = { renderCode }
+		/>
+
 		<SubmitBtn title = { I18n.t( "mention.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
 		<View style = { styles.tipBox }>
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip1" ) }</Text>
@@ -115,13 +135,14 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 	</View>;
 } );
 
-const Turn = React.memo( function( { count, number, account, password, note, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
+const Turn = React.memo( function( { count, number, account, phone, password, note, inputError, fetchSubmit, fetchSubmitError, isLoading, setInputText } )
 {
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>{ fetchSubmitError ? <Text style = { styles.errorText }>{ fetchSubmitError }</Text> : null }</View>
 		<Input value = { count } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.usable" ) }: </Text> } />
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "turn.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.number" ) }: </Text> } />
 		<Input index = { "account" } value = { account } placeholder = { I18n.t( "turn.placeholderAccount" ) } hasError = { inputError[ "account" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.account" ) }: </Text> } />
+		<Input index = { "phone" } value = { phone } placeholder = { I18n.t( "turn.placeholderPhone" ) } hasError = { inputError[ "phone" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.phone" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "turn.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "turn.password" ) }: </Text> } />
 		<Input index = { "note" } value = { note } placeholder = { I18n.t( "recharge.placeholderNote" ) } disabled = { false } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "recharge.note" ) }: </Text> } />
 		<SubmitBtn title = { I18n.t( "turn.submitText" ) } submitBtnStyle = { styles.submitBtn } loading = { isLoading } onSubmit = { fetchSubmit } />
@@ -135,9 +156,14 @@ const Access = React.memo( function( props )
 	const isTurn = props.route.params.type === "turn";
 
 	React.useEffect( () => {
-		props.navigation.setOptions( { title: `${ isRecharge ? I18n.t( "recharge.title" ) : isMention ? I18n.t( "mention.title" ) : isTurn ? I18n.t( "turn.title" ) : "" } - ${ props.route.params.name }( ID: ${ props.id } )` } );
-		return props.clear;
-	}, [] );
+		props.navigation.addListener( "focus", () => {
+			props.navigation.setOptions( { title: `${ isRecharge ? I18n.t( "recharge.title" ) : isMention ? I18n.t( "mention.title" ) : isTurn ? I18n.t( "turn.title" ) : "" } - ${ props.route.params.name }( ID: ${ props.id } )` } );
+		} );
+		props.navigation.addListener( "blur", () => {
+			props.clear();
+		} );
+
+	}, [ props.navigation ] );
 
 	if( isTurn )
 	{
@@ -150,18 +176,21 @@ const Access = React.memo( function( props )
 			} );
 		}, [] );
 
-		return <Turn
-			count = { props.route.params.count }
-			number = { props.number }
-			account = { props.account }
-			password = { props.password }
-			note = { props.note }
-			inputError = { props.inputError }
-			fetchSubmit = { fetchSubmit }
-			fetchSubmitError = { props.fetchSubmitError }
-			isLoading = { props.isLoading }
-			setInputText = { props.setInputText }
-		/>;
+		return <ScrollView showsVerticalScrollIndicator = { false } keyboardDismissMode = { "on-drag" } onScrollBeginDrag = { Keyboard.dismiss }>
+			<Turn
+				count = { props.route.params.count }
+				number = { props.number }
+				account = { props.account }
+				phone = { props.phone }
+				password = { props.password }
+				note = { props.note }
+				inputError = { props.inputError }
+				fetchSubmit = { fetchSubmit }
+				fetchSubmitError = { props.fetchSubmitError }
+				isLoading = { props.isLoading }
+				setInputText = { props.setInputText }
+			/>
+		</ScrollView>
 	};
 
 	if( isMention )
@@ -187,7 +216,12 @@ const Access = React.memo( function( props )
 				number = { props.number }
 				fee = { props.fee }
 				password = { props.password }
+				code = { props.code }
 				inputError = { props.inputError }
+				sendCodeStatus = { props.sendCodeStatus }
+				countdown = { props.countdown }
+				sendCodeError = { props.sendCodeError }
+				sendCode = { props.sendMentionCode }
 				fetchSubmit = { fetchSubmit }
 				fetchUsableError = { props.fetchUsableError }
 				fetchSubmitError = { props.fetchSubmitError }
@@ -248,12 +282,15 @@ export default connect(
 	{
 		const ctcData = state.ctc;
 		const accessData = state.access;
+		const sendCodeData = state.sendCode;
 
 		return {
 			id: ctcData.id,
 			usable: accessData.usable,
 			address: accessData.address,
 			account: accessData.account,
+			phone: accessData.phone,
+			code: accessData.code,
 			number: accessData.number,
 			fee: accessData.fee,
 			note: accessData.note,
@@ -262,11 +299,15 @@ export default connect(
 			isLoading: accessData.isLoading,
 			fetchAddressError: accessData.fetchAddressError,
 			fetchUsableError: accessData.fetchUsableError,
-			fetchSubmitError: accessData.fetchSubmitError
+			fetchSubmitError: accessData.fetchSubmitError,
+
+			sendCodeStatus: sendCodeData.sendCodeStatus,
+			countdown: sendCodeData.countdown,
+			sendCodeError: sendCodeData.sendCodeError
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setInputText, clear, fetchData, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
+		return bindActionCreators( { setInputText, clear, sendMentionCode, fetchData, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
 	}
 )( Access );
