@@ -37,7 +37,9 @@ export default React.memo( function Header( { children, logoKey, usdtInfo, tradi
 		<View style = { styles.headerLeftView }>
 			<Image style = { styles.headerLeftViewLogo } source = { logoKey == 1 ? require( "./../images/logo.png" ) : require( "./../images/logo2.png" ) } />
 			<View style = { styles.headerLeftViewInfo }>
-				<Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text>
+				{
+					usdtInfo ? <Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text> : null
+				}
 				{
 					( etusdInfo && tradingInfo )
 						? <React.Fragment>

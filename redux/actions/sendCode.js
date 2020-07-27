@@ -142,9 +142,8 @@ export function sendMentionCode()
 			{
 				const params = { "提交": "提币发送验证码" };
 
-				// const res = await fetchPost( "/user.php", params );
-				// console.log( "res", res );
-				const res = {"发送成功": ["发送成功"]};
+				const res = await fetchPost( "/user.php", params );
+
 				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
 				{
 					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } );

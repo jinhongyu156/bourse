@@ -1,10 +1,10 @@
 import {
 	ACTION_SET_FINANCE_VERSION, ACTION_SET_FINANCE_TABINDEX, ACTION_SET_FINANCE_STATEMENTDATA, ACTION_SET_FINANCE_ISLOADINGSTATEMENTDATA, ACTION_SET_FINANCE_FECTHSTATEMENTERROR,
 	ACTION_SET_FINANCE_USERDETAILDATA, ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA,
-	ACTION_SET_FINANCE_MODALDATA, ACTION_SET_FINANCE_ACTIVITYSWIPER
+	ACTION_SET_FINANCE_MODALDATA, ACTION_SET_FINANCE_ACTIVITYSWIPER, ACTION_SET_FINANCE_QUSETIONDATA
 } from "./../actions/finance.js";
 
-import { defaultModalData } from "./../actions/finance.js";
+import { defaultModalData, qusetionData } from "./../actions/finance.js";
 
 const defaultState = {
 	version: null,										// 服务器版本号
@@ -18,7 +18,8 @@ const defaultState = {
 	userDetailData: {},									// 用户详细数据
 	isloadingUserDetailData: false,						// 是否正在请求用户详细数据
 
-	modalData: defaultModalData							// Modal 框所需数据
+	modalData: defaultModalData,						// Modal 框所需数据
+	qusetionData: qusetionData
 };
 
 export default function( state = defaultState, action )
@@ -51,6 +52,9 @@ export default function( state = defaultState, action )
 
 		case ACTION_SET_FINANCE_ACTIVITYSWIPER:
 			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_FINANCE_QUSETIONDATA:
+			return Object.assign( {}, state, { qusetionData: action.payload } );
 
 		default:
 			return state;

@@ -1,11 +1,13 @@
 import { amountReg } from "./../../javascripts/regExp.js";
 import { fetchPost, isObject, isArray, getNum, objectValueGetNum } from "./../../javascripts/util.js";
+import Toast from "react-native-root-toast";
 
 import { Platform } from "react-native";
 
 import I18n from "i18n-js";
 
 export const defaultModalData = { visible: false, key: "", title: "", text: "", times: 0, inputError: null, fecthError: null, isloading: false, tip: "" };
+export const qusetionData = { loading: false, visible: false, options: [], type: "", title: "", answer: "", selected: null, error: "" };
 
 /* action type */
 export const ACTION_SET_FINANCE_VERSION = "ACTION_SET_FINANCE_VERSION";
@@ -18,6 +20,7 @@ export const ACTION_SET_FINANCE_USERDETAILDATA = "ACTION_SET_FINANCE_USERDETAILD
 export const ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA = "ACTION_SET_FINANCE_ISLOADINGUSERDETAILDATA";
 
 export const ACTION_SET_FINANCE_MODALDATA = "ACTION_SET_FINANCE_MODALDATA";
+export const ACTION_SET_FINANCE_QUSETIONDATA = "ACTION_SET_FINANCE_QUSETIONDATA";
 
 export const ACTION_SET_FINANCE_ACTIVITYSWIPER = "ACTION_SET_FINANCE_ACTIVITYSWIPER";
 
@@ -95,6 +98,84 @@ export function setModalText( text )
 			tip: getTip( finance.modalData.key, amountReg.test( text ) ? Number( text ) : 0, finance.userDetailData.rate )
 		} );
 		dispatch( { type: ACTION_SET_FINANCE_MODALDATA, payload: payload } );
+	};
+};
+
+// 打开问题回答模态框
+export function showQuestionModal()
+{
+	return async function( dispatch, getState )
+	{
+		try
+		{
+			const { finance } = getState();
+
+			dispatch( { type: ACTION_SET_FINANCE_QUSETIONDATA, payload: Object.assign( {}, finance.qusetionData, { loading: true } ) } )
+
+			const res = await fetchPost( "/user.php", { "提交": "问答" } );
+
+			if( isObject( res ) )
+			{
+				const payload = Object.assign( {}, qusetionData, { loading: false, visible: true, options: Object.entries( res[ "答案" ] ).map( item => ( { key: item[ 0 ], value: item[ 1 ] } ) ), type: res[ "类别" ], title: res[ "提问" ], answer: res[ "正确" ], selected: null, error: "" } );
+				dispatch( { type: ACTION_SET_FINANCE_QUSETIONDATA, payload: payload } );
+			};
+
+			if( res == 0 )
+			{
+				dispatch( fetchGetBenefits( res => Toast.show( res ) ) );
+			};
+
+			if( typeof res === "string" )
+			{
+				Toast.show( res );
+			};
+
+		} catch( err )
+		{
+			const payload = Object.assign( {}, qusetionData, { loading: false, visible: true, options: [], type: "", title: "", answer: "", selected: null, error: err.type === "network" ? `${ err.status }: ${ I18n.t( "finance.header.fetchQusetionError" ) }` : err.err.toString() } );
+			dispatch( { type: ACTION_SET_FINANCE_QUSETIONDATA, payload: payload } );
+		};
+	};
+};
+
+// 关闭问题回答模态框
+export function hideQuestionModal()
+{
+	return function( dispatch, getState )
+	{
+		const payload = Object.assign( {}, qusetionData, { loading: false, visible: false, options: [], type: "", title: "", answer: "", selected: null, error: "" } );
+		dispatch( { type: ACTION_SET_FINANCE_QUSETIONDATA, payload: payload } )
+	};
+};
+
+
+// 设置 qusetionData 中的 selected 属性
+export function setQuestionSelected( key )
+{
+	return function( dispatch, getState )
+	{
+		const { finance } = getState();
+		const payload = Object.assign( {}, finance.qusetionData, { selected: key } );
+		dispatch( { type: ACTION_SET_FINANCE_QUSETIONDATA, payload: payload } )
+	};
+};
+
+// 问答提交
+export function questionSubmit( callback )
+{
+	return function( dispatch, getState )
+	{
+		const { finance } = getState();
+
+		if( finance.qusetionData.selected == finance.qusetionData.answer )
+		{
+			dispatch( hideQuestionModal() );
+			callback && callback();
+		} else
+		{
+			Toast.show( I18n.t( "finance.question.wrong" ) );
+			dispatch( showQuestionModal() );
+		};
 	};
 };
 

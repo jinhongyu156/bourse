@@ -23,6 +23,15 @@ const underlineStyles = {
 	inactive: { color: "#888888" }
 };
 
+const backgroundStyles = {
+	tabBarItem: { flex: 1, paddingHorizontal: 26, paddingVertical: 12 },
+	tabBarItemView: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#FFFFFF", borderRadius: 50 },
+	activeBg: { backgroundColor: "#696DAC" },
+	inactiveBg: { backgroundColor: "#FFFFFF" },
+	active: { fontSize: 16, fontWeight: "bold", color: "#FFFFFF" },
+	inactive: { fontSize: 16, fontWeight: "normal", color: "#888888" }
+};
+
 const defaultStyles = {
 	tabBarItem: { flex: 1 },
 	tabBarItemView: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center" },
@@ -59,11 +68,21 @@ const UnderlineTabBarItem = React.memo( function( { index, title, fontSize, acti
 	</TouchableOpacity>;
 } );
 
+// 带有背景色
+const BackgroundTabBarItem = React.memo( function( { index, title, fontSize, activeStyle, isActive, onPress } )
+{
+	return <TouchableOpacity style = { backgroundStyles.tabBarItem } onPress = { () => onPress( index ) }>
+		<View style = { [ backgroundStyles.tabBarItemView, isActive ? backgroundStyles.activeBg : backgroundStyles.inactiveBg ] } >
+			<Text style = { [ defaultStyles.tabBarItemText ], isActive ? backgroundStyles.active : backgroundStyles.inactive }>{ title }</Text>
+		</View>
+	</TouchableOpacity>;
+} );
+
 const DefaultTabBarItem = React.memo( function( { index, title, activeStyle, isActive, onPress } )
 {
 	return <TouchableOpacity style = { defaultStyles.tabBarItem } onPress = { () => onPress( index ) }>
-		<View style = { underlineStyles.tabBarItemView } >
-			<Text style = { [ defaultStyles.tabBarItemText ], isActive ? ( activeStyle ? { color: activeStyle } : defaultStyles.active ) : defaultStyles.inactive }>{ title }</Text>
+		<View style = { defaultStyles.tabBarItemView } >
+			<Text style = { isActive ? ( activeStyle ? { color: activeStyle } : defaultStyles.active ) : defaultStyles.inactive }>{ title }</Text>
 		</View>
 	</TouchableOpacity>;
 } );
@@ -82,6 +101,8 @@ const TabBar = React.memo( function( { tabs, type, tabBarStyle, fontSize, active
 				? <CheckBoxTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: type === "underline"
 				? <UnderlineTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
+			: type === "background"
+				? <BackgroundTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: type === "default"
 				? <DefaultTabBarItem key = { index } index = { index } title = { item } fontSize = { fontSize } activeStyle = { activeStyle } isActive = { isActive } onPress = { onPress } />
 			: null

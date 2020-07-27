@@ -3,6 +3,7 @@ export default {
 		finance: "Finance",
 		contract: "Contract",
 		simulator: "Simulator",
+		classroom: "Classroom",
 		ctc: "Ctc",
 		user: "User"
 	},
@@ -66,6 +67,31 @@ export default {
 		trading: "Trading",
 		simulatorUsdt: "Simulator USDT",
 	},
+	classroom: {
+		tabItem: {
+			task: "Task",
+			encyclopedia: "Encyclopedia"
+		},
+		task: {
+			schedule: "Task schedule",
+			today: "Today's task",
+
+			dividend: "Dividend",
+			tradingDig: "Trading Dig",
+			commissions: "Commissions",
+			mining: "Mining",
+			contracts: "Contracts",
+			sales: "Sales",
+
+			unfinished: "Unfinished",
+			completed: "Completed"
+		},
+		encyclopedia: {
+			answer: "Answer:",
+			noDataText: "No data has been queried",
+			title: "ETU Encyclopedia"
+		}
+	},
 	finance: {
 		title: "Index",
 		quit: "Press again to exit the application",
@@ -78,9 +104,10 @@ export default {
 			trading: "trading",
 			hashrate: "hashrate",
 			fetchGetBenefitsError: "Failure to collect proceeds",
+			fetchQusetionError: "Q&a request failed",
 			investETU: "investETU",
-			investment: "Investment",
-			benefits: "Get benefits"
+			investment: "Earnings",
+			benefits: "Benefits"
 		},
 		exchange: {
 			exchangeText: "Exchange",
@@ -118,6 +145,13 @@ export default {
 			trading: "Trading",
 			noData: "No data was queried",
 			fetchStatementError: "Failed to obtain flow data"
+		},
+		question: {
+			tip1: "1: Receive daily income and answer random encyclopedia questions",
+			tip2: "2: If you answer correctly, you can get profits. If not, you can answer again",
+			cancel: "Cancel",
+			submit: "Submit",
+			wrong: "Wrong"
 		}
 	},
 	contract: {

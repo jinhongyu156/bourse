@@ -80,6 +80,22 @@ const Contract = React.memo( function ( props )
 		props.navigation.push( "Chart" );
 	}, [] );
 
+	const goToAccess = React.useCallback( function( type, title, count = 0 )
+	{
+		props.navigation.push( "Access", { type: type, name: title, count: count } );
+	}, [] );
+
+	const goToUsdtRecharge = React.useCallback( function()
+	{
+		if( props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length )
+		{
+			props.navigation.push( "UsdtRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+		} else
+		{
+			return;
+		};
+	}, [ props.data ] );
+
 	const renderTabBar = React.useCallback( function( { tabs, activeTab, goToPage } )
 	{
 		return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.tabBarBox }>
@@ -90,6 +106,20 @@ const Contract = React.memo( function ( props )
 
 	return <View style = { styles.container }>
 		<Header logoKey = { 2 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUsdtRecharge }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "recharge", "USDT" ) }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_recharge.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtRecharge" ) }</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "mention", "USDT" ) }>
+				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_withdrawal.png" ) } />
+				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtWithdrawal" ) }</Text>
+			</TouchableOpacity>
+
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToChart }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/chart.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.chart" ) }</Text>
@@ -149,7 +179,10 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const contractData = state.contract;
+		const ctcData = state.ctc;
+
 		return {
+			data: ctcData.data,
 			tabIndex: contractData.tabIndex,
 			productId: contractData.productId,
 			fetchDataError: contractData.fetchDataError,

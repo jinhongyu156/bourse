@@ -2,6 +2,8 @@ import React from "react";
 
 import { View, Text, ScrollView, ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
 
+import QusetionCard from "./../containers/qusetionCard.js";
+
 import I18n from "i18n-js";
 
 const styles = StyleSheet.create( {
@@ -20,19 +22,36 @@ const Row = React.memo( function( { text } )
 	</View>;
 } );
 
-export default React.memo( function ShowText( { data, loading, error, fetchData } )
+export default React.memo( function ShowText( { title, data, loading, error, fetchData, qusetionData, showQuestionModal, hideModal, onSelect, submit } )
 {
 	React.useEffect( function()
 	{
-		fetchData();
+		title === "hotkey" ? showQuestionModal() : fetchData();
 	}, [] );
 
-	return <ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }>
+	const bindQuestionSubmit = React.useCallback( function()
 	{
-		error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
-		: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
-		: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } text = { item } /> )
-		: null
-	}
-	</ScrollView>;
+		submit( () => fetchData() );
+	}, [] );
+
+	return <React.Fragment>
+		<ScrollView style = { styles.container } showsVerticalScrollIndicator = { false } refreshControl = { <RefreshControl refreshing = { loading } onRefresh = { fetchData } /> }>
+		{
+			error ? <View style = { styles.errorBox }><Text style = { styles.errorText }>{ error }</Text></View>
+			: ( !loading && data.length === 0 ) ? <View style = { styles.errorBox }><Text style = { styles.noDataText }>{ I18n.t( "user.noDataText" ) }</Text></View>
+			: ( !loading && data.length ) ? data.map( ( item, index ) => <Row key = { index } text = { item } /> )
+			: null
+		}
+		</ScrollView>
+		{
+			title === "hotkey"
+				? <QusetionCard
+					{ ...qusetionData }
+					hideModal = { hideModal }
+					onSelect = { onSelect }
+					submit = { bindQuestionSubmit }
+				/>
+				: null
+		}
+	</React.Fragment>;
 } );

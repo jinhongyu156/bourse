@@ -43,7 +43,6 @@ import Auth from "./pages/auth.js";
 import Camera from "./pages/camera.js";
 import Activity from "./pages/activity.js";
 import Ranking from "./pages/ranking.js";
-import Simulator from "./pages/simulator.js";
 import SimulatorAccess from "./pages/simulatorAccess.js";
 
 // used by BottomTabNavigator
@@ -51,6 +50,8 @@ import Finance from "./pages/finance.js";
 import Contract from "./pages/contract.js";
 import Ctc from "./pages/ctc.js";
 import User from "./pages/user.js";
+import Classroom from "./pages/classroom.js";
+import Simulator from "./pages/simulator.js";
 
 // 限制 TextInput 长度不超过 50;
 TextInput.defaultProps = Object.assign( {}, TextInput.defaultProps, { maxLength: 50 } );
@@ -90,32 +91,39 @@ function TabNavigator( props )
 {
 	return <Tab.Navigator tabBar = { props => <TabBar { ...props } /> }>
 		<Tab.Screen name = "Finance" component = { Finance } options = { {
-			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.finance" ) }</Text>,
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.finance" ) }</Text>,
 			tabBarIcon: focused => focused
 				? <Image style = { styles.image } source = { require( "./images/finance_active.png" ) } />
 				: <Image style = { styles.image } source = { require( "./images/finance_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "Contract" component = { Contract } options = { {
-			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.contract" ) }</Text>,
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.contract" ) }</Text>,
 			tabBarIcon: ( focused ) => focused
 				? <Image style = { styles.image } source = { require( "./images/contract_active.png" ) } />
 				: <Image style = { styles.image } source = { require( "./images/contract_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "Simulator" component = { Simulator } options = { {
-			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.simulator" ) }</Text>,
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.simulator" ) }</Text>,
 			tabBarIcon: ( focused ) => focused
-				? <Image style = { styles.image } source = { require( "./images/simulator_inactive.png" ) } />
-				: <Image style = { styles.image } source = { require( "./images/simulator_active.png" ) } />
+				? <Image style = { styles.image } source = { require( "./images/simulator_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/simulator_inactive.png" ) } />
+		} } />
+
+		<Tab.Screen name = "Classroom" component = { Classroom } options = { {
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.classroom" ) }</Text>,
+			tabBarIcon: ( focused ) => focused
+				? <Image style = { styles.image } source = { require( "./images/classroom_active.png" ) } />
+				: <Image style = { styles.image } source = { require( "./images/classroom_inactive.png" ) } />
 		} } />
 
 		<Tab.Screen name = "Ctc" component = { Ctc } options = { {
-			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.ctc" ) }</Text>,
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.ctc" ) }</Text>,
 			tabBarIcon: ( focused ) => focused
 				? <Image style = { styles.image } source = { require( "./images/ctc_active.png" ) } />
 				: <Image style = { styles.image } source = { require( "./images/ctc_inactive.png" ) } />
 		} } />
 		<Tab.Screen name = "User" component = { User } options = { {
-			title: focused => <Text style = { { color: focused ? "#696DAC" : "#DEE1E4" } }>{ I18n.t( "bottomTabNavigator.user" ) }</Text>,
+			title: focused => <Text style = { { color: focused ? "#696DAC" : "#D3D6DC" } }>{ I18n.t( "bottomTabNavigator.user" ) }</Text>,
 			tabBarIcon: ( focused ) => focused
 				? <Image style = { styles.image } source = { require( "./images/user_active.png" ) } />
 				: <Image style = { styles.image } source = { require( "./images/user_inactive.png" ) } />

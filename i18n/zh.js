@@ -3,6 +3,7 @@ export default {
 		finance: "金融",
 		contract: "合约",
 		simulator: "模拟",
+		classroom: "课堂",
 		ctc: "币币",
 		user: "用户"
 	},
@@ -63,6 +64,31 @@ export default {
 		simulatorUsdt: "模拟 USDT",
 		trading: "交易金",
 	},
+	classroom: {
+		tabItem: {
+			task: "任务督导",
+			encyclopedia: "ETU百科"
+		},
+		task: {
+			schedule: "任务进度",
+			today: "今日任务",
+
+			dividend: "挖矿分红",
+			tradingDig: "交易挖矿",
+			commissions: "交易佣金",
+			mining: "旗下交易挖矿",
+			contracts: "旗下合约佣金",
+			sales: "团队销售矿机",
+
+			unfinished: "未完成",
+			completed: "已完成"
+		},
+		encyclopedia: {
+			answer: "答",
+			noDataText: "暂未查询到数据",
+			title: "ETU百科"
+		}
+	},
 	finance: {
 		title: "首页",
 		quit: "再按一次退出应用",
@@ -75,6 +101,7 @@ export default {
 			trading: "交易金",
 			hashrate: "算力",
 			fetchGetBenefitsError: "领取收益失败",
+			fetchQusetionError: "请求问答失败",
 			investETU: "投资ETU金融",
 			investment: "投资",
 			benefits: "领取收益"
@@ -114,6 +141,13 @@ export default {
 			trading: "交易金",
 			noData: "未查询到数据",
 			fetchStatementError: "获取流水数据失败"
+		},
+		question: {
+			tip1: "1: 每日领取收益随机《香港数字有限公司百科题目》答题",
+			tip2: "2: 回答正确后方可领取收益，答错则随机下一题目",
+			cancel: "取消",
+			submit: "提交",
+			wrong: "回答错误"
 		}
 	},
 	contract: {

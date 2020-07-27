@@ -11,14 +11,16 @@ import {
 	fetchUserDetailData, fetchMyClientData, fetchUserQueryData, fetchEditPassword, fetchSubAccountsData,
 	fetchSubAccountsUnbind, fetchBindSubAccount, fetchSetHotkeyData, fetchSetSummarizeData, fetchElectronicContractData
 } from "./../redux/actions/user.js";
+
+import { showQuestionModal, hideQuestionModal, setQuestionSelected, questionSubmit } from "./../redux/actions/finance.js";
+
 import { showQueryTypeIndexActionSheet, hideActionSheet as hideQueryTypeIndexActionSheet } from "./../redux/actions/user.js";
+
 import { showLanguageActionSheet, hideActionSheet as hideLanguageActionSheet } from "./../redux/actions/login.js";
+
 import { fetchCardData } from "./../redux/actions/myBankCard.js";
 
 import { fetchSimulatorUserQueryData, showSimulatorQueryTypeIndexActionSheet, hideSimulatorActionSheet } from "./../redux/actions/simulator.js";
-
-
-
 
 import { getVersion } from "./../redux/actions/finance.js";
 
@@ -226,6 +228,7 @@ export default connect(
 		const languageData = state.language;
 		const myBankCardData = state.myBankCard;
 		const simulatorData = state.simulator;
+			
 
 		return {
 			myClientProps: {
@@ -261,10 +264,11 @@ export default connect(
 				loading: userData.isLoadingBindSubAccount, fetchError: userData.fetchBindSubAccountError, inputError: userData.inputError
 			},
 			hotkeyProps: {
-				data: userData.hotkeyData, loading: userData.isLoadingHotkeyData, error: userData.fetchHotkeyDataError
+				title: "hotkey", data: userData.hotkeyData, loading: userData.isLoadingHotkeyData, error: userData.fetchHotkeyDataError,
+				qusetionData: financeData.qusetionData
 			},
 			summarizeProps: {
-				data: userData.summarizeData, loading: userData.isLoadingSummarizeData, error: userData.fetchSummarizeDataError
+				title: "summarize", data: userData.summarizeData, loading: userData.isLoadingSummarizeData, error: userData.fetchSummarizeDataError
 			},
 			electronicContractProps: {
 				data: userData.electronicContractData, loading: userData.isLoadingElectronicContractData, error: userData.fetchElectronicContractDataError
@@ -284,7 +288,7 @@ export default connect(
 			callbackForQuery: bindActionCreators( { fetchData: fetchUserQueryData, setQueryNavIndex: setQueryNavIndex, showQueryTypeIndexActionSheet: showQueryTypeIndexActionSheet, hideActionSheet: hideQueryTypeIndexActionSheet }, dispatch ),
 			callbackForSubAccounts: bindActionCreators( { fetchData: fetchSubAccountsData, unbind: fetchSubAccountsUnbind }, dispatch ),
 			callbackForBindSubAccount: bindActionCreators( { setInputText: setInputText, submit: fetchBindSubAccount }, dispatch ),
-			callbackForHotkey: bindActionCreators( { fetchData: fetchSetHotkeyData }, dispatch ),
+			callbackForHotkey: bindActionCreators( { fetchData: fetchSetHotkeyData, showQuestionModal: showQuestionModal, hideModal: hideQuestionModal, onSelect: setQuestionSelected, submit: questionSubmit }, dispatch ),
 			callbackForSummarize: bindActionCreators( { fetchData: fetchSetSummarizeData }, dispatch ),
 			callbackForElectronicContract: bindActionCreators( { fetchData: fetchElectronicContractData }, dispatch ),
 
@@ -294,5 +298,3 @@ export default connect(
 		};
 	}
 )( User );
-
-

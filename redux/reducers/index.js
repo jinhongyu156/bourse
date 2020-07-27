@@ -20,6 +20,8 @@ import usdtMentionReducer from "./usdtMention.js";
 import historyReducer from "./history.js";
 import rankingReducer from "./ranking.js";
 
+import classroomReducer from "./classroom.js";
+
 
 import languageReducer from "./language.js";
 import storageToReduxReducer from "./storageToRedux.js";
@@ -44,6 +46,7 @@ export default combineReducers( {
 	history: historyReducer,
 	ranking: rankingReducer,
 	simulator: simulatorReducer,
+	classroom: classroomReducer,
 
 	language: languageReducer,
 	storageToRedux: storageToReduxReducer

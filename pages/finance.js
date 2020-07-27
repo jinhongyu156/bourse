@@ -8,9 +8,11 @@ import { bindActionCreators } from "redux";
 
 import { connect } from "react-redux";
 
-import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
+import { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, showExchangeModal, hideExchangeModal, showQuestionModal, hideQuestionModal, setQuestionSelected, questionSubmit, setModalText, fetchGetBenefits } from "./../redux/actions/finance.js";
 
 import { fetchUserDetailData as testLogin } from "./../redux/actions/user.js";
+
+import { fetchData as fetchC2cData, closeWs } from "./../redux/actions/ctc.js";
 
 import { CommonActions } from "@react-navigation/native";
 
@@ -28,6 +30,8 @@ import UserInfo from "./../containers/userInfo.js";
 import Statement from "./../containers/statement.js";
 import ModalCard from "./../containers/modalCard.js";
 import ModalMenu from "./../containers/modalMenu.js";
+
+import QusetionCard from "./../containers/qusetionCard.js";
 
 const PACKAGEJSON = require( "./../package.json" );
 
@@ -78,6 +82,7 @@ const Finance = function ( props )
 		props.fetchUserDetailData();
 		props.getVersion();
 		props.fetchSwiper();
+		props.fetchC2cData();
 		props.testLogin( () => props.navigation.dispatch( CommonActions.reset( { index: 0, routes: [ { name: "Login" } ] } ) ) );
 	}, [] );
 
@@ -95,6 +100,27 @@ const Finance = function ( props )
 	{
 		setModalMenuData( { left: bounds.left, top: bounds.top } )
 	}, [] );
+
+	const bindQuestionSubmit = React.useCallback( function()
+	{
+		props.questionSubmit( () => props.fetchGetBenefits( res => Toast.show( res ) ) )
+	}, [] );
+
+	const goToAccess = React.useCallback( function( type, title, count = 0 )
+	{
+		props.navigation.push( "Access", { type: type, name: title, count: count } );
+	}, [] );
+
+	const goToUsdtRecharge = React.useCallback( function()
+	{
+		if( props.data.length && props.data[ 0 ].data.filter( c => c.key === "USDT" ).length )
+		{
+			props.navigation.push( "UsdtRecharge", { usdtPrice: props.data[ 0 ].data.filter( c => c.key === "USDT" )[ 0 ].unitRate } );
+		} else
+		{
+			return;
+		};
+	}, [ props.data ] );
 
 	// React.useEffect( function()
 	// {
@@ -121,6 +147,7 @@ const Finance = function ( props )
 			BackHandler.addEventListener( "hardwareBackPress", onBack );
 		} );
 		props.navigation.addListener( "blur", () => {
+			closeWs();
 			BackHandler.removeEventListener( "hardwareBackPress", onBack );
 		} );
 
@@ -134,13 +161,27 @@ const Finance = function ( props )
 	};
 
 	return <React.Fragment>
-		<Header logoKey = { 1 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }>
+		{ /* <Header logoKey = { 1 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } etusdInfo = { props.userDetailData[ "ETUSD" ] }> */ }
+		<Header logoKey = { 1 }>
 			<React.Fragment>
+				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUsdtRecharge }>
+					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
+					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "recharge", "USDT" ) }>
+					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_recharge.png" ) } />
+					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtRecharge" ) }</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => goToAccess( "mention", "USDT" ) }>
+					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/usdt_withdrawal.png" ) } />
+					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.usdtWithdrawal" ) }</Text>
+				</TouchableOpacity>
+
 				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.showExchangeModal( "投资ETU金融" ) }>
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/invest_etu.png" ) } />
 					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "finance.header.investment" ) } ETU</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { () => props.fetchGetBenefits( res => Toast.show( res ) ) }>
+				<TouchableOpacity style = { styles.headerRightViewItem } onPress = { props.showQuestionModal }>
 					<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/get_benefits.png" ) } />
 					<Text style = { styles.headerRightViewItemText }>{ I18n.t( "finance.header.benefits" ) }</Text>
 				</TouchableOpacity>
@@ -170,6 +211,12 @@ const Finance = function ( props )
 			setModalText = { props.setModalText }
 			hideModal = { props.hideExchangeModal }
 		/>
+		<QusetionCard
+			{ ...props.qusetionData }
+			hideModal = { props.hideQuestionModal }
+			onSelect = { props.setQuestionSelected }
+			submit = { bindQuestionSubmit }
+		/>
 		<FloatAction
 			maxY = { FLOATACTIONMAXY }
 			x = { DEFAULTFLOATACTIONLEFT }
@@ -194,8 +241,11 @@ export default connect(
 	function mapStateToProps( state, ownProps )
 	{
 		const financeData = state.finance;
+		const ctcData = state.ctc;
 
 		return {
+			data: ctcData.data,
+
 			version: financeData.version,
 			tabIndex: financeData.tabIndex,
 			statementData: financeData.statementData,
@@ -207,12 +257,13 @@ export default connect(
 			userDetailData: financeData.userDetailData,
 			isloadingUserDetailData: financeData.isloadingUserDetailData,
 
-			modalData: financeData.modalData
+			modalData: financeData.modalData,
+			qusetionData: financeData.qusetionData
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, testLogin, showExchangeModal, hideExchangeModal, setModalText, fetchGetBenefits }, dispatch );
+		return bindActionCreators( { getVersion, setTabIndex, fetchStatement, fetchUserDetailData, fetchSwiper, testLogin, showExchangeModal, hideExchangeModal, showQuestionModal, hideQuestionModal, setQuestionSelected, questionSubmit, setModalText, fetchGetBenefits, fetchC2cData }, dispatch );
 	}
 )( Finance );
 
