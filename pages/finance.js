@@ -154,6 +154,7 @@ const Finance = function ( props )
 	}, [ props.navigation ] );
 
 	// 双数为强制更新, 单数为非必须更新
+	console.log( "props.version", props.version )
 	if( !showAlert && props.version && props.version.version && !( props.version.version.split( "." )[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version.version )
 	{
 		setShowAlert( true );

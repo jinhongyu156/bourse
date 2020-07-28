@@ -350,8 +350,16 @@ export function getVersion()
 {
 	return async function( dispatch )
 	{
-		const res = await fetchPost( Platform.OS === "android" ? "/android_version.php" : "/ios_version.php", {} );
-		dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
+		try
+		{
+			const res = await fetchPost( Platform.OS === "android" ? "/android_version.php" : "/ios_version.php", {} );
+			console.log( res, "res" )
+			dispatch( { type: ACTION_SET_FINANCE_VERSION, payload: res } );
+		} catch( err )
+		{
+			console.log( "======>", err )
+		}
+		
 	};
 };
 
