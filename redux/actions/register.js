@@ -15,8 +15,11 @@ export const ACTION_SET_REGISTER_FETCHREGISTERERROR = "ACTION_SET_REGISTER_FETCH
 
 export const ACTION_SET_REGISTER_CLEAR = "ACTION_SET_REGISTER_CLEAR";
 
+let timeout = null;
+
 /* action create */
 import { setSendCodeStatus, clearSendCodeError } from "./sendCode.js"
+
 // 切换注册方式
 export function setRegisterType( registerType )
 {
@@ -74,7 +77,10 @@ export function setInputText( key, value )
 			dispatch( setSendCodeStatus( ( register.imageCode && phoneNumberReg.test( value ) ) ? 1 : 0 ) );
 			if( phoneNumberReg.test( value ) )
 			{
-				register.imageBlob || dispatch( fetchImageCode() );
+				// register.imageBlob || dispatch( fetchImageCode() );
+				if ( timeout !== null ) clearTimeout( timeout );
+				timeout = setTimeout( () => dispatch( fetchImageCode() ), 1000 );
+
 			} else
 			{
 				dispatch( { type: ACTION_SET_REGISTER_IMAGEBLOB, payload: null } );

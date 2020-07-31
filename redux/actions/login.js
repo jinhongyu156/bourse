@@ -20,6 +20,8 @@ export const ACTION_SET_LOGIN_CLEAR = "ACTION_SET_LOGIN_CLEAR";
 import { setLanguage } from "./language.js";
 import { setTheme } from "./theme.js";
 
+let timeout = null;
+
 // 切换登录方式
 export function setLoginType( loginType )
 {
@@ -61,7 +63,10 @@ export function setInputText( key, value )
 			dispatch( { type: ACTION_SET_LOGIN_INPUTERROR, payload: Object.assign( {}, login.inputError, { phoneNumber: !phoneNumberReg.test( value ) } ) } );
 			if( phoneNumberReg.test( value ) )
 			{
-				login.imageBlob || dispatch( fetchImageCode() );
+				// login.imageBlob || dispatch( fetchImageCode() );
+				if ( timeout !== null ) clearTimeout( timeout );
+				timeout = setTimeout( () => dispatch( fetchImageCode() ), 1000 );
+
 			} else
 			{
 				dispatch( { type: ACTION_SET_LOGIN_IMAGEBLOB, payload: null } );
@@ -175,6 +180,7 @@ export function fetchImageCode()
 {
 	return async function( dispatch, getState )
 	{
+		console.log( "chufa" )
 		const { login } = getState();
 
 		if( ( login.loginType === 0 && phoneNumberReg.test( login.phoneNumber ) ) || ( login.loginType === 1 && emailTextReg.test( login.emailText ) ) )

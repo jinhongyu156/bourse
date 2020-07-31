@@ -10,7 +10,7 @@ export default {
 	login: {
 		title: "Login",
 		placeholder: {
-			account: "Please enter your account number",
+			account: "Please enter account( 6-digit length )",
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			password: "Please enter your password", code: "Please enter the code"
 		},
@@ -35,7 +35,7 @@ export default {
 	register: {
 		title: "Register",
 		placeholder: {
-			account: "Please enter your account number( 6-digit length )",
+			account: "Please enter your account( 6-digit length )",
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			name: "Please enter your name", referee: "Please enter your referee",
 			password: "Please enter your password", newPassword: "Please enter your new password", confirmPassword: "Please enter your password again",

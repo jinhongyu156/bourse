@@ -9,7 +9,7 @@ export default {
 	},
 	login: {
 		title: "登陆",
-		placeholder: { account: "请输入账号", email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
+		placeholder: { account: "请输入账号( 6位长度 )", email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
 		loginType: { phoneNumber: "电话号码登录", email: "邮箱登录" },
 		forgetPassword: "忘记密码 ?",
 		register: "立即注册",
