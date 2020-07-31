@@ -89,7 +89,8 @@ export function sendCode()
 
 				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
 				{
-					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } );
+					// dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } ); // 新版本修改
+					dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: res[ "发送成功" ] } );
 					startCountdown();
 				} else
 				{
@@ -108,6 +109,8 @@ export function sendMentionCode()
 	return async function( dispatch, getState )
 	{
 		const { sendCode } = getState();
+		const { access } = getState();
+		const { user } = getState();
 
 		const seconds = sendCode.countdown;
 
@@ -140,8 +143,69 @@ export function sendMentionCode()
 		{
 			try
 			{
-				const params = { "提交": "提币发送验证码" };
+				const filterItem = [ { key: "电话", value: user.accountData[ "电话" ] }, { key: "邮箱", value: user.accountData[ "邮箱" ] } ].filter( item => item.value === access.accountIndex );
 
+				if( filterItem.length )
+				{
+					const params = { "提交": "提币发送验证码", "类型": filterItem[ 0 ][ "key" ] };
+
+					const res = await fetchPost( "/user.php", params );
+
+					if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
+					{
+						dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: null } );
+						startCountdown();
+					} else
+					{
+						dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: res } );
+					};
+				};
+			} catch( err )
+			{
+				dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: err.type === "network" ? `${ err.status }: ${ I18n.t( "sendCode.sendCodeError" ) }` : err.toString() } );
+			};
+		};
+	};
+};
+
+export function sendBindAccountCode()
+{
+	return async function( dispatch, getState )
+	{
+		const { sendCode } = getState();
+		const { user } = getState();
+
+		const seconds = sendCode.countdown;
+
+		// 开始倒计时
+		function startCountdown()
+		{
+			const overTimeStamp = Date.now() + seconds * 1000;								// 切换到后台时, 倒计时将不受影响
+			const run = function()
+			{
+				const nowTimeStamp = Date.now();
+
+				if ( nowTimeStamp >= overTimeStamp )
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: seconds, sendCodeStatus: 3 } } );
+					clearInterval( timer );
+				} else
+				{
+					dispatch( { type: ACTION_SET_SENDCODE_COUNTDOWN_ACTIVE, payload: { countdown: parseInt( ( overTimeStamp - nowTimeStamp ) / 1000 ), sendCodeStatus: 2 } } );
+				};
+			};
+			run();
+			timer = setInterval( run, 1000 );
+		};
+
+		if ( sendCode.sendCodeStatus === 0 || sendCode.sendCodeStatus === 2 )
+		{
+			dispatch( { type: ACTION_SET_SENDCODE_SENDCODEERROR, payload: I18n.t( "sendCode.info" ) } );
+		} else
+		{
+			try
+			{
+				const params = { "提交": "发送验证信息", "验证方式": user.bindAccountType ? "邮箱" : "手机", "电话": user.bindAccountType ? user.accountEmailText : user.accountPhoneText };
 				const res = await fetchPost( "/user.php", params );
 
 				if( isObject( res ) && Object.keys( res ).includes( "发送成功" ) )
@@ -158,6 +222,11 @@ export function sendMentionCode()
 			};
 		};
 	};
+};
+
+export function clearTimer()
+{
+	clearInterval( timer );
 };
 
 // 清空发送验证码的错误信息

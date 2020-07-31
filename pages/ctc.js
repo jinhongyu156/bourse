@@ -274,7 +274,8 @@ const Ctc = React.memo( function( props )
 
 
 	return <View style = { styles.container }>
-		<Header logoKey = { 2 } usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }>
+		{ /* <Header logoKey = { 2 } usdtInfo = { props.originalData[ "USDT" ] } etusdInfo = { props.originalData[ "ETUSD" ] } slbtInfo = { props.originalData[ "SLBT" ] }> */ }
+		<Header logoKey = { 2 }>
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUsdtRecharge }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />
 				<Text style = { styles.headerRightViewItemText }>{ I18n.t( "contract.header.recharge" ) }</Text>

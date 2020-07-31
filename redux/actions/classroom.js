@@ -28,7 +28,6 @@ export function getData()
 
 		} catch( err )
 		{
-			console.log( err )
 			dispatch( { type: ACTIONS_SET_CLASSROOM_LOADING, payload: false } );
 		};
 	};

@@ -154,7 +154,6 @@ const Finance = function ( props )
 	}, [ props.navigation ] );
 
 	// 双数为强制更新, 单数为非必须更新
-	console.log( "props.version", props.version )
 	if( !showAlert && props.version && props.version.version && !( props.version.version.split( "." )[ 2 ] & 1 ) && PACKAGEJSON.version !== props.version.version )
 	{
 		setShowAlert( true );
@@ -218,7 +217,7 @@ const Finance = function ( props )
 			onSelect = { props.setQuestionSelected }
 			submit = { bindQuestionSubmit }
 		/>
-		<FloatAction
+		{ /* <FloatAction
 			maxY = { FLOATACTIONMAXY }
 			x = { DEFAULTFLOATACTIONLEFT }
 			y = { DEFAULTFLOATACTIONHEIGHT }
@@ -226,7 +225,7 @@ const Finance = function ( props )
 			imageSource = { require( "./../images/float_action.png" ) }
 			onDragRelease = { onDragRelease }
 			onPress = { showMenu }
-		/>
+		/> */ }
 		<ModalMenu
 			{ ...modalMenuData }
 			size = { FLOATACTIONHEIGHT }

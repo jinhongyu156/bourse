@@ -105,7 +105,7 @@ const Contract = React.memo( function ( props )
 	}, [] );
 
 	return <View style = { styles.container }>
-		<Header logoKey = { 2 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
+		<Header order = { 1 } logoKey = { 2 } usdtInfo = { props.userDetailData[ "USDT" ] } tradingInfo = { props.userDetailData[ "交易金" ] } slbtInfo = { props.userDetailData[ "SLBT" ] }>
 
 			<TouchableOpacity style = { styles.headerRightViewItem } onPress = { goToUsdtRecharge }>
 				<Image style = { styles.headerRightViewItemImage } source = { require( "./../images/recharge.png" ) } />

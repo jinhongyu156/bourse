@@ -6,13 +6,18 @@ import Toast from "react-native-root-toast";
 
 import Clipboard from "@react-native-community/clipboard";
 
+import { useNavigation, CommonActions } from "@react-navigation/native";
+
 import { fetchData } from "./../redux/actions/ctc.js";
-import { setInputText, clear, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit } from "./../redux/actions/access.js";
+
+import { setAccountIndex, hideActionSheet, showAccountActionSheet, setInputText, clear, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit } from "./../redux/actions/access.js";
 import { sendMentionCode } from "./../redux/actions/sendCode.js";
+import { fetchAccountData } from "./../redux/actions/user.js";
 
 import Input from "./../containers/input.js";
 import SubmitBtn from "./../containers/submit.js";
 import SendCodeBtn from "./../containers/sendCode.js";
+import ActionSheet from "./../components/actionSheet.js";
 
 import { bindActionCreators } from "redux";
 
@@ -45,6 +50,7 @@ const styles = StyleSheet.create( {
 	addressBtnBox: { flex: 4, flexDirection: "row", justifyContent: "space-between" },
 	addressBtn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#696DAC" },
 	addressBtnText: { color: "#FFFFFF" },
+	actionSheetBtn: { flex: 1 },
 
 	codeInputStyle: { flex: 2, height: INPUTBOXHEIGHT * 0.9, fontSize: 14 },
 
@@ -96,12 +102,19 @@ const Recharge = React.memo( function( { name, address, number, note, inputError
 	</View>;
 } );
 
-const Mention = React.memo( function( { name, usable, address, number, fee, password, code, inputError, sendCodeStatus, countdown, sendCodeError, sendCode, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
+const Mention = React.memo( function( { name, usable, address, number, fee, password, code, inputError, sendCodeStatus, countdown, sendCodeError, sendCode, accountIndex, actionSheetData, isShowActionSheet, accountData, hideActionSheet, showAccountActionSheet, fetchSubmit, fetchUsableError, fetchSubmitError, isLoading, setInputText } )
 {
+	const navigation = useNavigation();
+
 	const renderCode = React.useCallback( function()
 	{
 		return <SendCodeBtn sendCode = { sendCode } countdown = { countdown } sendCodeStatus = { sendCodeStatus } />
 	}, [ sendCodeStatus, countdown ] );
+
+	const goToBindAccount = React.useCallback( function()
+	{
+		navigation.push( "BindAccount" );
+	}, [] );
 
 	return <View style = { styles.container }>
 		<View style = { styles.errorBox }>
@@ -114,6 +127,10 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 		<Input index = { "number" } value = { number } placeholder = { I18n.t( "mention.placeholderNumber" ) } hasError = { inputError[ "number" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.number" ) }: </Text> } />
 		<Input value = { number ? String( fee ) : ( name === "ETH" ? "3%" : "5%" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.fee" ) }: </Text> } />
 		<Input index = { "password" } value = { password } placeholder = { I18n.t( "mention.placeholderPassword" ) } hasError = { inputError[ "password" ] } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } setInputText = { setInputText } renderInputLeft = { () => <Text>{ I18n.t( "mention.password" ) }: </Text> } />
+
+		<TouchableOpacity onPress = { accountIndex == null ? goToBindAccount : showAccountActionSheet } style = { styles.actionSheetBtn }>
+			<Input value = { accountIndex ? accountIndex : I18n.t( "mention.noAccountTip" ) } disabled = { true } inputBoxStyle = { styles.inputBoxStyle } inputStyle = { styles.inputStyle } renderInputLeft = { () => <Text>{ I18n.t( "mention.authType" ) }: </Text> } />
+		</TouchableOpacity>
 
 		<Input index = { "code" } value = { code }
 			placeholder = { I18n.t( "mention.placeholderCode" ) }
@@ -132,6 +149,11 @@ const Mention = React.memo( function( { name, usable, address, number, fee, pass
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip4" ) }</Text>
 			<Text style = { styles.tipText }>{ I18n.t( "mention.tip5", { name: name } ) }</Text>
 		</View>
+		<ActionSheet
+			{ ...actionSheetData }
+			hide = { hideActionSheet }
+			isShow = { isShowActionSheet }
+		/>
 	</View>;
 } );
 
@@ -196,8 +218,18 @@ const Access = React.memo( function( props )
 	if( isMention )
 	{
 		React.useEffect( () => {
-			props.fetchUsable( props.route.params.name );
-		}, [] );
+			props.navigation.addListener( "focus", () => {
+				props.fetchUsable( props.route.params.name );
+				props.fetchAccountData();
+			} );
+		}, [ props.navigation ] );
+
+		React.useEffect( () => {
+			if( Object.keys( props.accountData ).length )
+			{
+				props.setAccountIndex( props.accountData[ "电话" ] ? props.accountData[ "电话" ] : props.accountData[ "邮箱" ] ? props.accountData[ "邮箱" ] : null )
+			};
+		}, [ props.accountData ] )
 
 		const fetchSubmit = React.useCallback( function()
 		{
@@ -222,6 +254,12 @@ const Access = React.memo( function( props )
 				countdown = { props.countdown }
 				sendCodeError = { props.sendCodeError }
 				sendCode = { props.sendMentionCode }
+				accountIndex = { props.accountIndex }
+				actionSheetData = { props.actionSheetData }
+				isShowActionSheet = { props.isShowActionSheet }
+				accountData = { props.accountData }
+				hideActionSheet = { props.hideActionSheet }
+				showAccountActionSheet = { props.showAccountActionSheet }
 				fetchSubmit = { fetchSubmit }
 				fetchUsableError = { props.fetchUsableError }
 				fetchSubmitError = { props.fetchSubmitError }
@@ -283,6 +321,7 @@ export default connect(
 		const ctcData = state.ctc;
 		const accessData = state.access;
 		const sendCodeData = state.sendCode;
+		const userData = state.user;
 
 		return {
 			id: ctcData.id,
@@ -303,11 +342,16 @@ export default connect(
 
 			sendCodeStatus: sendCodeData.sendCodeStatus,
 			countdown: sendCodeData.countdown,
-			sendCodeError: sendCodeData.sendCodeError
+			sendCodeError: sendCodeData.sendCodeError,
+
+			accountData: userData.accountData,
+			accountIndex: accessData.accountIndex, 
+			actionSheetData: accessData.actionSheetData, 
+			isShowActionSheet: accessData.isShowActionSheet,
 		};
 	},
 	function mapDispatchToProps( dispatch, ownProps )
 	{
-		return bindActionCreators( { setInputText, clear, sendMentionCode, fetchData, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
+		return bindActionCreators( { setAccountIndex, hideActionSheet, showAccountActionSheet, setInputText, clear, sendMentionCode, fetchAccountData, fetchData, fetchAddress, fetchUsable, fetchRechargeSubmit, fetchMentionSubmit, fetchTurnSubmit }, dispatch );
 	}
 )( Access );

@@ -38,21 +38,30 @@ export function getMessage( code, productId )
 };
 
 // 整理 contractData 将新属性 count, msg, total 放入其中
-export function getNewContractData( contractData, tabIndex )
+export function getNewContractData( contractData, userDetailData, productId, tabIndex )
 {
 	const newContractData = contractData.slice( 0 );
 
 	for ( let i = newContractData.length - 1; i >= 0; i-- )
 	{
+		const newprice = newContractData[ i ].newprice;
+
 		for ( let j = newContractData[ i ].feilv.length - 1; j >= 0; j-- )
 		{
-			const count = newContractData[ i ].feilv[ j ].count ? newContractData[ i ].feilv[ j ].count : "1"
+			const fee = 1 * newprice * newContractData[ i ].feilv[ j ][ "波动盈亏" ] * ( productId === "BTC" ? 0.002 : productId === "GOLD" ? 0.001 : productId === "OIL" ? 0.0015 : 0 );
+			// 算法: ( 交易金 * 0.002 ) / 1 笔的手续费 = 直接填写
+
+			const n = Math.ceil( ( userDetailData[ tabIndex === 0 ? "USDT" : tabIndex === 1 ? "交易金" : tabIndex === 2 ? "SLBT" : "USDT" ] * 0.002 ) / fee );
+
+			const initCount = tabIndex === 1 ? String( n <= 1 ? 1 : n ) : "1";
+
+			const count = newContractData[ i ].feilv[ j ].count ? newContractData[ i ].feilv[ j ].count : initCount;
 
 			const msg = getMessage( newContractData[ i ].feilv[ j ].code, newContractData[ i ].name );
 
 			const total = getTotal( newContractData[ i ].name, tabIndex, Number( count ), Number( newContractData[ i ].feilv[ j ][ "波动盈亏" ] ), newContractData[ i ].newprice );
 
-			Object.assign( newContractData[ i ].feilv[ j ], { count, msg, total } );
+			Object.assign( newContractData[ i ].feilv[ j ], { count, msg, total, mincount: initCount } );
 		};
 	};
 	return newContractData;
@@ -159,9 +168,10 @@ export function setCount( text, code )
 				for ( let j = contractDataItem.feilv.length - 1; j >= 0; j-- )
 				{
 					const currentProductItem = contractDataItem.feilv[ j ];
+
 					if( currentProductItem.code === code )
 					{
-						const count = numberReg.test( text ) ? text : "1";
+						const count = numberReg.test( text ) ? ( Number( text ) >= Number( currentProductItem.mincount ) ? text : currentProductItem.mincount ) : `${ currentProductItem.mincount }`;
 						const total = getTotal( contractDataItem.name, contract.tabIndex, Number( count ), Number( currentProductItem[ "波动盈亏" ] ), contractDataItem.newprice );
 						Object.assign( newContractData[ i ].feilv[ j ], { count, total } );
 						break;
@@ -213,7 +223,7 @@ function wsContract()
 					// 同步 contractData newprice 字段
 					const contractData = contract.contractData.map( item => res.includes( item.name ) ? Object.assign( {}, item, { newprice: Number( res.split( "," )[ 1 ] ) } ) : item );
 					// 整理 contractData 数据
-					const newContractData = getNewContractData( contractData, contract.tabIndex );
+					const newContractData = getNewContractData( contractData, contract.userDetailData, contract.productId, contract.tabIndex );
 					// 同步 userOrderData newprice 字段
 					const newUserOrderData = getNewUserOrderData( contract.userOrderData, contractData );
 					// 获取 currentProduct 数据
@@ -247,7 +257,7 @@ export function fetchContractData()
 				const userDetailData = res[ "登录参数" ] ? objectValueGetNum( res[ "登录参数" ], [ "USDT", "SLBT", "交易金" ] ) : {};
 
 				const productId = contract.productId ? contract.productId : ( contractData.length ? contractData[ 0 ].name : "" )
-				const newContractData = getNewContractData( contractData, contract.tabIndex );
+				const newContractData = getNewContractData( contractData, userDetailData, productId, contract.tabIndex );
 				const newUserOrderData = getNewUserOrderData( userOrderData, contractData );
 				const currentProduct = getCurrentProduct( newContractData, productId );
 

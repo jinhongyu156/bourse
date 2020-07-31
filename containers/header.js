@@ -31,14 +31,14 @@ const styles = StyleSheet.create( {
 
 } );
 
-export default React.memo( function Header( { children, logoKey, usdtInfo, tradingInfo, etusdInfo, slbtInfo } )
+export default React.memo( function Header( { children, logoKey, order, usdtInfo, tradingInfo, etusdInfo, slbtInfo } )
 {
 	return <ImageBackground source = { require( "./../images/header.png" ) } style = { styles.headerBackground }>
 		<View style = { styles.headerLeftView }>
 			<Image style = { styles.headerLeftViewLogo } source = { logoKey == 1 ? require( "./../images/logo.png" ) : require( "./../images/logo2.png" ) } />
 			<View style = { styles.headerLeftViewInfo }>
 				{
-					usdtInfo ? <Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text> : null
+					( !order && usdtInfo ) ? <Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text> : null
 				}
 				{
 					( etusdInfo && tradingInfo )
@@ -51,6 +51,9 @@ export default React.memo( function Header( { children, logoKey, usdtInfo, tradi
 					: etusdInfo
 						? <Text style = { styles.headerLeftViewInfoText }>ETUSD: { etusdInfo }</Text>
 					: null
+				}
+				{
+					( order && usdtInfo ) ? <Text style = { styles.headerLeftViewInfoText }>USDT: { usdtInfo }</Text> : null
 				}
 				{
 					slbtInfo

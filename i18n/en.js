@@ -10,6 +10,7 @@ export default {
 	login: {
 		title: "Login",
 		placeholder: {
+			account: "Please enter your account number",
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			password: "Please enter your password", code: "Please enter the code"
 		},
@@ -34,6 +35,7 @@ export default {
 	register: {
 		title: "Register",
 		placeholder: {
+			account: "Please enter your account number( 6-digit length )",
 			email: "Please enter email address", phoneNumber: "Please enter your mobile phone number",
 			name: "Please enter your name", referee: "Please enter your referee",
 			password: "Please enter your password", newPassword: "Please enter your new password", confirmPassword: "Please enter your password again",
@@ -242,11 +244,16 @@ export default {
 		fee: "Fee",
 		password: "Password",
 		code: "Code",
+		authType: "Auth Type",
 
 		placeholderAddress: "Please enter ethereum-based money",
 		placeholderCode: "Please enter a verification code",
 		placeholderNumber: "Please enter the number of withdrawals",
 		placeholderPassword: "Please enter money password",
+		noAccountTip: "ou have not attached a phone or email address",
+		actionSheetAccountTitle: "Please select your authentication method",
+		actionSheetAccountMessage: "Once selected, it is validated in this manner",
+		cancel: "Cancel",
 
 		submitText: "Mention",
 		tip1: "1: The service charge will be deducted from the balance",
@@ -411,6 +418,7 @@ export default {
 		query: "Query",
 		subAccounts: "Sub",
 		bindSubaccount: "Bind",
+		bindAccount: "Auth",
 		hotkey: "Hotkey",
 		summarize: "Summarize",
 		downloadCenter: "Download",
@@ -446,6 +454,9 @@ export default {
 		confirmPassWord: "Confirm password",
 		editPasswordSubmit: "submit",
 		fetchEditPassWordError: "Password change failed",
+		fetchBindAccountError: "Binding message failed",
+		inputBindAccountError: "Please complete the information",
+		fetchBindAccountSuccess: "Binding message successful",
 		fetchEditPassWordSuccess: "Password changed successfully",
 		inputEditPassWordError: "Please complete the information",
 
@@ -486,9 +497,18 @@ export default {
 
 		subAccountText: "Subaccount",
 		subAccountPassWordText: "Password",
+		accountPhoneText: "Phone",
+		accountEmailText: "Email",
+		code: "Code",
 		subAccountTextPlaceholder: "Please enter the subaccount number",
 		subAccountPassWordTextPlaceholder: "Please enter the subaccount password",
+
+		accountPhonePlaceholder: "Please enter your account number",
+		accountEmailPlaceholder: "Please enter your account email",
+		codePlaceholder: "Please enter a verification code",
+
 		bindSubaccountSubmit: "Bind",
+		bindAccountSubmit: "Submit",
 		fetchBindSubaccountSuccess: "Binding success",
 		fetchBindSubaccountError: "Binding failure",
 		inputBindSubaccountError: "Please complete the information",

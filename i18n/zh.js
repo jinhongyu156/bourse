@@ -9,7 +9,7 @@ export default {
 	},
 	login: {
 		title: "登陆",
-		placeholder: { email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
+		placeholder: { account: "请输入账号", email: "请输入电子邮箱", phoneNumber: "请输入电话号码", password: "请输入密码", code: "请输入验证码" },
 		loginType: { phoneNumber: "电话号码登录", email: "邮箱登录" },
 		forgetPassword: "忘记密码 ?",
 		register: "立即注册",
@@ -31,6 +31,7 @@ export default {
 	register: {
 		title: "注册",
 		placeholder: {
+			account: "请输入账号( 6 位长度 )",
 			email: "请输入电子邮箱", phoneNumber: "请输入电话号码", name: "请输入姓名", referee: "请输入推荐人",
 			password: "请输入密码", newPassword: "请输入新密码", confirmPassword: "请再次输入密码",
 			imageCode: "请输入图片验证码", code: "请输入设备验证码"
@@ -236,12 +237,17 @@ export default {
 		number: "提币数量",
 		fee: "服务费用",
 		password: "资金密码",
+		authType: "验证方式",
 		code: "验证码",
+		actionSheetAccountTitle: "请选择您的验证方式",
+		actionSheetAccountMessage: "选择后将以该方式验证",
+		cancel: "取消",
 
 		placeholderAddress: "请输入基于以太坊网络的钱包地址",
 		placeholderCode: "请输入验证码",
 		placeholderNumber: "请输入提币数量",
 		placeholderPassword: "请输入资金密码",
+		noAccountTip: "您尚未绑定电话或邮箱",
 
 		submitText: "确认提币",
 		tip1: "1: 服务费将在余额中扣除",
@@ -407,6 +413,7 @@ export default {
 		query: "流水查询",
 		subAccounts: "子账户列表",
 		bindSubaccount: "绑定子账号",
+		bindAccount: "认证信息",
 		hotkey: "一键领取",
 		summarize: "资金归集",
 		downloadCenter: "下载中心",
@@ -442,7 +449,10 @@ export default {
 		confirmPassWord: "确认密码",
 		editPasswordSubmit: "提交",
 		fetchEditPassWordError: "修改密码失败",
+		fetchBindAccountError: "绑定信息失败",
+		inputBindAccountError: "请将信息填写完整",
 		fetchEditPassWordSuccess: "修改密码成功",
+		fetchBindAccountSuccess: "绑定信息成功",
 		inputEditPassWordError: "请将信息填写完整",
 
 		actionSheetTitle: "请选择查询方式",
@@ -483,9 +493,18 @@ export default {
 
 		subAccountText: "子账户账号",
 		subAccountPassWordText: "子账户密码",
+		accountPhoneText: "账户电话",
+		accountEmailText: "账户邮箱",
+		code: "验证码",
 		subAccountTextPlaceholder: "请输入子账户账号",
 		subAccountPassWordTextPlaceholder: "请输入子账户密码",
+
+		accountPhonePlaceholder: "请输入账户电话",
+		accountEmailPlaceholder: "请输入账户邮件",
+		codePlaceholder: "请输入验证码",
+
 		bindSubaccountSubmit: "绑定",
+		bindAccountSubmit: "提交",
 		fetchBindSubaccountSuccess: "绑定成功",
 		fetchBindSubaccountError: "绑定失败",
 		inputBindSubaccountError: "请将信息填写完整",

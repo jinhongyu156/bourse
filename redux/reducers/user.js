@@ -5,7 +5,7 @@ import {
 	ACTION_SET_USER_INPUTTEXT, ACTION_SET_USER_INPUTERROR, ACTION_SET_USER_ISLOADINGEDITPASSWORD, ACTION_SET_USER_FETCHEDITPASSWORDERROR, ACTION_SET_USER_CLEAREDITPASSWORD,
 	ACTION_SET_USER_QUERYNAVINDEX, ACTION_SET_USER_QUERYTYPEINDEX, ACTION_SET_USER_ISSHOWACTIONSHEET, ACTION_SET_USER_USERQUERYDATA,
 	ACTION_SET_USER_AUTHDATA, ACTION_SET_USER_SUBACCOUNTSDATA, ACTION_SET_USER_ISLOADINGBINDSUBACCOUNT, ACTION_SET_USER_FETCHBINDSUBACCOUNTERROR, ACTION_SET_USER_CLEARBINDSUBACCOUNT,
-	ACTION_SET_USER_HOTKEYDATA, ACTION_SET_USER_SUMMARIZEDATA, ACTION_SET_USER_ELECTRONICCONTRACTDATA
+	ACTION_SET_USER_HOTKEYDATA, ACTION_SET_USER_SUMMARIZEDATA, ACTION_SET_USER_ELECTRONICCONTRACTDATA, ACTION_SET_USER_ACCOUNTDATA, ACTION_SET_USER_BINDACCOUNTTYPE, ACTION_SET_USER_CLEARACCOUNTDATA, ACTION_SET_USER_FETCHBINDACCOUNTERROR
 } from "./../actions/user.js";
 
 const defaultState = {
@@ -47,6 +47,13 @@ const defaultState = {
 	subAccountPassWordText: "",							// 绑定子账户输入的子账户密码文本
 	isLoadingBindSubAccount: false,						// 是否正在绑定子账户
 	fetchBindSubAccountError: null,						// 绑定子账户请求失败
+
+	bindAccountType: 0,									// 绑定信息的方式 0: 手机; 1: 邮箱
+	accountPhoneText: "",								// 绑定手机号
+	accountEmailText: "",								// 绑定邮箱
+	accountCodeText: "",								// 验证码
+	accountData: {},									// 账户信息
+	fetchBindAccountError: null,						// 请求绑定账户信息失败
 
 	hotkeyData: [],										// 一键领取数据
 	isLoadingHotkeyData: false,							// 是否正在加载一键领取数据
@@ -128,6 +135,18 @@ export default function( state = defaultState, action )
 
 		case ACTION_SET_USER_AUTHDATA:
 			return Object.assign( {}, state, action.payload );
+
+		case ACTION_SET_USER_ACCOUNTDATA:
+			return Object.assign( {}, state, { accountData: action.payload } );
+
+		case ACTION_SET_USER_BINDACCOUNTTYPE:
+			return Object.assign( {}, state, { bindAccountType: action.payload } );
+
+		case ACTION_SET_USER_CLEARACCOUNTDATA:
+			return Object.assign( {}, state, { accountPhoneText: "", accountEmailText: "", accountCodeText: "", fetchBindAccountError: null, inputError: {} } );
+
+		case ACTION_SET_USER_FETCHBINDACCOUNTERROR:
+			return Object.assign( {}, state, { fetchBindAccountError: action.payload } );
 
 		default:
 			return state;

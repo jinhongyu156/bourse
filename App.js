@@ -28,8 +28,10 @@ import I18n from "./i18n/index.js";
 
 /** pages*/
 // used by StackNavigator
-import Login from "./pages/login.js";
-import Register from "./pages/register.js";
+// import Login from "./pages/login.js";
+import Login from "./pages/login2.js";
+// import Register from "./pages/register.js";
+import Register from "./pages/register2.js";
 import Disclaimer from "./pages/disclaimer.js";
 import Access from "./pages/access.js";
 import MyQrCode from "./pages/myQrCode.js";
@@ -44,6 +46,7 @@ import Camera from "./pages/camera.js";
 import Activity from "./pages/activity.js";
 import Ranking from "./pages/ranking.js";
 import SimulatorAccess from "./pages/simulatorAccess.js";
+import BindAccount from "./pages/bindAccount.js";
 
 // used by BottomTabNavigator
 import Finance from "./pages/finance.js";
@@ -193,6 +196,7 @@ export default function()
 						<Stack.Screen name = "Activity" component = { Activity } options = { () => ( { title: I18n.t( "activity.title" ) } ) } />
 						<Stack.Screen name = "Ranking" component = { Ranking } options = { () => ( { title: I18n.t( "ranking.title" ) } ) } />
 						<Stack.Screen name = "SimulatorAccess" component = { SimulatorAccess } />
+						<Stack.Screen name = "BindAccount" component = { BindAccount }  options = { () => ( { title: I18n.t( "user.bindAccount" ) } ) } />
 						
 					</Stack.Navigator>
 				</NavigationContainer>

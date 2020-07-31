@@ -222,6 +222,7 @@ export function fetchLogin()
 			try
 			{
 				const res = await fetchPost( "/user.php", params );
+
 				if( res === "ok" )
 				{
 					await AsyncStorage.setItem( "isLogin", "true" );

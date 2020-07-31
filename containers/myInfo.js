@@ -52,6 +52,11 @@ export default React.memo( function MyInfo( { id, vouchers, version, userLanguag
 		navigation.push( "History" );
 	}, [] );
 
+	const goToBindAccount = React.useCallback( function()
+	{
+		navigation.push( "BindAccount" );
+	}, [] );
+
 	const hasNewVersion = version ? PACKAGEJSON.version !== version.version : false;
 
 	return <React.Fragment>
@@ -60,9 +65,9 @@ export default React.memo( function MyInfo( { id, vouchers, version, userLanguag
 				<Text style = { styles.rowKeyText }>ID</Text>
 				<Text style = { styles.rowValueText }>{ id }</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = { styles.row }>
-				<Text style = { styles.rowKeyText }>{ I18n.t( "user.vouchers" ) }</Text>
-				<Text style = { styles.rowValueText }>{ vouchers }</Text>
+			<TouchableOpacity style = { styles.row } onPress = { goToBindAccount }>
+				<Text style = { styles.rowKeyText }>{ I18n.t( "user.bindAccount" ) }</Text>
+				<Text style = { styles.rowValueText } />
 			</TouchableOpacity>
 			<TouchableOpacity style = { styles.row } onPress = { goToMyBankCard }>
 				<Text style = { styles.rowKeyText }>{ I18n.t( "myBankCard.title" ) }</Text>

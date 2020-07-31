@@ -1,5 +1,5 @@
 import { fetchPost, isObject, isArray, objectValueGetNum } from "./../../javascripts/util.js";
-import { passwordReg, phoneNumberReg, emailTextReg } from "./../../javascripts/regExp.js";
+import { passwordReg, phoneNumberReg, phoneNumberReg1, emailTextReg } from "./../../javascripts/regExp.js";
 
 import I18n from "i18n-js";
 /* action type */
@@ -16,6 +16,7 @@ export const ACTION_SET_USER_FETCHEDITPASSWORDERROR = "ACTION_SET_USER_FETCHEDIT
 export const ACTION_SET_USER_CLEAREDITPASSWORD = "ACTION_SET_USER_CLEAREDITPASSWORD";
 export const ACTION_SET_USER_QUERYNAVINDEX = "ACTION_SET_USER_QUERYNAVINDEX";
 export const ACTION_SET_USER_QUERYTYPEINDEX = "ACTION_SET_USER_QUERYTYPEINDEX";
+export const ACTION_SET_USER_BINDACCOUNTTYPE = "ACTION_SET_USER_BINDACCOUNTTYPE";
 export const ACTION_SET_USER_ISSHOWACTIONSHEET = "ACTION_SET_USER_ISSHOWACTIONSHEET";
 export const ACTION_SET_USER_USERQUERYDATA = "ACTION_SET_USER_USERQUERYDATA";
 
@@ -27,9 +28,15 @@ export const ACTION_SET_USER_CLEARBINDSUBACCOUNT = "ACTION_SET_USER_CLEARBINDSUB
 export const ACTION_SET_USER_HOTKEYDATA = "ACTION_SET_USER_HOTKEYDATA";
 export const ACTION_SET_USER_SUMMARIZEDATA = "ACTION_SET_USER_SUMMARIZEDATA";
 export const ACTION_SET_USER_ELECTRONICCONTRACTDATA = "ACTION_SET_USER_ELECTRONICCONTRACTDATA";
+
+export const ACTION_SET_USER_ACCOUNTDATA = "ACTION_SET_USER_ACCOUNTDATA";
+export const ACTION_SET_USER_CLEARACCOUNTDATA = "ACTION_SET_USER_CLEARACCOUNTDATA";
+export const ACTION_SET_USER_FETCHBINDACCOUNTERROR = "ACTION_SET_USER_FETCHBINDACCOUNTERROR";
 /* action create */
 
 import { logout } from "./login.js"
+
+import { setSendCodeStatus, clearSendCodeError, clearTimer } from "./sendCode.js"
 
 // 设置 tabIndex1
 export function setTabIndex1( tabIndex1 )
@@ -71,6 +78,12 @@ function setFetchEditPassWordError( fetchEditPassWordError )
 	return { type: ACTION_SET_USER_FETCHEDITPASSWORDERROR, payload: fetchEditPassWordError };
 };
 
+// 设置 fetchBindAccountError
+function setFetchBindAccountError( fetchBindAccountError )
+{
+	return { type: ACTION_SET_USER_FETCHBINDACCOUNTERROR, payload: fetchBindAccountError };
+};
+
 // 设置 userQueryData
 function setUserQueryData( userQueryData, isLoadingUserQueryData, fetchUserQueryDataError )
 {
@@ -81,6 +94,12 @@ function setUserQueryData( userQueryData, isLoadingUserQueryData, fetchUserQuery
 function setSubAccountsData( subAccountsData, isLoadingSubAccountsData, fetchSubAccountsError )
 {
 	return { type: ACTION_SET_USER_SUBACCOUNTSDATA, payload: { subAccountsData, isLoadingSubAccountsData, fetchSubAccountsError } };
+};
+
+// 设置 fetchAccountData
+function setFetchAccountData( accountData )
+{
+	return { type: ACTION_SET_USER_ACCOUNTDATA, payload: accountData };
 };
 
 // 设置 isLoadingBindSubAccount
@@ -125,6 +144,18 @@ export function clearEditPassWord()
 	return { type: ACTION_SET_USER_CLEAREDITPASSWORD };
 };
 
+// 清空绑定信息区数据
+export function clearAccountData()
+{
+	return function( dispatch )
+	{
+		clearTimer();
+		dispatch( clearSendCodeError() );
+		dispatch( setSendCodeStatus( 0 ) );
+		dispatch( { type: ACTION_SET_USER_CLEARACCOUNTDATA } );
+	};
+};
+
 // 情况绑定子账户区的数据
 export function clearBindSubAccount()
 {
@@ -145,6 +176,16 @@ export function setQueryNavIndex( queryNavIndex )
 export function setQueryTypeIndex( queryTypeIndex )
 {
 	return { type: ACTION_SET_USER_QUERYTYPEINDEX, payload: queryTypeIndex }
+};
+
+// 设置 bindAccountType
+export function setBindAccountType( bindAccountType )
+{
+	return function( dispatch )
+	{
+		dispatch( { type: ACTION_SET_USER_BINDACCOUNTTYPE, payload: bindAccountType } );
+		dispatch( clearAccountData() );
+	};
 };
 
 //  打开 ActionSheet
@@ -209,7 +250,7 @@ export function fetchUserDetailData( callback = () => {} )
 	};
 };
 
-// 用户输入 设置 oldPassWord newPassWord confirmPassWord inputError
+// 用户输入 设置 oldPassWord newPassWord confirmPassWord accountPhoneText accountEmailText inputError
 export function setInputText( key, value )
 {
 	return function( dispatch, getState )
@@ -227,8 +268,18 @@ export function setInputText( key, value )
 		};
 		if( key === "subAccountText" )
 		{
-			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !( phoneNumberReg.test( value ) || emailTextReg.test( value ) ) } ) } );
+			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !phoneNumberReg.test( value ) } ) } );
 		};
+		if( key === "accountPhoneText" )
+		{
+			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !phoneNumberReg1.test( value ) } ) } );
+			dispatch( setSendCodeStatus( ( phoneNumberReg1.test( value ) ) ? 1 : 0 ) );
+		};
+		if( key === "accountEmailText" )
+		{
+			dispatch( { type: ACTION_SET_USER_INPUTERROR, payload: Object.assign( {}, user.inputError, { [ key ]: !emailTextReg.test( value ) } ) } );
+			dispatch( setSendCodeStatus( ( emailTextReg.test( value ) ) ? 1 : 0 ) );
+		}
 	};
 };
 
@@ -287,6 +338,57 @@ export function fetchEditPassword( callback )
 		} else
 		{
 			dispatch( setFetchEditPassWordError( I18n.t( "user.inputEditPassWordError" ) ) );
+		};
+	};
+};
+
+// 请求绑定账号信息
+export function fetchBindAccount( callback )
+{
+	return async function( dispatch, getState )
+	{
+		const { user } = getState();
+
+		if( ( user.bindAccountType ? user.accountEmailText : user.accountPhoneText ) && user.accountCodeText && !user.inputError[ user.bindAccountType ? "accountEmailText" : "accountPhoneText" ] )
+		{
+			try
+			{
+
+				const res = await fetchPost( "/user.php", { "提交": "账户认证", "认证方式": user.bindAccountType ? "邮箱" : "手机", "电话": user.bindAccountType ? user.accountEmailText : user.accountPhoneText, "验证码": user.accountCodeText } );
+
+				if( res === "ok" )
+				{
+					callback()
+					dispatch( clearAccountData() );
+					dispatch( fetchAccountData() );
+				} else
+				{
+					dispatch( setFetchBindAccountError( res ) );
+				};
+			} catch( err )
+			{
+				dispatch( setFetchBindAccountError( err.type === "network" ? `${ err.status }: ${ I18n.t( "user.fetchBindAccountError" ) }` : err.err.toString() ) );
+			};
+		} else
+		{
+			dispatch( setFetchBindAccountError( I18n.t( "user.inputBindAccountError" ) ) );
+		};
+	};
+};
+
+// 请求绑定信息
+export function fetchAccountData()
+{
+	return async function( dispatch )
+	{
+		const res = await fetchPost( "/user.php", { "提交": "认证信息" } );
+
+		if( isObject( res ) )
+		{
+			dispatch( setFetchAccountData( res ) );
+		} else
+		{
+			dispatch( setFetchAccountData( {} ) );
 		};
 	};
 };

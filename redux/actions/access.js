@@ -13,8 +13,11 @@ export const ACTION_SET_ACCESS_ISLOADING = "ACTION_SET_ACCESS_ISLOADING";
 export const ACTION_SET_ACCESS_FETCHSUBMITERROR = "ACTION_SET_ACCESS_FETCHSUBMITERROR";
 export const ACTION_SET_ACCESS_CLEAR = "ACTION_SET_ACCESS_CLEAR";
 
-import { setSendCodeStatus, clearSendCodeError } from "./sendCode.js"
+export const ACTION_SET_ACCESS_ACTIONSHEETDATA = "ACTION_SET_ACCESS_ACTIONSHEETDATA";
+export const ACTION_SET_ACCESS_ACCOUNTINDEX = "ACTION_SET_ACCESS_ACCOUNTINDEX";
 
+import { fetchAccountData } from "./user.js";
+import { setSendCodeStatus, clearSendCodeError, clearTimer } from "./sendCode.js"
 /* action create */
 // 设置当前币种
 function setCoin( coin )
@@ -51,9 +54,66 @@ export function clear()
 {
 	return function( dispatch )
 	{
+		clearTimer();
 		dispatch( clearSendCodeError() );
 		dispatch( setSendCodeStatus( 0 ) );
 		dispatch( { type: ACTION_SET_ACCESS_CLEAR } );
+	};
+};
+
+// 设置 accountIndex
+export function setAccountIndex( accountIndex )
+{
+	return function( dispatch, getState )
+	{
+		const { access } = getState();
+
+		console.log( "accountIndex", accountIndex, "access.accountIndex", access.accountIndex )
+
+		if( accountIndex )
+		{
+			dispatch( setSendCodeStatus( 1 ) );
+			dispatch( { type: ACTION_SET_ACCESS_ACCOUNTINDEX, payload: accountIndex } );
+		};
+	};
+};
+
+//  打开 ActionSheet
+export function showActionSheet( actionSheetData )
+{
+	return { type: ACTION_SET_ACCESS_ACTIONSHEETDATA, payload: { isShowActionSheet: true, actionSheetData: actionSheetData } };
+};
+
+// 关闭 ActionSheet
+export function hideActionSheet()
+{
+	return { type: ACTION_SET_ACCESS_ACTIONSHEETDATA, payload: { isShowActionSheet: false, actionSheetData: {} } };
+};
+
+// 打开 account 选择 ActionSheet
+export function showAccountActionSheet()
+{
+	return function( dispatch, getState )
+	{
+		const { user } = getState();
+		const { access } = getState();
+
+		const options = [ user.accountData[ "电话" ], user.accountData[ "邮箱" ], I18n.t( "mention.cancel" ) ].filter( item => item );
+
+		const markButtonIndex = options.findIndex( item => item === access.accountIndex );
+
+		dispatch( showActionSheet( {
+			title: I18n.t( "mention.actionSheetAccountTitle" ),
+			message: I18n.t( "mention.actionSheetAccountMessage" ),
+			cancelButtonIndex: options.length - 1,
+			markButtonIndex: markButtonIndex,
+			options: options,
+			onPress: function( index )
+			{
+				dispatch( setAccountIndex( options[ index ] ) );
+				dispatch( hideActionSheet() );
+			}
+		} ) );
 	};
 };
 
@@ -73,7 +133,6 @@ export function setInputText( key, value )
 		if( key === "password" )
 		{
 			dispatch( { type: ACTION_SET_ACCESS_INPUTERROR, payload: Object.assign( {}, access.inputError, { password: !passwordReg.test( value ) } ) } );
-			dispatch( setSendCodeStatus( ( passwordReg.test( value ) ) ? 1 : 0 ) );
 		};
 		if( key === "account" )
 		{
@@ -174,20 +233,23 @@ export function fetchMentionSubmit( coin, callback )
 	return async function( dispatch, getState )
 	{
 		const { access } = getState();
+		const { user } = getState();
 
 		if( Object.values( access.inputError ).every( item => item === false ) && access.usable && access.address && access.number && access.password && access.code )
 		{
 			if( Number( access.number ) < Number( access.usable ) )
 			{
 				dispatch( setIsLoading( true ) );
+				const filterItem = [ { key: "电话", value: user.accountData[ "电话" ] }, { key: "邮箱", value: user.accountData[ "邮箱" ] } ].filter( item => item.value === access.accountIndex );
 				// const params = { "提交": "applyTransaction", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password }; // 新版本
-				const params = { "提交": "提币", "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password, "验证码": access.code };
-
+				const params = { "提交": "提币", "验证类型": filterItem[ 0 ][ "key" ], "提币类型": coin, "提币数量": access.number, "提币地址": access.address, "资金密码": access.password, "验证码": access.code };
+				console.log( "params", params );
 				try
 				{
 					// const res = await fetchPost( "/chongbi.php", params ); // 新版本
 					const res = await fetchPost( "/otc.php", params );
-					console.log( "res", res )
+					console.log( "res", res );
+
 					if( res === "成功" )
 					{
 						callback();

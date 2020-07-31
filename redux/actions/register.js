@@ -196,7 +196,7 @@ export function fetchRegister( type, callback )
 		if (
 			( ( register.registerType === 0 && register.phoneNumber ) || ( register.registerType === 1 && register.emailText ) ) &&
 			( type === "register" ? ( register.name && register.referee && register.agree ) : ( register.newPassword ) ) &&
-			register.password && register.imageCode && register.code &&
+			register.password && register.imageCode && // register.code &&
 			!register.isLoading && Object.values( register.inputError ).every( item => item === false )
 		)
 		{
@@ -205,7 +205,8 @@ export function fetchRegister( type, callback )
 			{
 				const params = type === "register"
 					? {
-						"提交": "注册",
+						// "提交": "注册",
+						"提交": "ETU注册",
 						"注册方式": register.registerType === 0 ? "手机注册" : register.registerType === 1 ? "邮箱注册" : "",
 						"电话": register.registerType === 0 ? register.phoneNumber : register.registerType === 1 ? register.emailText : "",
 						"姓名": register.name,
@@ -225,6 +226,7 @@ export function fetchRegister( type, callback )
 						"短信验证码": register.code
 					}
 				: {};
+				console.log( "params", params )
 
 				const res = await fetchPost( "/user.php", params );
 
