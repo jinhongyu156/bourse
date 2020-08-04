@@ -13,6 +13,7 @@ import Tab from "./../components/tab.js";
 import Header from "./../containers/header.js";
 import TabBar from "./../containers/tabBar.js";
 import Product from "./../containers/product.js";
+import Kline from "./../containers/kline.js";
 import ProductHandle from "./../containers/productHandle.js";
 import Notice from "./../containers/notice.js";
 import Order from "./../containers/order.js";
@@ -56,6 +57,7 @@ const Content = function ( { productId, setProductId, setCount, contractData, cu
 		<Notice />
 		<ProductHandle data = { currentProduct } setCount = { setCount } submit = { fetchSubmit } />
 		<Order data = { userOrderData } submit = { fetchClosing } />
+		<Kline type = { productId } />
 	</ScrollView>;
 };
 
